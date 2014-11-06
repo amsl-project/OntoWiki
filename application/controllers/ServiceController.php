@@ -668,7 +668,6 @@ class ServiceController extends Zend_Controller_Action
         $this->_response->setBody($this->view->render($file));
     }
 
-
     /**
      * JSON outputs of the transitive closure of resources to a given start
      * resource and an transitive attribute
@@ -827,7 +826,6 @@ class ServiceController extends Zend_Controller_Action
         $response->setBody(json_encode($output));
     }
 
-
     /**
      * JSON output of the RDFauthor init config, which is a RDF/JSON Model
      * without objects where the user should be able to add data
@@ -876,13 +874,41 @@ class ServiceController extends Zend_Controller_Action
             $resourceUri = $parameter;
         }
 
+        $event            = new Erfurt_Event('onRDFAuthorInitActionTemplate');
+        $event->model     = $model;
+        $event->resource  = $resourceUri;
+        $event->parameter = $parameter;
+        $event->mode      = $workingMode;
+        $eventResult      = $event->trigger();
+
+        // empty object to hold data
+        $output        = new stdClass();
+        $newProperties = new stdClass();
+
+        //Write rdfAuthor-output to handle 'Add Property'-widget
+        if ($event->addPropertyValues !== null) {
+            $output->addPropertyValues = $event->addPropertyValues;
+        } else {
+            $output->addPropertyValues = '{}';
+        }
+
+        if ($event->addOptionalPropertyValues !== null) {
+            $output->addOptionalPropertyValues = $event->addOptionalPropertyValues;
+        } else {
+            $output->addOptionalPropertyValues = '{}';
+        }
+
         if ($workingMode == 'class') {
-            $properties = $model->sparqlQuery(
-                'SELECT DISTINCT ?uri ?value {
-                ?s ?uri ?value.
-                ?s a <' . $parameter . '>.
-                } LIMIT 20 ', array('result_format' => 'extended')
-            );
+            if ($eventResult) {
+                $properties = $event->properties;
+            } else {
+                $properties = $model->sparqlQuery(
+                    'SELECT DISTINCT ?uri ?value {
+                        ?s ?uri ?value.
+                        ?s a <'. $parameter . '>.
+                        } LIMIT 20 ', array('result_format' => 'extended')
+                    );
+            }
         } elseif ($workingMode == 'clone') {
             // FIXME: more than one values of a property are not supported right now
             // FIXME: Literals are not supported right now
@@ -893,11 +919,15 @@ class ServiceController extends Zend_Controller_Action
                 } LIMIT 20 ', array('result_format' => 'extended')
             );
         } elseif ($workingMode == 'edit') {
+            if ($eventResult) {
+                $properties = $event->properties;
+            } else {
             $properties = $model->sparqlQuery(
                 'SELECT ?uri ?value {
                 <' . $parameter . '> ?uri ?value.
                 } LIMIT 20 ', array('result_format' => 'extended')
-            );
+                );
+            }
         } else { // resource
             $properties = $model->sparqlQuery(
                 'SELECT DISTINCT ?uri ?value {
@@ -906,12 +936,7 @@ class ServiceController extends Zend_Controller_Action
             );
         }
 
-        // empty object to hold data
-        $output        = new stdClass();
-        $newProperties = new stdClass();
-
         $properties = $properties['results']['bindings'];
-
         // feed title helper w/ URIs
         $titleHelper = new OntoWiki_Model_TitleHelper($model);
         $titleHelper->addResources($properties, 'uri');
@@ -920,8 +945,21 @@ class ServiceController extends Zend_Controller_Action
             foreach ($properties as $property) {
 
                 $currentUri   = $property['uri']['value'];
-                $currentValue = $property['value']['value'];
-                $currentType  = $property['value']['type'];
+                /* FIXME ad-hoc fix since in rdfauthor template mode
+                   the value will not be set right now (but should probably
+                   be provided in future
+                */
+                if (isset($property['value']) && isset($property['value']['value'])) {
+                    $currentValue = $property['value']['value'];
+                } else {
+                    $currentValue = '';
+                }
+
+                if (isset($property['value']) && isset($property['value']['type'])) {
+                    $currentType  = $property['value']['type'];
+                } else {
+                    $currentType = '';
+                }
 
                 $value = new stdClass();
 
@@ -965,8 +1003,11 @@ class ServiceController extends Zend_Controller_Action
                         $value->value = $currentValue;
                         $value->type  = $currentType;
                     }
-                    if ($workingMode == 'class') {
-                        $value->value = '';
+                    if ($workingMode == 'class' && $eventResult) {
+                        $value->value = $currentValue;
+                        $value->type  = $currentType;
+                    } elseif ($workingMode == 'class' && !$eventResult) {
+                        $value->value = '' ;
                         $value->type  = $currentType;
                     }
                 }

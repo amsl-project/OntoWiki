@@ -355,7 +355,6 @@ $(document).ready(function() {
     });
     
     $('.edit.cancel').click(function() {
-        $(body).data('editingMode', false);
         // reload page
         window.location.href = window.location.href;
         RDFauthor.cancel();
@@ -373,7 +372,6 @@ $(document).ready(function() {
     
     // edit mode
     $('.edit-enable').click(function() {
-        $(body).data('editingMode', true);
         var button = this;
         if ($(button).hasClass('active')) {
             RDFauthor.cancel();
@@ -401,9 +399,11 @@ $(document).ready(function() {
                         $('.edit-enable').removeClass('active');
                         
                         // HACK: reload whole page after 1000 ms
+                        /*
                         window.setTimeout(function () {
                             window.location.href = window.location.href;
                         }, 500);
+                        */
                     }, 
                     onCancel: function () {
                         $('.edit').each(function() {
@@ -444,7 +444,7 @@ $(document).ready(function() {
             });
         }
     });
-    
+
     $('.clone-resource').click(function() {
         loadRDFauthor(function () {
             var serviceURI = urlBase + 'service/rdfauthorinit';
@@ -455,6 +455,10 @@ $(document).ready(function() {
                mode: 'clone',
                uri: prototypeResource
             }, function(data) {
+                var addPropertyValues = data['addPropertyValues'];
+                var addOptionalPropertyValues = data['addOptionalPropertyValues'];
+                delete data.addPropertyValues;
+                delete data.addOptionalPropertyValues;
                 // get default resource uri for subjects in added statements (issue 673)
                 // grab first object key
                 for (var subjectUri in data) {break;};
@@ -468,6 +472,8 @@ $(document).ready(function() {
                     autoParse: false, 
                     showPropertyButton: true,
                     loadOwStylesheet: false,
+                    addPropertyValues: addPropertyValues,
+                    addOptionalPropertyValues: addOptionalPropertyValues,
                     onSubmitSuccess: function (responseData) {
                         var newLocation;
                         if (responseData && responseData.changed) {
@@ -476,9 +482,11 @@ $(document).ready(function() {
                             newLocation = window.location.href;
                         }
                         // HACK: reload whole page after 500 ms
+                        /*
                         window.setTimeout(function () {
                             window.location.href = newLocation;
                         }, 500);
+                        */
                     }
                 });
                 
@@ -489,8 +497,7 @@ $(document).ready(function() {
     
     // add property
     $('.property-add').click(function() {
-        $(body).data('editingMode', true);
-        if(typeof(RDFauthor) === 'undefined') {
+        if(typeof(RDFauthor) === 'undefined' || ((typeof(RDFAUTHOR_STATUS) != 'undefined') && (RDFAUTHOR_STATUS === 'inactive'))) {
             loadRDFauthor(function () {
                 RDFauthor.setOptions({
                     onSubmitSuccess: function () {
@@ -504,11 +511,13 @@ $(document).ready(function() {
                             $(this).fadeOut(effectTime);
                         });
                         $('.edit-enable').removeClass('active');
-                        
+
                         // HACK: reload whole page after 1000 ms
+                        /*
                         window.setTimeout(function () {
                             window.location.href = window.location.href;
                         }, 500);
+                        */
                     }, 
                     onCancel: function () {
                         $('.edit').each(function() {

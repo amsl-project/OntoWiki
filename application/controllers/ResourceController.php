@@ -106,6 +106,18 @@ class ResourceController extends OntoWiki_Controller_Base
                 $values     = $event->values;
             }
 
+            $event                  = new Erfurt_Event('onPropertiesActionTemplate');
+            $event->selectedModel   = $this->_owApp->selectedModel;
+            $event->resource        = $resource;
+            $event->graph           = $graph;
+            $event->predicates      = $predicates;
+            $result                 = $event->trigger();
+
+            if ($result) {
+                $predicates = $event->predicates;
+                $this->view->templateHtml = $event->templateHtml;
+            }
+
             $titleHelper = new OntoWiki_Model_TitleHelper($graph);
             // add graphs
             $graphs = array_keys($predicates);
