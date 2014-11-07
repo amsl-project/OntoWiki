@@ -624,6 +624,14 @@ class ServiceController extends Zend_Controller_Action
             }
         }
 
+                /**
+        * Trigger Index
+        **/
+        $indexEvent             = new Erfurt_Event('onIndexAction');
+        $indexEvent->resource   = !null == key($delete) ? key($delete) : key($insert);
+        $indexEvent->model      = $deleteModel->getModelUri();
+        $indexEvent->trigger();
+
         if ($changes) {
             /**
              * @see {http://www.w3.org/Protocols/rfc2616/rfc2616-sec10.html#sec10.2.2}
