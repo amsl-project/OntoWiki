@@ -1,8 +1,9 @@
+
 /**
  * This file is part of the {@link http://ontowiki.net OntoWiki} project.
  *
  * @copyright Copyright (c) 2009, {@link http://aksw.org AKSW}
- * @license   http://opensource.org/licenses/gpl-license.php GNU General Public License (GPL)
+ * @license http://opensource.org/licenses/gpl-license.php GNU General Public License (GPL)
  */
 
 /**
@@ -501,6 +502,13 @@ function createInstanceFromClassURI(type, dataCallback) {
             mode: 'class',
             uri: type
         }, function(data) {
+            if (data.hasOwnProperty('propertyOrder')) {
+                var propertyOrder = data.propertyOrder;
+                delete data.propertyOrder;
+            }
+            else {
+                var propertyOrder = null;
+            }
             // pass data through callback
             if (typeof dataCallback == 'function') {
                 data = dataCallback(data);
@@ -544,7 +552,12 @@ function createInstanceFromClassURI(type, dataCallback) {
                 }
             });
            
-            RDFauthor.start(null, 'class');
+            var options = {};
+            if (propertyOrder != null) {
+                options.propertyOrder = propertyOrder;
+            }
+			options.workingMode = 'class';
+            RDFauthor.start(null, options);
         })
     });
 }
@@ -567,6 +580,13 @@ function editResourceFromURI(resource) {
             var addOptionalPropertyValues = data['addOptionalPropertyValues'];
             delete data.addPropertyValues;
             delete data.addOptionalPropertyValues;
+			if (data.hasOwnProperty('propertyOrder')) {
+                var propertyOrder = data.propertyOrder;
+                delete data.propertyOrder;
+            }
+            else {
+                var propertyOrder = null;
+            }
             
             // get default resource uri for subjects in added statements (issue 673)
             // grab first object key
@@ -600,7 +620,12 @@ function editResourceFromURI(resource) {
                 }
             });
 
-            RDFauthor.start();
+            var options = {};
+            if (propertyOrder != null) {
+                options.propertyOrder = propertyOrder;
+            }
+			options.workingMode = 'class';
+            RDFauthor.start(null, options);
         })
     });
 }
@@ -772,6 +797,7 @@ function addProperty() {
             RDFauthor.getView().addWidget(statement, null, {container: $('#' + td2ID), activate: true});
         }
     };
+    
     var selector = new Selector(RDFAUTHOR_DEFAULT_GRAPH, RDFAUTHOR_DEFAULT_SUBJECT, selectorOptions);
     selector.presentInContainer();
 }

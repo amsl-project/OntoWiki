@@ -1067,6 +1067,15 @@ class ServiceController extends Zend_Controller_Action
             $output->$resourceUri = $newProperties;
         }
 
+        // Sort Properties with sortproperties extension
+        $event       = new Erfurt_Event('onSortPropertiesRDFauthorData');
+        $event->data = $output;
+        $result      = $event->trigger();
+
+        if ($result) {
+            $output = $event->output;
+        }
+
         // send the response
         $response->setHeader('Content-Type', 'application/json');
         $response->setBody(json_encode($output));
