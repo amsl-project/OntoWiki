@@ -4,3 +4,24 @@
 [submodule "libraries/Erfurt"]
 	path = libraries/Erfurt
 	url = git://github.com/amsl-project/Erfurt.git
+[submodule "extensions/template"]
+	path = extensions/template
+	url = https://github.com/AKSW/template.ontowiki.git
+[submodule "extensions/contextinfo"]
+	path = extensions/contextinfo
+	url = https://github.com/AKSW/contextinfo.ontowiki.git
+[submodule "extensions/imagehelper"]
+	path = extensions/imagehelper
+	url = https://github.com/AKSW/imagehelper.ontowiki.git
+[submodule "extensions/deadlinehelper"]
+	path = extensions/deadlinehelper
+	url = https://github.com/AKSW/deadlinehelper.ontowiki.git
+[submodule "extensions/issnimporter"]
+	path = extensions/issnimporter
+	url = https://github.com/amsl-project/issnimporter.ontowiki.git
+[submodule "extensions/fulltextsearch"]
+	path = extensions/fulltextsearch
+	url = https://github.com/amsl-project/fulltextsearch.ontowiki.git
+[submodule "extensions/files"]
+	path = extensions/files
+	url = https://github.com/AKSW/files.ontowiki.git
