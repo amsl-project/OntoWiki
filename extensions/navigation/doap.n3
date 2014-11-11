@@ -42,7 +42,13 @@
           owconfig:id "label";
           rdfs:label "By Label" ;
           :type <http://www.w3.org/2000/01/rdf-schema#label>
-    ]
+    ];
+    owconfig:config [
+          a owconfig:Config;
+          owconfig:id "order";
+          rdfs:label "By order property" ;
+          :type <http://ns.ontowiki.net/SysBase/order>
+    ];
 ];
 
  owconfig:config [
@@ -283,6 +289,35 @@
  :rootName "Caucasus Spiders" ;
           :rootURI <http://db.caucasus-spiders.info/Area/152> ;
     ] ;
+
+    owconfig:config [
+      a owconfig:Config;
+      owconfig:id "Bibrm-Classes";
+      rdfs:label "Bibrm-Classes" ;
+      :titleMode "titleHelper" ;
+      :cache "false"^^xsd:boolean ;
+      :hierarchyTypes (<http://vocab.ub.uni-leipzig.de/bibrm/Class>) ;
+      :hiddenNS (
+        <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+        <http://www.w3.org/2000/01/rdf-schema#>
+        <http://www.w3.org/2002/07/owl#>
+      );
+      owconfig:config [
+        a owconfig:Config;
+        owconfig:id "hierarchyRelations";
+        :in (<http://www.w3.org/2000/01/rdf-schema#subClassOf>)
+      ];
+      owconfig:config [
+        a owconfig:Config;
+        owconfig:id "list";
+        :config "{|filter|:[{|rdfsclass|:|%resource%|,|mode|:|rdfsclass|}]}"
+      ];
+      :hierarchyTypes (<http://ns.ontowiki.net/SysOnt/hidden>) ;
+      :showImplicitElements "true"^^xsd:boolean ;
+      :showEmptyElements "true"^^xsd:boolean ;
+      :showCounts "false"^^xsd:boolean ;
+      :checkSub "true"^^xsd:boolean
+  ] ;
 
 
 ] .

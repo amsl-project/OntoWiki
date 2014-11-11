@@ -152,6 +152,13 @@ cache.backend.sqlite.cache_db_complete_path         = "/tmp/ow_cache.sqlite"
 ;; Options for Gearman/worker
 worker.enable	= false
 
+;; TitleHelper Bibiographic URIs
+titleHelper.properties.gndPrBody   = "http://d-nb.info/standards/elementset/gnd#preferredNameForTheCorporateBody" 
+titleHelper.properties.gndPrPerson = "http://d-nb.info/standards/elementset/gnd#preferredNameForThePerson" 
+titleHelper.properties.gndPrSubject= "http://d-nb.info/standards/elementset/gnd#preferredNameForTheSubjectHeading" 
+titleHelper.properties.gndPrWork   = "http://d-nb.info/standards/elementset/gnd#preferredNameForTheWork" 
+titleHelper.properties.gndPrGeoName= "http://d-nb.info/standards/elementset/gnd#preferredNameForThePlaceOrGeographicName" 
+
 
 ;;;;
 ;; uncomment this line if you need more information

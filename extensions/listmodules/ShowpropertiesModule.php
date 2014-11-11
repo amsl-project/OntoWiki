@@ -74,10 +74,10 @@ class ShowpropertiesModule extends OntoWiki_Module
         $this->view->inversePropertiesListLink = (string)$url;
 
         if ($this->_privateConfig->filterhidden || $this->_privateConfig->filterlist) {
-            $this->view->properties        = $this->filterProperties($this->_instances->getAllProperties(false));
+            $this->view->properties        = $this->filterProperties($this->_instances->getAllPropertiesBySingleQuery(false));
             $this->view->reverseProperties = $this->filterProperties($this->_instances->getAllProperties(true));
         } else {
-            $this->view->properties        = $this->_instances->getAllProperties(false);
+            $this->view->properties        = $this->_instances->getAllPropertiesBySingleQuery(false);
             $this->view->reverseProperties = $this->_instances->getAllProperties(true);
         }
 
