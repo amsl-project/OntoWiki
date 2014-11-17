@@ -29,7 +29,7 @@
 :navigation owconfig:config [
       a owconfig:Config;
       owconfig:id "defaults";
-      :config "classes" ;
+      :config "bibrm" ;
       :limit "10" ;
       :checkTypes "true"^^xsd:boolean ;
       :showMenu "true"^^xsd:boolean
@@ -225,28 +225,6 @@
         :checkSub "true"^^xsd:boolean ;
         :titleMode "titleHelper" ;
         :showCounts "false"^^xsd:boolean
-    ];
- owconfig:config [
-          a owconfig:Config;
-          owconfig:id "org";
-          rdfs:label "Groups" ;
-          :hierarchyTypes (
-                <http://xmlns.com/foaf/0.1/Group>
-                <http://xmlns.com/foaf/0.1/Organization>
-          ) ;
-          owconfig:config [
-              a owconfig:Config;
-              owconfig:id "hierarchyRelations";
-              :out (<http://ns.ontowiki.net/SysOnt/subGroup>)
-        ];
- owconfig:config [
-              a owconfig:Config;
-              owconfig:id "instanceRelation";
-              :in (<http://xmlns.com/foaf/0.1/member>) ;
-              :out (<http://xmlns.com/foaf/0.1/member_of>)
-        ];
- :titleMode "titleHelper" ;
-          :showCounts "true"^^xsd:boolean
     ];
  owconfig:config [
           a owconfig:Config;
