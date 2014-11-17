@@ -114,7 +114,7 @@ $(document).ready(function(){
             }
         }
 
-        filter.add("filterbox"+filter.counter, prop, inverse, propLabel, filtertype, value1, value2, type, typedata, function(newfilter) {
+        filter.add("filterbox"+filter.count, prop, inverse, propLabel, filtertype, value1, value2, type, typedata, function(newfilter) {
             //react in filter box
             //$("#addwindow").hide();
         }, false, negate);
