@@ -29,7 +29,7 @@
 :navigation owconfig:config [
       a owconfig:Config;
       owconfig:id "defaults";
-      :config "bibrm" ;
+      :config "Bibrm-Classes" ;
       :limit "10" ;
       :checkTypes "true"^^xsd:boolean ;
       :showMenu "true"^^xsd:boolean
@@ -39,17 +39,17 @@
       owconfig:id "sorting";
       owconfig:config [
           a owconfig:Config;
+          owconfig:id "order";
+          rdfs:label "By order property" ;
+          :type <http://ns.ontowiki.net/SysOnt/order>
+      ];
+      owconfig:config [
+          a owconfig:Config;
           owconfig:id "label";
           rdfs:label "By Label" ;
           :type <http://www.w3.org/2000/01/rdf-schema#label>
-    ];
-    owconfig:config [
-          a owconfig:Config;
-          owconfig:id "order";
-          rdfs:label "By order property" ;
-          :type <http://ns.ontowiki.net/SysBase/order>
-    ];
-];
+      ];
+ ];
 
  owconfig:config [
       a owconfig:Config;

@@ -19,7 +19,7 @@
       a owconfig:Config;
       owconfig:id "sort";
       :method "rdf" ;
-      :property <http://ns.ontowiki.net/SysBase/order>
+      :property <http://ns.ontowiki.net/SysOnt/order>
 ] ;
   doap:release :v1-0 .
 :v1-0 a doap:Version ;
