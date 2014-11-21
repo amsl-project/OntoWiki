@@ -223,3 +223,10 @@ filter_help3;Werden mindestens vier Buchstaben eingegeben, kann anschließend du
 filter_help4;Sobald die Suche die Wörter AND oder OR enthält, muss die komplette bif:contains-Syntax benutzt werden.
 Further info;mehr Informationen
 
+# Export
+As CSV;Als CSV herunterladen
+Advanced export;Erweiterte Exportoptionen
+advanced options;Erweiterte Optionen
+Download as csv with labels;CSV mit Benzeichnern herunterladen
+Download as csv with uris;CSV mit URIs herunterladen
+show;anzeigen

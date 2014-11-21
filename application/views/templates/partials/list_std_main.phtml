@@ -7,7 +7,6 @@ $actionMenu->setEntry('Toggle show Resource Query', "javascript:showresQuery()")
 $actionMenu->setEntry('Toggle show Value Query', "javascript:showvalQuery()");
 $actions = new OntoWiki_Menu();
 $actions->setEntry('View', $actionMenu);
-$this->placeholder('main.window.menu')->set($actions->toArray());
 
 $instances = $this->instances;
 // get queries
@@ -18,6 +17,25 @@ $valueQuery = $instances->getQuery();
 $permalink = $instances->getPermalink($this->listName);
 $config = Erfurt_App::getInstance()->getConfig();
 $urlBase = $config->urlBase;
+$translate = OntoWiki::getInstance()->translate;
+
+// build list menu
+$listMenu = new OntoWiki_Menu();
+$exportUrl = $urlBase . "listexporter/export/"
+    . "?resourceQuery= " . urlencode($resourceQuery)
+    . "&valueQuery= " . urlencode($valueQuery)
+    . "&filename= " . $this->heading;
+
+$advancedExportUrl = $urlBase . "listexporter/view/"
+    . "?resourceQuery= " . urlencode($resourceQuery)
+    . "&valueQuery= " . urlencode($valueQuery);
+
+$listMenu->setEntry($translate->_('As CSV'), $exportUrl);
+$listMenu->setEntry($translate->_('Advanced export'), $advancedExportUrl);
+
+$actions->setEntry('Export', $listMenu);
+
+$this->placeholder('main.window.menu')->set($actions->toArray());
 
 $this->headScript()->prependScript(
     'function showPermaLink(){$("#permalink").slideToggle(400);}
