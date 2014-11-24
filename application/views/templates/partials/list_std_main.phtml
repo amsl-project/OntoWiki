@@ -19,22 +19,6 @@ $config = Erfurt_App::getInstance()->getConfig();
 $urlBase = $config->urlBase;
 $translate = OntoWiki::getInstance()->translate;
 
-// build list menu
-$listMenu = new OntoWiki_Menu();
-$exportUrl = $urlBase . "listexporter/export/"
-    . "?resourceQuery= " . urlencode($resourceQuery)
-    . "&valueQuery= " . urlencode($valueQuery)
-    . "&filename= " . $this->heading;
-
-$advancedExportUrl = $urlBase . "listexporter/view/"
-    . "?resourceQuery= " . urlencode($resourceQuery)
-    . "&valueQuery= " . urlencode($valueQuery);
-
-$listMenu->setEntry($translate->_('As CSV'), $exportUrl);
-$listMenu->setEntry($translate->_('Advanced export'), $advancedExportUrl);
-
-$actions->setEntry('Export', $listMenu);
-
 $this->placeholder('main.window.menu')->set($actions->toArray());
 
 $this->headScript()->prependScript(
@@ -125,3 +109,4 @@ $this->headScript()->prependScript(
     <?php else: ?>
 <p class="messagebox info"><?php echo $this->_('No matches.') ?></p>
     <?php endif; ?>
+<small><?php echo $translate->_('Export list as') ?>: <a href="<?php echo $urlBase; ?>listexporter/export/?valueQuery=<?php echo urlencode($valueQuery)?>&resourceQuery=<?php echo urlencode($resourceQuery)?>&filename=<?php echo $this->heading?>">CSV</a> <?php echo $translate->_('or') ?> <a href="<?php echo $urlBase; ?>listexporter/view/?valueQuery=<?php echo urlencode($valueQuery)?>&resourceQuery=<?php echo urlencode($resourceQuery)?>&filename=<?php echo $this->heading?>"><?php echo $translate->_('Advanced export options') ?></a></small>
