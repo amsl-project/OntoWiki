@@ -25,3 +25,6 @@
 [submodule "extensions/files"]
 	path = extensions/files
 	url = https://github.com/AKSW/files.ontowiki.git
+[submodule "extensions/listexporter"]
+	path = extensions/listexporter
+	url = https://github.com/amsl-project/listexporter.ontowiki.git
