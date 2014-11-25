@@ -283,7 +283,7 @@
       owconfig:config [
         a owconfig:Config;
         owconfig:id "hierarchyRelations";
-        :in (<http://www.w3.org/2000/01/rdf-schema#subClassOf>)
+        :in (<http://vocab.ub.uni-leipzig.de/bibrm/subClassOf>)
       ];
       owconfig:config [
         a owconfig:Config;
