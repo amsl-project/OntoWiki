@@ -439,6 +439,10 @@ class HistoryController extends OntoWiki_Controller_Component
                 )
             );
         }
+
+        // Trigger Reindex
+        $indexEvent = new Erfurt_Event('onFullreindexAction');
+        $indexEvent->trigger();
     }
 
     /**
