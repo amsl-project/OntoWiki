@@ -913,14 +913,10 @@ class ServiceController extends Zend_Controller_Action
         //Write rdfAuthor-output to handle 'Add Property'-widget
         if ($event->addPropertyValues !== null) {
             $output->addPropertyValues = $event->addPropertyValues;
-        } else {
-            $output->addPropertyValues = '{}';
         }
 
         if ($event->addOptionalPropertyValues !== null) {
             $output->addOptionalPropertyValues = $event->addOptionalPropertyValues;
-        } else {
-            $output->addOptionalPropertyValues = '{}';
         }
 
         if ($workingMode == 'class') {
