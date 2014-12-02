@@ -1,0 +1,50 @@
+<h1><?php echo $this->translate->_('Last changes for') . ' ' . $this->model ?></h1>
+
+<?php
+    $odd = false;
+    $nextPage = $this->page + 1;
+    $previousPage = $this->page - 1;
+    if ($previousPage < 1) {
+        $previousPage = 1;
+    }
+?>
+
+<table class="separated-vertical" id="history-list">
+    <thead>
+    <!-- table headers -->
+    <tr class="odd">
+        <th><?php echo $this->_('user'); ?> </th>
+        <th><?php echo $this->_('resource'); ?></th>
+        <th><?php echo $this->_('timestamp'); ?></th>
+        <th><?php echo $this->_('action-type'); ?></th>
+    </tr>
+    </thead>
+    <tbody>
+    <!-- table contents -->
+    <?php $i = 0; ?>
+    <?php foreach ($this->results as $result) :?>
+        <tr class="<?php echo $odd ? 'odd' : 'even'; $odd = !$odd; ?> ">
+            <td><?php echo $this->userArray[$result['useruri']]; ?></td>
+            <td><a href="<?php echo $result['url']; ?>"><?php echo $this->titleHelper->getTitle($result['resource']); ?></a></td>
+            <td><?php $timestamp = date('c', (int) $result['tstamp']); ?>
+                <?php echo OntoWiki_Utils::dateDifference($timestamp) . ' ('.substr($timestamp,0,strlen($timestamp) - 6).')'; ?></td>
+            <td><?php echo $this->_('HISTORY_ACTIONTYPE_' . $result['action_type']); ?></td>
+        </tr>
+    <?php endforeach; ?>
+    </tbody>
+</table>
+
+<a class="minibutton" href="
+<?php
+echo OntoWiki::getInstance()->getUrlBase()
+    . 'community/listlastchanges?page='
+    . $previousPage;
+?>
+"><?php echo $this->_("newer changes") ?></a>
+<a class="minibutton" href="
+    <?php
+        echo OntoWiki::getInstance()->getUrlBase()
+            . 'community/listlastchanges?page='
+            . $nextPage;
+    ?>
+"><?php echo $this->_("older changes") ?></a>

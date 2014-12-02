@@ -8,7 +8,8 @@
  * @license    http://opensource.org/licenses/gpl-license.php GNU General Public License (GPL)
  * @version    $Id:  $
  */
-
+$config = Erfurt_App::getInstance()->getConfig();
+$urlBase = $config->urlBase;
 ?>
 <?php if ($this->has('warningmessage')): ?>
     <p class="messagebox info"><?php echo $this->warningmessage ?></p>
@@ -18,7 +19,7 @@
 <?php endif?>
 
 <?php if ($this->has('changes')): ?>
-<ol class="bullets-none separated">
+<ol class="bullets-none separated has-contextmenu-area">
 <?php $odd = false; ?>
 <?php foreach($this->changes as $change): ?>
     <li class="<?php echo $odd ? 'odd' : 'even'; $odd = !$odd; ?>">
@@ -33,6 +34,13 @@
                 <?php echo $change['author'] ?>
             </a>
         </li>
+<div class="contextmenu">
+    <a class="item" href="<?php echo $urlBase; ?>community/listlastchanges?page=1">
+        <span class="icon icon-list" title="Show more">
+            <span>Show more</span>
+        </span>
+    </a>
+</div>
 <?php endforeach; ?>
 </ol>
 <?php endif?>

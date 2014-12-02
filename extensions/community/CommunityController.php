@@ -248,4 +248,51 @@ class CommunityController extends OntoWiki_Controller_Component
         // stop Action
         $versioning->endAction();
     }
+
+    /*
+     * View for displaying extended information to last changes of a resource.
+     */
+    public function listlastchangesAction()
+    {
+        $this->versioning = $this->_erfurt->getVersioning();
+        $this->model = $this->_owApp->selectedModel;
+        $params = $this->_request->getParams();
+        if (isset($params['page'])){
+            $page = $params['page'];
+        } else {
+            $page = 1;
+        }
+        $this->results = $this->versioning->getHistoryForGraph($this->model->getModelIri(), $page);
+        $titleHelper = new OntoWiki_Model_TitleHelper();
+        $translate = $this->_owApp->translate;
+
+        $userArray = $this->_erfurt->getUsers();
+        foreach ($this->results as $key => $entry) {
+
+            $this->results[$key]['url'] = $this->_config->urlBase . "view?r=" . urlencode($entry['resource']);
+            $titleHelper->addResource($entry['resource']);
+
+            if ($entry['useruri'] == $this->_erfurt->getConfig()->ac->user->anonymousUser) {
+                $userArray[$entry['useruri']] = 'Anonymous';
+            } else if ($entry['useruri'] == $this->_erfurt->getConfig()->ac->user->superAdmin) {
+                $userArray[$entry['useruri']] = 'SuperAdmin';
+            } else if (is_array($userArray[$entry['useruri']])) {
+                if (isset($userArray[$entry['useruri']]['userName'])) {
+                    $userArray[$entry['useruri']] = $userArray[$entry['useruri']]['userName'];
+                } else {
+                    $titleHelper->addResource($entry['useruri']);
+                    $userArray[$entry['useruri']] = $titleHelper->getTitle($entry['useruri']);
+                }
+            }
+        }
+
+        $this->view->placeholder('main.window.title')->set($translate->_('Last changes'));
+        $this->view->userArray = $userArray;
+        $this->view->translate = $translate;
+        $this->view->results = $this->results;
+        $this->view->model = $this->model->getTitle();
+        $this->view->titleHelper = $titleHelper;
+        $this->view->page = $page;
+        $this->_owApp->getNavigation()->disableNavigation();
+    }
 }
