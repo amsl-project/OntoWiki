@@ -29,7 +29,7 @@ class IndexController extends OntoWiki_Controller_Base
         $version = $this->_config->version;
         // try reading
         try {
-            $url = 'http://blog.aksw.org/feed/?cat=5&client='
+            $url = 'http://amsl.technology/feed/?lang=de'
                 . $version->label
                 . '&version='
                 . $version->number
@@ -87,7 +87,7 @@ class IndexController extends OntoWiki_Controller_Base
         $this->view->placeholder('main.window.title')->set('News');
 
         try {
-            $url = 'http://blog.aksw.org/feed/?cat=5&client='
+            $url = 'http://amsl.technology/feed/?lang=de'
                 . urlencode($version->label)
                 . '&version='
                 . urlencode($version->number)
