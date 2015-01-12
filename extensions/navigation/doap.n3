@@ -29,8 +29,8 @@
 :navigation owconfig:config [
       a owconfig:Config;
       owconfig:id "defaults";
-      :config "Bibrm-Classes" ;
-      :limit "10" ;
+      :config "Amsl-Classes" ;
+      :limit "12" ;
       :checkTypes "true"^^xsd:boolean ;
       :showMenu "true"^^xsd:boolean
 ];
@@ -270,11 +270,11 @@
 
     owconfig:config [
       a owconfig:Config;
-      owconfig:id "Bibrm-Classes";
-      rdfs:label "Bibrm-Classes" ;
+      owconfig:id "Amsl-Classes";
+      rdfs:label "Amsl-Classes" ;
       :titleMode "titleHelper" ;
       :cache "false"^^xsd:boolean ;
-      :hierarchyTypes (<http://vocab.ub.uni-leipzig.de/bibrm/Class>) ;
+      :hierarchyTypes (<http://vocab.ub.uni-leipzig.de/amsl/Class>) ;
       :hiddenNS (
         <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
         <http://www.w3.org/2000/01/rdf-schema#>
@@ -283,7 +283,7 @@
       owconfig:config [
         a owconfig:Config;
         owconfig:id "hierarchyRelations";
-        :in (<http://vocab.ub.uni-leipzig.de/bibrm/subClassOf>)
+        :in (<http://vocab.ub.uni-leipzig.de/amsl/subClassOf>)
       ];
       owconfig:config [
         a owconfig:Config;
