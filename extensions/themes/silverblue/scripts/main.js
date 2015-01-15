@@ -461,10 +461,18 @@ $(document).ready(function() {
                mode: 'clone',
                uri: prototypeResource
             }, function(data) {
+                if (data.hasOwnProperty('propertyOrder')) {
+                    var propertyOrder = data.propertyOrder;
+                    delete data.propertyOrder;
+                }
+                else {
+                    var propertyOrder = null;
+                }
+
                 var addPropertyValues = data['addPropertyValues'];
                 var addOptionalPropertyValues = data['addOptionalPropertyValues'];
-                delete data.addPropertyValues;
-                delete data.addOptionalPropertyValues;
+                delete data['addPropertyValues'];
+                delete data['addOptionalPropertyValues'];
                 // get default resource uri for subjects in added statements (issue 673)
                 // grab first object key
                 for (var subjectUri in data) {break;};
@@ -495,6 +503,13 @@ $(document).ready(function() {
                         */
                     }
                 });
+
+                var options = {};
+                if (propertyOrder != null) {
+                    options.propertyOrder = propertyOrder;
+                }
+                options.workingMode = 'clone';
+                RDFauthor.start(null, options);
                 
                 RDFauthor.start();
             });

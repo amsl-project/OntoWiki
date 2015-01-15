@@ -927,18 +927,22 @@ class ServiceController extends Zend_Controller_Action
                     'SELECT DISTINCT ?uri ?value {
                         ?s ?uri ?value.
                         ?s a <'. $parameter . '>.
-                        } LIMIT 20 ', array('result_format' => 'extended')
+                        } LIMIT 40 ', array('result_format' => 'extended')
                     );
             }
         } elseif ($workingMode == 'clone') {
             // FIXME: more than one values of a property are not supported right now
             // FIXME: Literals are not supported right now
-            $properties = $model->sparqlQuery(
-                'SELECT ?uri ?value {
-                <' . $parameter . '> ?uri ?value.
-                #FILTER (isUri(?value))
-                } LIMIT 20 ', array('result_format' => 'extended')
-            );
+            if ($eventResult) {
+                $properties = $event->properties;
+            } else {
+                $properties = $model->sparqlQuery(
+                    'SELECT ?uri ?value {
+                    <' . $parameter . '> ?uri ?value.
+                    #FILTER (isUri(?value))
+                    } LIMIT 40 ', array('result_format' => 'extended')
+                );
+            }
         } elseif ($workingMode == 'edit') {
             if ($eventResult) {
                 $properties = $event->properties;
@@ -946,7 +950,7 @@ class ServiceController extends Zend_Controller_Action
             $properties = $model->sparqlQuery(
                 'SELECT ?uri ?value {
                 <' . $parameter . '> ?uri ?value.
-                } LIMIT 20 ', array('result_format' => 'extended')
+                } LIMIT 40 ', array('result_format' => 'extended')
                 );
             }
         } else { // resource
@@ -1045,7 +1049,7 @@ class ServiceController extends Zend_Controller_Action
             $output->$resourceUri = $newProperties;
         } else {
             // empty sparql results -> start with a plain resource
-            if ($workingMode == 'class') {
+            if ($workingMode == 'class' || $workingMode =='clone') {
                 // for classes, add the rdf:type property
                 $value               = new stdClass();
                 $value->value        = $parameter;
