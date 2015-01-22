@@ -240,3 +240,6 @@ Last changes for;Letzte Änderungen für
 resource;Ressource
 newer changes;Neuere Änderungen
 older changes;Ältere Ánderungen
+
+# Feed URLs
+http://amsl.technology/feed/?lang=en;http://amsl.technology/feed/?lang=de
