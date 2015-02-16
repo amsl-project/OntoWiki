@@ -35,14 +35,18 @@ class SortpropertiesPlugin extends OntoWiki_Plugin
                     $order = array();
 
                     foreach ($result as $v) {
-                        $order[$v['p']] = $v['o'];
+                        if (isset($order[$v['p']])) {
+                            $order[$v['p']] = min($order[$v['p']], $v['o']);
+                        } else {
+                            $order[$v['p']] = $v['o'];
+                        }
                     }
 
                     $predicateOrder = array();
 
                     foreach (array_keys($predicates) as $predicate) {
                         if (array_key_exists($predicate, $order)) {
-                            $predicateOrder[] = (int)$order[$predicate];
+                            $predicateOrder[] = (int)$order[$predicate] ;
                         } else {
                             $predicateOrder[] = 0;
                         }
@@ -50,6 +54,8 @@ class SortpropertiesPlugin extends OntoWiki_Plugin
 
                     array_multisort($predicateOrder, SORT_DESC, SORT_NUMERIC, $predicates);
                     $data[$graphUri] = $predicates;
+
+
 
                 }
 
