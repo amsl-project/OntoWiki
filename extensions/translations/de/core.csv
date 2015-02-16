@@ -3,6 +3,9 @@
 # Encoding:  UTF-8
 # Separator: ;
 #
+
+http://amsl.technology/feed/?lang=en;http://amsl.technology/feed/?lang=de
+
 Back;Zurück
 Submit;Absenden
 Cancel;Abbrechen
@@ -13,6 +16,7 @@ Edit Properties;Eigenschaften bearbeiten
 Add Property;Eigenschaft hinzufügen
 Rendered in %1$d microseconds using %2$d SPARQL queries.;Gerendert in %1$d Mikrosekunden mit %2$d SPARQL-Anfragen.
 more;mehr
+
 
 moments ago;gerade eben
 approx. 1 minute ago;vor einer Minute
@@ -64,6 +68,7 @@ Source;Quellcode
 by;von
 Objects;Objekte
 Subjects;Subjekte
+Model info;Info Wissensbasis
 
 
 # Komponenten
@@ -141,6 +146,7 @@ Create Instance;Instantiieren
 Create Subclass;Unterklasse erstellen
 
 Select Knowledge Base;Wissensbasis auswählen
+View as Resource;Als Ressource anzeigen
 Configure Knowledge Base;Wissensbasis konfigurieren
 Add Data to Knowledge Base;Daten zur Wissensbasis hinzufügen
 Export Knowledge Base as RDF/XML;Wissensbasis als RDF/XML exportieren
@@ -149,6 +155,7 @@ Export Knowledge Base as RDF/N3;Wissensbasis als RDF/N3 exportieren
 Export Knowledge Base as RDF/JSON (Talis);Wissensbasis als RDF/JSON (Talis) exportieren
 Export Knowledge Base as Turtle;Wissensbasis als Turtle exportieren
 Export Knowledge Base as Notation 3;Wissensbasis als N3 exportieren
+Export Knowledge Base as N-Triples;Wissensbasis als N-Triples exportieren
 Delete Knowledge Base;Wissensbasis löschen
 
 Toggle show Permalink;Permalink anzeigen/verstecken
@@ -214,6 +221,8 @@ Reset Navigation;Navigation zurücksetzen
 Add Resource here;Ressource hier anlegen
 Show Hidden Elements;Versteckte Ressourcen einblenden
 Hide Hidden Elements;Versteckte Ressourcen ausblenden
+By order property;Nach Ordnungseigenschaft
+By Label;Nach Bezeichnung
 
 # filter extension
 Toggle help; Hilfe (de)aktivieren
@@ -240,3 +249,5 @@ Last changes for;Letzte Änderungen für
 resource;Ressource
 newer changes;Neuere Änderungen
 older changes;Ältere Ánderungen
+
+
