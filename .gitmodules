@@ -28,6 +28,3 @@
 [submodule "extensions/listexporter"]
 	path = extensions/listexporter
 	url = https://github.com/amsl-project/listexporter.ontowiki.git
-[submodule "import"]
-	path = import
-	url = https://github.com/amsl-project/demo-graphs.git

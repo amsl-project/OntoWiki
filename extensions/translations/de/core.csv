@@ -4,7 +4,6 @@
 # Separator: ;
 #
 
-http://amsl.technology/feed/?lang=en;http://amsl.technology/feed/?lang=de
 
 Back;Zurück
 Submit;Absenden
@@ -250,4 +249,5 @@ resource;Ressource
 newer changes;Neuere Änderungen
 older changes;Ältere Ánderungen
 
-
+# Feed URLs
+http://amsl.technology/feed/?lang=en;http://amsl.technology/feed/?lang=de
