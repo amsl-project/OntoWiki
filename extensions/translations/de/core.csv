@@ -3,9 +3,6 @@
 # Encoding:  UTF-8
 # Separator: ;
 #
-
-http://amsl.technology/feed/?lang=en;http://amsl.technology/feed/?lang=de
-
 Back;Zurück
 Submit;Absenden
 Cancel;Abbrechen
@@ -16,7 +13,6 @@ Edit Properties;Eigenschaften bearbeiten
 Add Property;Eigenschaft hinzufügen
 Rendered in %1$d microseconds using %2$d SPARQL queries.;Gerendert in %1$d Mikrosekunden mit %2$d SPARQL-Anfragen.
 more;mehr
-
 
 moments ago;gerade eben
 approx. 1 minute ago;vor einer Minute
@@ -250,4 +246,5 @@ resource;Ressource
 newer changes;Neuere Änderungen
 older changes;Ältere Ánderungen
 
-
+# Feed URLs
+http://amsl.technology/feed/?lang=en;http://amsl.technology/feed/?lang=de
