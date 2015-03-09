@@ -31,3 +31,6 @@
 [submodule "extensions/counterimporter"]
 	path = extensions/counterimporter
 	url = https://github.com/amsl-project/counterimporter.ontowiki.git
+[submodule "extensions/jsloader"]
+	path = extensions/jsloader
+	url = https://github.com/amsl-project/jsloader.ontowiki.git
