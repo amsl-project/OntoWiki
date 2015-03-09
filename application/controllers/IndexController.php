@@ -29,7 +29,7 @@ class IndexController extends OntoWiki_Controller_Base
         $version = $this->_config->version;
         // try reading
         try {
-            $url = 'http://amsl.technology/feed/?lang=de'
+            $url = 'http://amsl.technology/feed/?lang=en'
                 . $version->label
                 . '&version='
                 . $version->number
@@ -84,15 +84,11 @@ class IndexController extends OntoWiki_Controller_Base
         $owFeed  = null;
         $version = $this->_config->version;
 
+        $translate = OntoWiki::getInstance()->translate;
         $this->view->placeholder('main.window.title')->set('News');
 
-        try {
-            $url = 'http://amsl.technology/feed/?lang=de'
-                . urlencode($version->label)
-                . '&version='
-                . urlencode($version->number)
-                . '&suffix='
-                . urlencode($version->suffix);
+            try {
+            $url = $translate->translate('http://amsl.technology/feed/?lang=en');
 
             $owFeed = Zend_Feed::import($url);
 
