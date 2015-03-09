@@ -28,3 +28,6 @@
 [submodule "extensions/listexporter"]
 	path = extensions/listexporter
 	url = https://github.com/amsl-project/listexporter.ontowiki.git
+[submodule "extensions/counterimporter"]
+	path = extensions/counterimporter
+	url = https://github.com/amsl-project/counterimporter.ontowiki.git
