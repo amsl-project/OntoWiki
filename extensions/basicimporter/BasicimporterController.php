@@ -212,8 +212,11 @@ class BasicimporterController extends OntoWiki_Controller_Component
             // stopping versioning action
             $versioning->endAction();
 
-			// Trigger Reindex
-            $indexEvent = new Erfurt_Event('onFullreindexAction');
+            /**
+             * Trigger Reindex
+             **/
+            $indexEvent             = new Erfurt_Event('onReindexAction');
+            $indexEvent->model      = $modelIri;
             $indexEvent->trigger();
 
         } catch (Erfurt_Exception $e) {
