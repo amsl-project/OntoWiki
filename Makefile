@@ -34,7 +34,7 @@ help:
 	@echo "     pull ....................... 'git pull' for all repos"
 	@echo "     fetch ...................... 'git fetch' for all repos"
 	@echo "     fetch-all .................. 'git fetch --all', i.e. fetch all repos on all remotes"
-	@echo "     add-upstream ............... Adds standard AKSW git repo as remote/upstream"
+	@echo "     add-upstream ............... Adds standard amsl-project git repo as remote/upstream"
 	@echo "     status ..................... 'git status' for all repos"
 	@echo "     branch-check ............... 'git rev-parse' for all repos"
 	@echo "     clean ...................... Deletes all log and cache files"
@@ -108,14 +108,14 @@ libraries: zend submodules-developer
 
 submodules: # read-only
 	git submodule init
-	git config submodule.libraries/Erfurt.url "https://github.com/AKSW/Erfurt.git"
-	git config submodule.libraries/RDFauthor.url "https://github.com/AKSW/RDFauthor.git"
+	git config submodule.libraries/Erfurt.url "https://github.com/amsl-project/Erfurt.git"
+	git config submodule.libraries/RDFauthor.url "https://github.com/amsl-project/RDFauthor.git"
 	git submodule update
 
 submodules-developer: # read-write
 	git submodule init
-	git config submodule.libraries/Erfurt.url "git@github.com:AKSW/Erfurt.git"
-	git config submodule.libraries/RDFauthor.url "git@github.com:AKSW/RDFauthor.git"
+	git config submodule.libraries/Erfurt.url "git@github.com:amsl-project/Erfurt.git"
+	git config submodule.libraries/RDFauthor.url "git@github.com:amsl-project/RDFauthor.git"
 	git submodule update
 
 # developer targets
@@ -135,7 +135,7 @@ fetch-all:
 	git submodule foreach git fetch --all
 
 add-upstream:
-	git remote add upstream git://github.com/AKSW/OntoWiki.git
+	git remote add upstream git://github.com/amsl-project/OntoWiki.git
 
 info:
 	@git --no-pager log -1 --oneline --decorate
@@ -172,7 +172,7 @@ zend2:
 rdfauthor:
 	rm -rf libraries/RDFauthor
 	@echo 'Cloning RDFauthor into libraries/RDFauthor ...'
-	git clone git@github.com:AKSW/RDFauthor.git libraries/RDFauthor
+	git clone git@github.com:amsl-project/RDFauthor.git libraries/RDFauthor
 
 # test stuff
 
@@ -229,7 +229,7 @@ install-test-environment:
 erfurt@:
 	rm -rf libraries/Erfurt
 	@echo 'Cloning Erfurt into libraries/Erfurt ...'
-	git clone git@github.com:AKSW/Erfurt.git libraries/Erfurt
+	git clone git@github.com:amsl-project/Erfurt.git libraries/Erfurt
 
 odbctest:
 	@application/scripts/odbctest.php
