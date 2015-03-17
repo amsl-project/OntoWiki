@@ -130,6 +130,11 @@ class ModellistModule extends OntoWiki_Module
             $models[] = $temp;
         }
 
+        // sort KnowledgeBases/models by label
+        usort($models, function($a, $b) {
+            return strcasecmp($a["label"], $b["label"]);
+        });
+
         $content = $this->render('modellist', $models, 'models');
 
         return $content;
