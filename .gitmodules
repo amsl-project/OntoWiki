@@ -34,3 +34,6 @@
 [submodule "extensions/files"]
 	path = extensions/files
 	url = https://github.com/amsl-project/files.ontowiki.git
+[submodule "extensions/linkandcreate"]
+	path = extensions/linkandcreate
+	url = https://github.com/amsl-project/linkandcreate.ontowiki.git
