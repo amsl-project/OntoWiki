@@ -32,7 +32,8 @@
       :config "Amsl-Classes" ;
       :limit "12" ;
       :checkTypes "true"^^xsd:boolean ;
-      :showMenu "true"^^xsd:boolean
+      :showMenu "true"^^xsd:boolean ;
+      :orderUri <http://ns.ontowiki.net/SysOnt/order>
 ];
  owconfig:config [
       a owconfig:Config;
