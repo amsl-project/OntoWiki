@@ -275,7 +275,7 @@
       rdfs:label "Amsl-Classes" ;
       :titleMode "titleHelper" ;
       :cache "false"^^xsd:boolean ;
-      :hierarchyTypes (<http://vocab.ub.uni-leipzig.de/amsl/Class>) ;
+      :hierarchyTypes (<http://vocab.ub.uni-leipzig.de/terms/Class>) ;
       :hiddenNS (
         <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
         <http://www.w3.org/2000/01/rdf-schema#>
