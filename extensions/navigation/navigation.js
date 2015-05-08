@@ -58,10 +58,6 @@
             // the limit
             var limit = navigationConfig.defaults.limit;
 
-            // sorting
-            var defaultOrderUri = navigationConfig.defaults.orderUri;
-
-
             // set the state
             var state = {};
             state.limit = limit;
@@ -72,13 +68,12 @@
             setup = navigationSetup;
         }
 
-        // sort
-        if (typeof defaultOrderUri === 'undefined' || defaultOrderUri === '') {
-            setup.state.sorting = 'http://www.w3.org/2000/01/rdf-schema#label';
-        } else {
+        // sorting
+        var defaultOrderUri = navigationConfig.defaults.orderUri;
+
+        if (typeof defaultOrderUri !== 'undefined' || defaultOrderUri !== '') {
             setup.state.sorting = defaultOrderUri;
         }
-
 
         // delete old search string
         delete(setup.state.searchString);
