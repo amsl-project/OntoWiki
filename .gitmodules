@@ -34,3 +34,6 @@
 [submodule "extensions/jsloader"]
 	path = extensions/jsloader
 	url = https://github.com/amsl-project/jsloader.ontowiki.git
+[submodule "extensions/statements"]
+	path = extensions/statements
+	url = https://github.com/amsl-project/statements.ontowiki.git
