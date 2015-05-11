@@ -68,6 +68,13 @@
             setup = navigationSetup;
         }
 
+        // sorting
+        var defaultOrderUri = navigationConfig.defaults.orderUri;
+
+        if (typeof defaultOrderUri !== 'undefined' || defaultOrderUri !== '') {
+            setup.state.sorting = defaultOrderUri;
+        }
+
         // delete old search string
         delete(setup.state.searchString);
 

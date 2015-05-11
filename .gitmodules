@@ -22,9 +22,6 @@
 [submodule "extensions/fulltextsearch"]
 	path = extensions/fulltextsearch
 	url = https://github.com/amsl-project/fulltextsearch.ontowiki.git
-[submodule "extensions/files"]
-	path = extensions/files
-	url = https://github.com/AKSW/files.ontowiki.git
 [submodule "extensions/listexporter"]
 	path = extensions/listexporter
 	url = https://github.com/amsl-project/listexporter.ontowiki.git
@@ -37,3 +34,9 @@
 [submodule "extensions/statements"]
 	path = extensions/statements
 	url = https://github.com/amsl-project/statements.ontowiki.git
+[submodule "extensions/files"]
+	path = extensions/files
+	url = https://github.com/amsl-project/files.ontowiki.git
+[submodule "extensions/linkandcreate"]
+	path = extensions/linkandcreate
+	url = https://github.com/amsl-project/linkandcreate.ontowiki.git
