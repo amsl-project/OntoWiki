@@ -293,7 +293,7 @@ class OntoWiki_Menu_Registry
 
             $modelMenu->appendEntry(
                 'Delete Knowledge Base',
-                (string)$url
+                "javascript:deleteModelDialog('$url')"
             );
         }
 

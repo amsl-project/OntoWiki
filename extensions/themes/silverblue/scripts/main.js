@@ -1,5 +1,5 @@
 /**
- * 
+ *
  * @copyright Copyright (c) 2014, {@link http://aksw.org AKSW}
  * @license   http://opensource.org/licenses/gpl-license.php GNU General Public License (GPL)
  */
@@ -41,14 +41,14 @@ $(document).ready(function() {
                     //a - 97 - add property - A - 65
                     case 65 : $('.property-add').trigger('click'); break;
                     //s - 115 - save S - 83
-                    case 83 : if ($('.edit-enable').hasClass('active')) { 
-                                   $('.edit.save').trigger('click'); 
-                               }; 
+                    case 83 : if ($('.edit-enable').hasClass('active')) {
+                                   $('.edit.save').trigger('click');
+                               };
                                break;
                     //c  - 99 - cancel C - 67
-                    case 67 : if ($('.edit-enable').hasClass('active')) { 
-                                  $('.edit.cancel').trigger('click'); 
-                              }; 
+                    case 67 : if ($('.edit-enable').hasClass('active')) {
+                                  $('.edit.cancel').trigger('click');
+                              };
                               break;
                     //l - 108 - clone L - 76
                     case 76 : $('.clone-resource').trigger('click'); break;
@@ -103,28 +103,28 @@ $(document).ready(function() {
         $('.contextmenu-enhanced .contextmenu').fadeOut(effectTime, function(){$(this).remove();})
         $('.marked').removeClass('marked');
     });
-    
+
     // add section resizer
     $('.section-sidewindows').append('<span class="resizer-horizontal"></span>');
-    
+
     // give it a nice (non-standard) cursor
     if ($.browser.safari) {
         $('.resizer-horizontal').css('cursor', 'col-resize');
     } else if ($.browser.mozilla) {
         $('.resizer-horizontal').css('cursor', 'ew-resize');
     }
-    
+
     // make resizer draggable
     // draggables need an explicit (inline) position
     $('.section-sidewindows .resizer-horizontal')
         .css('position', 'absolute')
         .draggable({
-            axis: 'x', 
-            zIndex: dragZIndex,  
-            cursor: 'move', 
+            axis: 'x',
+            zIndex: dragZIndex,
+            cursor: 'move',
             start: function(event, ui) {
                 $('.section-sidewindows .resizer-horizontal').addClass('dragging');
-            }, 
+            },
             stop: function(event, ui) {
                 var resizerWidth = $('.section-sidewindows .resizer-horizontal').width();
                 var sectionRatioPercent = Math.round((((event.originalEvent.pageX) / $(document).width())) * 1000) * 0.1;
@@ -135,7 +135,7 @@ $(document).ready(function() {
                 $('.section-sidewindows').css('position', 'absolute');
                 $('.section-sidewindows .resizer-horizontal').removeClass('dragging');
             }});
-    
+
     // resize separator when all ajax crap is loaded
     window.setTimeout(function () {
         $('.section-sidewindows .resizer-horizontal').height(
@@ -242,30 +242,30 @@ $(document).ready(function() {
             }
         })
     })
-    
+
     /* end: list selection */
-    
+
     // inner labels
     $('input.inner-label').innerLabel().blur();
-    
+
     // prefix preserving inputs
     $('input.prefix-value').prefixValue();
-    
+
     $('.editable').makeEditable();
-    
+
     // autosubmit
     $('a.submit').click(function() {
         // submit all forms inside this submit button's parent window
         var formName = $(this).attr('id');
         var formSpec = formName ? '[name=' + formName + ']' : '';
-        
+
         $(this).parents('.window').eq(0).find('form' + formSpec).each(function() {
             if ($(this).hasClass('ajaxForm')) {
                 // submit asynchronously
                 var actionUrl = $(this).attr('action');
                 var method    = $(this).attr('method');
                 var data      = $(this).serialize();
-                
+
                 if ($(this).hasClass('reloadOnSuccess')) {
                     var mainContent = $(this).parents('.content.has-innerwindows').eq(0).children('.innercontent');
                     var onSuccess = function() {
@@ -278,7 +278,7 @@ $(document).ready(function() {
                 } else {
                     $.get(actionUrl, data, onSuccess);
                 }
-                
+
                 this.reset();
             } else {
                 // submit normally
@@ -286,7 +286,7 @@ $(document).ready(function() {
             }
         })
     });
-    
+
     /*
      *  simulate Safari behaviour for other browsers
      *  on return/enter, submit the form
@@ -297,7 +297,7 @@ $(document).ready(function() {
             $(this).parents('form').submit();
         }
     });
-    
+
     /*
      *  on press enter, this type of textbox looses focus and gives it to the next element of the same type
      */
@@ -314,11 +314,11 @@ $(document).ready(function() {
                 var next2 = me.parent().next().find('>'+meType+':first')
                 if (next2.length != 0){
                     next2.focus();
-                } 
-            } 
+                }
+            }
         }
     });
-    
+
     // autosubmit
     $('a.reset').click(function() {
         // reset all forms inside this submit button's parent window
@@ -353,13 +353,13 @@ $(document).ready(function() {
             // javascript variable.
             createInstanceFromClassURI($('#filterbox a').attr('about'));
         }
-        
+
     });
 
     $('.edit.save').click(function() {
         RDFauthor.commit();
     });
-    
+
     $('.edit.cancel').click(function() {
         // reload page
         window.location.href = window.location.href;
@@ -368,14 +368,14 @@ $(document).ready(function() {
         // mainInnerContent.load(document.URL);
         // $('.edit-enable').click();
     });
-    
+
 //    $('.icon-edit').click(function() {return editProperty(this)});
-    
+
     // disable inline-editing for not readable models
     if (typeof selectedGraph !== 'undefined' && !selectedGraph.editable) {
         $('.icon-edit').closest('a').remove();
     }
-    
+
     // edit mode
     $('.edit-enable').click(function() {
         var button = this;
@@ -403,45 +403,45 @@ $(document).ready(function() {
                             $(this).fadeOut(effectTime);
                         });
                         $('.edit-enable').removeClass('active');
-                        
+
                         // HACK: reload whole page after 1000 ms
                         /*
                         window.setTimeout(function () {
                             window.location.href = window.location.href;
                         }, 500);
                         */
-                    }, 
+                    },
                     onCancel: function () {
                         $('.edit').each(function() {
                             $(this).fadeOut(effectTime);
                         });
                         $('.edit-enable').removeClass('active');
-                    }, 
-                    saveButtonTitle: 'Save Changes', 
-                    cancelButtonTitle: 'Cancel', 
+                    },
+                    saveButtonTitle: 'Save Changes',
+                    cancelButtonTitle: 'Cancel',
                     title: $('.section-mainwindows .window').eq(0).children('.title').eq(0).text(),
                     loadOwStylesheet: false,
                     viewOptions: {
                         // no statements needs popover
-                        type: $('.section-mainwindows table.Resource').length ? RDFAUTHOR_VIEW_MODE : 'popover', 
+                        type: $('.section-mainwindows table.Resource').length ? RDFAUTHOR_VIEW_MODE : 'popover',
                         container: function (statement) {
                             var element = RDFauthor.elementForStatement(statement);
                             var parent  = $(element).closest('div');
-                            
+
                             if (!parent.hasClass('ontowiki-processed')) {
                                 parent.children().each(function () {
                                     $(this).hide();
                                 });
                                 parent.addClass('ontowiki-processed');
                             }
-                            
+
                             return parent.get(0);
                         }
                     }
                 });
-                
+
                 RDFauthor.start();
-                
+
                 $('.edit').each(function() {
                     $(this).fadeIn(effectTime, function() {
                         $(button).addClass('active');
@@ -476,14 +476,14 @@ $(document).ready(function() {
                 // get default resource uri for subjects in added statements (issue 673)
                 // grab first object key
                 for (var subjectUri in data) {break;};
-                
+
                 populateRDFauthor(data, true, subjectUri, selectedGraph.URI);
-                
+
                 RDFauthor.setOptions({
                     saveButtonTitle: 'Create Resource',
                     cancelButtonTitle: 'Cancel',
-                    title: 'Create New Resource by Cloning ' + selectedResource.title,  
-                    autoParse: false, 
+                    title: 'Create New Resource by Cloning ' + selectedResource.title,
+                    autoParse: false,
                     showPropertyButton: true,
                     loadOwStylesheet: false,
                     addPropertyValues: addPropertyValues,
@@ -510,12 +510,12 @@ $(document).ready(function() {
                 }
                 options.workingMode = 'clone';
                 RDFauthor.start(null, options);
-                
+
                 RDFauthor.start();
             });
         });
     })
-    
+
     // add property
     $('.property-add').click(function() {
         if(typeof(RDFauthor) === 'undefined' || ((typeof(RDFAUTHOR_STATUS) != 'undefined') && (RDFAUTHOR_STATUS === 'inactive'))) {
@@ -539,31 +539,31 @@ $(document).ready(function() {
                             window.location.href = window.location.href;
                         }, 500);
                         */
-                    }, 
+                    },
                     onCancel: function () {
                         $('.edit').each(function() {
                             $(this).fadeOut(effectTime);
                         });
                         $('.edit-enable').removeClass('active');
-                    }, 
-                    saveButtonTitle: 'Save Changes', 
+                    },
+                    saveButtonTitle: 'Save Changes',
                     cancelButtonTitle: 'Cancel',
                     loadOwStylesheet: false,
-                    title: $('.section-mainwindows .window').eq(0).children('.title').eq(0).text(), 
+                    title: $('.section-mainwindows .window').eq(0).children('.title').eq(0).text(),
                     viewOptions: {
                         // no statements needs popover
-                        type: $('.section-mainwindows table.Resource').length ? RDFAUTHOR_VIEW_MODE : 'popover', 
+                        type: $('.section-mainwindows table.Resource').length ? RDFAUTHOR_VIEW_MODE : 'popover',
                         container: function (statement) {
                             var element = RDFauthor.elementForStatement(statement);
                             var parent  = $(element).closest('div');
-                            
+
                             if (!parent.hasClass('ontowiki-processed')) {
                                 parent.children().each(function () {
                                     $(this).hide();
                                 });
                                 parent.addClass('ontowiki-processed');
                             }
-                            
+
                             return parent.get(0);
                         }
                     }
@@ -576,15 +576,15 @@ $(document).ready(function() {
         } else {
             addProperty();
         }
-        
+
     });
-    
+
     $('.tabs').children('li').children('a').click(function() {
         var url = $(this).attr('href');
-        
+
         $(this).parents('.tabs').children('li').removeClass('active');
         $(this).parent('li').addClass('active');
-                
+
         if (url.match(/#/)) {
             var wnd = $(this).parents('.window').eq(0);
             wnd.children('div').children('.content').removeClass('active-tab-content');
@@ -594,7 +594,7 @@ $(document).ready(function() {
             return true;
         }
     });
-    
+
     // box display/hide    
     // $('.toggle-module-display').click(function() {
     //     var module = $('.window#' + $(this).attr('id').replace('toggle-', ''));
@@ -613,26 +613,26 @@ $(document).ready(function() {
     //         }
     //     }
     // })
-    
-    
+
+
     // make sidebar windows sortable
 /*    if ($('.section-sidewindows .window').length) {
         $('.section-sidewindows .window .title').css('cursor', 'move');
         $('.section-sidewindows').sortable({
-            items: '.window', 
-            handle: '.title', 
-            // containment: 'parent', 
-            opacity: 0.8, 
-            axis: 'y', 
-            cursor: 'move', 
-            revert: true, 
+            items: '.window',
+            handle: '.title',
+            // containment: 'parent',
+            opacity: 0.8,
+            axis: 'y',
+            cursor: 'move',
+            revert: true,
             start: function(event, ui) {
                 ui.helper.css('width', $('.section-sidewindows .window').eq(0).width() + 'px');
                 ui.helper.css('margin-left', '0');
-            }, 
+            },
             update: function() {
                 var moduleOrder = $('.section-sidewindows').sortable('serialize', {
-                    expression: '(.*)', 
+                    expression: '(.*)',
                     key: 'value'
                 });
                 sessionStore('moduleOrder', moduleOrder, {encode: false, namespace: 'Module_Registry'});
@@ -642,7 +642,7 @@ $(document).ready(function() {
         $('.section-sidewindows').css('position', 'absolute');
     }
 */
-    
+
     // make tabs sortable
     // if ($('#tabs').children().length) {
     //     $('#tabs').sortable({
@@ -659,18 +659,18 @@ $(document).ready(function() {
     //         }
     //     });
     // }
-    
+
     // inline widgets
     // $('.inline-edit-local').live('click', function() {
     //     RDFauthor.startInline($(this).closest('.editable').get(0));
     // });
-    
+
     $('.hidden').hide();
-    
+
     //-------------------------------------------------------------------------
     //---- liveQuery triggers
     //-------------------------------------------------------------------------
-    
+
     // expandables
     $('.expandable').livequery(function() {
         $(this).expandable();
@@ -695,17 +695,17 @@ $(document).ready(function() {
     $('*[resource]').livequery(function() {
         $(this).addClass('Resource');
     });
-    
-    
+
+
     var liveSearchMinChars = 3;
     var liveSearchTimeout  = 250; // ms
     var count = 0;
-    
+
     // live-search
     $('input.live-search').livequery('keyup', function() {
         var localCount = ++count;
         var searchInput = $(this);
-        
+
         window.setTimeout(function() {
             // no more input, so do something
             if (count == localCount) {
@@ -720,16 +720,16 @@ $(document).ready(function() {
                     // load normal hierarchy
                     $(searchInput).parents('.content').children('ul').fadeIn(effectTime);
                     $(searchInput).parents('.content').children('.messagebox').remove();
-                }                
+                }
             }
         }, liveSearchTimeout);
     });
-    
+
     /* RESOURCE CONTEXT MENUS */
     $('.has-contextmenus-block .Resource').livequery(function() {
         $(this).append('<span class="button"></span>');
     });
-    
+
     $('.has-contextmenus-block .Resource span.button').livequery(function() {
         $(this).mouseover(function() {
             hideHref($(this).parent());
@@ -741,12 +741,12 @@ $(document).ready(function() {
             showHref($(this).parent())
         });
     });
-    
+
     var loadChildren = function(li) {
         var ul;
         var a   = $(li).children('.hierarchy-toggle');
         var uri = $(li).children('.has-children').attr('about');
-        
+
         var toggleDisplay = function(ul) {
             if (ul.css('display') != 'none') {
                 ul.slideUp(effectTime, function() {
@@ -760,7 +760,7 @@ $(document).ready(function() {
                 });
             }
         }
-        
+
         var serviceUrl = urlBase + 'service/hierarchy?entry=' + encodeURIComponent(uri);
         $.get(serviceUrl, function(data) {
             ul = $(data);
@@ -769,19 +769,19 @@ $(document).ready(function() {
             toggleDisplay(ul);
         })
     }
-    
+
     $('ul .hierarchy .has-children').livequery(function() {
         // is open and should have children but has none
         if ($(this).prev('.hierarchy-toggle').hasClass('open') && $(this).parent().children('ul').length < 1) {
             loadChildren($(this).parent());
         }
     });
-    
+
     $('.hierarchy-toggle').livequery('click', function(event) {
         var ul;
         var a   = $(this);
         var uri = a.next().attr('about');
-        
+
         var toggleDisplay = function(ul) {
             if (ul.css('display') != 'none') {
                 ul.slideUp(effectTime, function() {
@@ -795,7 +795,7 @@ $(document).ready(function() {
                 });
             }
         }
-        
+
         if ($(this).parent('li').children('ul').length < 1) {
             // TODO: Ajax
             var serviceUrl = urlBase + 'service/hierarchy?entry=' + encodeURIComponent(uri);
@@ -809,23 +809,52 @@ $(document).ready(function() {
             ul = a.parent('li').children('ul');
             toggleDisplay(ul);
         }
-        
+
         event.stopPropagation();
     })
-    
+
     $('tbody a.toggle').live('click', function() {
         $(this).closest('tbody').toggleClass('closed');
     })
-    
+
     // site is ready, processing is finished
     $('body').removeClass('is-processing');
 
     // enhance every window with buttons, menu and resizer
     // this must be done at the end of the onready block (because we generate the menu automatically)
     $('.window').enhanceWindow();
-    
+
     // adjust neede space for clickmenu
     $('.window div.cmDiv').adjustClickMenu();
-    
+
 }) // $(document).ready
+
+
+
+function deleteModelDialog(url) {
+    $("#dialog-delete-model").dialog({
+        resizable: false,
+        modal: true,
+        buttons: [
+            {
+                text: _translate('Delete'),
+                click: function () {
+                    $(this).dialog("close");
+                    $.ajax({
+                        url: url,
+                        success: function (result) {
+                            $(location).attr('href',urlBase);
+                        }
+                    });
+                }
+            },
+            {
+                text: _translate('Cancel'),
+                click: function() {
+                    $(this).dialog("close");
+                }
+            }
+        ]
+    });
+}
 
