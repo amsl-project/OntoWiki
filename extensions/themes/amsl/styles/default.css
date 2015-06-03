@@ -2742,3 +2742,7 @@ div.contextmenu-enhanced .contextmenu
 .marked, tr.list-selected td, .selected, tr.marked td {
     color: #FFF !important;
 }
+
+.hidden-dialog {
+    display: none;
+}
