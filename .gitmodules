@@ -40,3 +40,6 @@
 [submodule "extensions/linkandcreate"]
 	path = extensions/linkandcreate
 	url = https://github.com/amsl-project/linkandcreate.ontowiki.git
+[submodule "sample-data"]
+	path = sample-data
+	url = https://github.com/amsl-project/sample-data.git
