@@ -319,3 +319,8 @@ endif
 
 list-events:
 	@grep -R "new Erfurt_Event" * 2> /dev/null | sed "s/.*new Erfurt_Event('//;s/');.*//" | sort -u
+
+data-init:
+	sh -c "$(PWD)/application/scripts/clean.sh"
+	sh -c "$(PWD)/application/scripts/init.sh $(PWD)"
+
