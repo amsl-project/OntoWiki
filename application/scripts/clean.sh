@@ -9,7 +9,6 @@ if [ $# == 1 ]; then
 fi
 mkdir /tmp/clean_$SESSION
 chmod -R 777 /tmp/clean_$SESSION
-IFS=' '  read -r ISQL_PROG virt_user virt_pw <<< "`exec virtuoso.sh`"
 curl -L "http://localhost:8890/sparql" --data-urlencode "default-graph-uri=" --data-urlencode "query=SELECT DISTINCT ?g WHERE { GRAPH ?g { ?s a ?p}}" --data-urlencode "format=text/csv" | sed "s/\"//g" | sed 1D | sort >/tmp/clean_$SESSION/graphs.lst
 
 while read GRAPH
@@ -22,5 +21,7 @@ do
         DELETE=$DELETE"SPARQL DROP GRAPH <$GRAPH>;"
     fi
 done < /tmp/clean_$SESSION/graphs.lst
-IFS=' '  read -r ISQL_PROG virt_user virt_pw <<< "`exec ./virtuoso.sh`"
+echo $OWPATH
+IFS=' '  read -r ISQL_PROG virt_user virt_pw <<< "`exec $OWPATH/application/scripts/virtuoso.sh $OWPATH`"
+echo "$ISQL_PROG -U $virt_user -P $virt_pw"
 eval "$ISQL_PROG -U $virt_user -P $virt_pw exec=\"$DELETE\""
