@@ -322,7 +322,7 @@ list-events:
 
 make update:
 	git fetch --all
-	git checkout origin master
+	git checkout origin/develop
 	git submodule init
 	git submodule sync
 	git submodule update
