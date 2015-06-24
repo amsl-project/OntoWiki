@@ -320,16 +320,23 @@ endif
 list-events:
 	@grep -R "new Erfurt_Event" * 2> /dev/null | sed "s/.*new Erfurt_Event('//;s/');.*//" | sort -u
 
-make update:
+make amsl-update:
 	git fetch --all
 	git checkout origin/develop
 	git submodule init
 	git submodule sync
 	git submodule update
-	sh -c "$(PWD)/application/scripts/vocab.sh $(PWD)"
 
 data-init:
 	sh -c "$(PWD)/application/scripts/clean.sh $(PWD)"
 	sh -c "$(PWD)/application/scripts/init.sh $(PWD)"
 	sh -c "$(PWD)/application/scripts/vocab.sh $(PWD)"
 
+clean-virtuoso:
+	sh -c "$(PWD)/application/scripts/clean.sh $(PWD)"
+
+amsl-vocab:
+	sh -c "$(PWD)/application/scripts/vocab.sh $(PWD)"
+
+export-virtuoso:
+	sh -c "$(PWD)/application/scripts/export.sh $(PWD)"
