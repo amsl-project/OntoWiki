@@ -43,3 +43,6 @@
 [submodule "sample-data"]
 	path = sample-data
 	url = https://github.com/amsl-project/sample-data.git
+[submodule "extensions/jobcenter"]
+	path = extensions/jobcenter
+	url = git@github.com:amsl-project/jobcenter.ontowiki.git
