@@ -4,9 +4,6 @@
 [submodule "libraries/Erfurt"]
 	path = libraries/Erfurt
 	url = https://github.com/amsl-project/Erfurt.git
-[submodule "extensions/template"]
-	path = extensions/template
-	url = https://github.com/AKSW/template.ontowiki.git
 [submodule "extensions/contextinfo"]
 	path = extensions/contextinfo
 	url = https://github.com/AKSW/contextinfo.ontowiki.git
