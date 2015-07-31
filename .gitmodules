@@ -43,3 +43,6 @@
 [submodule "extensions/template"]
 	path = extensions/template
 	url = https://github.com/amsl-project/template.ontowiki.git
+[submodule "extensions/deadlinehelper"]
+	path = extensions/deadlinehelper
+	url = https://github.com/amsl-project/deadlinehelper.ontowiki.git
