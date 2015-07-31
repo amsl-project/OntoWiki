@@ -43,3 +43,6 @@
 [submodule "extensions/jobcenter"]
 	path = extensions/jobcenter
 	url = https://github.com/amsl-project/jobcenter.ontowiki.git
+[submodule "extensions/template"]
+	path = extensions/template
+	url = https://github.com/amsl-project/template.ontowiki.git
