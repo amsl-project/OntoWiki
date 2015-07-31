@@ -10,9 +10,6 @@
 [submodule "extensions/imagehelper"]
 	path = extensions/imagehelper
 	url = https://github.com/AKSW/imagehelper.ontowiki.git
-[submodule "extensions/deadlinehelper"]
-	path = extensions/deadlinehelper
-	url = https://github.com/AKSW/deadlinehelper.ontowiki.git
 [submodule "extensions/issnimporter"]
 	path = extensions/issnimporter
 	url = https://github.com/amsl-project/issnimporter.ontowiki.git
