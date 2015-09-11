@@ -132,11 +132,24 @@ Model URI;Modell-URI
 Create an Empty Knowledge Base;Eine leere Wissensbasis anlegen
 Base URI;Basis-URI
 Type;Typ
-Import From the Web;Aus dem WWW importieren
+Import From the Web;Aus dem Web importieren
 Upload a File;Eine Datei hochladen
 File Type;Dateityp
 File (max. %1$sB);Datei (max. %1$sB)
 Paste Source;Quelltext eingeben
+Import an RDF resource from the web;RDF-Ressource aus dem Web importieren
+Tries to fetch a graph from the web.;Versucht einen Graphen aus dem Web abzurufen
+Upload an RDF Dump;RDF-Dump hochladen
+Parse and import turtle, ntriples, rdfxml and other dumps.;Importiert Turtle, Ntriples, RDF/XML und andere Dumps.
+Parses and import turtle, ntriples and rdfxml import from a textfield.;Importiert Turtle, Ntriples, RDF/XML aus einem Textfeld.
+Import a titlelist with csv upload;Titelliste über den CSV-Upload importieren
+Imports a CSV file title list of different formatting (e.g. KBART).;Importiert eine CSV-Titelliste unterschiedlicher Formatierung (u. a. KBART).
+Add Data;Daten hinzufügen
+Data import actions;Datenimporte
+Please use one of these options to import data from various sources or with different tranformations:;Bitte wählen Sie eine der folgenden Möglichkeiten, um Daten aus verschiedenen Quellen zu importieren:
+;
+;
+;
 Source Code;Quelltext
 Enter the URL where the model should be downloaded from. If you leave the field empty the model URI will be used.;Geben Sie die URL zur Modelldatei an. Wenn Sie dieses Feld leer lassen, wird stattdessen die Modell-URI benutzt.
 Location;URL zur Datei

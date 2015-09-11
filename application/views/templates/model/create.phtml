@@ -50,7 +50,7 @@
                 type="radio" class="radio importAction" name="importAction"
                 id="import-<?php echo $key ?>" value="<?php echo $key ?>"
                 <?php echo (isset($action['parameter']) ? $action['parameter'] : '' ) ?>
-                <?php echo (isset($action['description']) ? 'data-desc="' . $action['description'] .'"' : '' ) ?>
+                <?php echo (isset($action['description']) ? 'data-desc="'.$this->_($action['description']).'"' : '' ) ?>
             />
             <?php echo $this->_($action['label']) ?>
         </label>
