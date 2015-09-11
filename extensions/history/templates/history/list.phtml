@@ -42,7 +42,8 @@
         <td class="history-detail"><a><?php echo $this->_('HISTORY_ACTIONTYPE_' . $abschnitt['action_type']); ?></a>
             <div style="display:none;" class="is-processing"><?php echo $abschnitt['id']; ?></div>
         </td>
-        <td> <?php echo $abschnitt['change_reason']; ?> </td>
+       <!-- <td> <?php if(isset($abschnitt['change_reason'])) {echo $abschnitt['change_reason'];} else {echo $this->_('No change reason given.');} ?> </td> -->
+       <td> <?php if(isset($abschnitt['change_reason'])) {echo $abschnitt['change_reason'];}  ?> </td> -->
     </tr>
     <?php endforeach; ?>
                     
