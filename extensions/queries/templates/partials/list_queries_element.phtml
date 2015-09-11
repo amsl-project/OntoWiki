@@ -8,15 +8,15 @@
     <div class="has-contextmenu-area" >
         <h3>
             <span class="name">"<?php echo $entry['name'][0]['value']; ?>"</span>
-            <span class="views">(<?php echo $numViews ?> views)</span>
+            <span class="views">(<?php echo $numViews ?> <?php echo $this->_('views'); ?>)</span>
         </h3>
-        open with:
+        <?php echo $this->_('Open with:'); ?>
 <?php
     //always show link to queryeditor
     $QEurl = new OntoWiki_Url(array('controller' => 'queries', 'action'=>'editor'), array());
     $QEurl->queryUri = $this->instanceUri;
 ?>
-        <a class="minibutton" href="<?php echo $QEurl; ?>">Editor</a>
+        <a class="minibutton" href="<?php echo $QEurl; ?>"><?php echo $this->_('Editor'); ?></a>
 <?php
     //if possible show link to original editor
     if($generator == "qb") {

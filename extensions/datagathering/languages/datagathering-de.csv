@@ -20,23 +20,8 @@ No existing sync configuration. Create one now by clicking the Save button.;Es e
 Sync Configuration;Synchronisations-Konfiguration
 Model URI;Modell-URI
 Wrapper Name;Wrapper-Name
-Resource URI;Ressource URI
+Resource URI;Ressourcen-URI
 Check for Updates;Auf Aktualisierungen prüfen
 Sync Query;Sync-Anfrage
 HISTORY_ACTIONTYPE_1010;Daten importiert
 HISTORY_ACTIONTYPE_1020;Ressource synchonisiert
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-

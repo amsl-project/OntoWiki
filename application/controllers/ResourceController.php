@@ -269,7 +269,11 @@ class ResourceController extends OntoWiki_Controller_Base
         //$list->setOrderProperty('http://ns.ontowiki.net/SysOnt/order');
 
         //begin view building
-        $this->view->placeholder('main.window.title')->set('Resource List');
+        // Set the window title in the appropriate language.
+        $translate   = $this->_owApp->translate;
+        $windowTitle = $translate->_('Resource List');
+        $this->view->placeholder('main.window.title')->set($windowTitle);
+
 
         // rdfauthor on a list is not possible yet
         // TODO: check acl
