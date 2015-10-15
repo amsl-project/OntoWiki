@@ -285,7 +285,7 @@ class OntoWiki_Controller_Plugin_ListSetupHelper extends Zend_Controller_Plugin_
             if (isset($request->limit)) { // how many results per page
                 $list->setLimit($request->limit);
             } else {
-                $list->setLimit(10);
+                $list->setLimit(30);
             }
             if (isset($request->p)) { // p is the page number
                 $list->setOffset(
