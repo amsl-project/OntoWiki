@@ -137,6 +137,13 @@ class LinkinghereModule extends OntoWiki_Module
 
         $this->view->resource   = $this->_owApp->selectedResource;
         $this->view->properties = $properties;
+
+        // sort instances list nicely
+        foreach ($instances as &$instance) {
+            usort($instance, function($a, $b) {
+                return strnatcasecmp($a['title'], $b['title']);
+            });
+        }
         $this->view->instances  = $instances;
 
         if (!$results) {
