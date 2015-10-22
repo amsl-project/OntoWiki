@@ -651,6 +651,9 @@ function resourceURL(resourceURI) {
 function editProperty(event) {
     var element = $.event.fix(event).target;
 
+    $('.toolbar a.save').removeClass('hidden');
+    $('.toolbar a.cancel').removeClass('hidden');
+
     loadRDFauthor(function () {
         RDFauthor.setOptions({
             saveButtonTitle: 'Save Changes', 

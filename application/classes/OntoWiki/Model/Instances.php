@@ -1574,7 +1574,11 @@ class OntoWiki_Model_Instances extends OntoWiki_Model
             $properties[] = array('uri' => $row['resourceUri']['value']);
         }
 
-        return $this->convertProperties($properties);
+        $convertedProperties = $this->convertProperties($properties);
+        usort($convertedProperties, function($a, $b) {
+            return strnatcasecmp($a['title'], $b['title']);
+        });
+        return $convertedProperties;
     }
 
 

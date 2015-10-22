@@ -51,6 +51,9 @@ class FilterModule extends OntoWiki_Module
         //$this->view->headScript()->appendFile($this->view->moduleUrl . 'resources/jquery.dump.js');
 
         $this->view->properties        = $this->_instances->getAllProperties(false);
+        usort($this->view->properties, function($a, $b) {
+            return strnatcasecmp($a['title'], $b['title']);
+        });
         $this->view->inverseProperties = $this->_instances->getAllProperties(true);
 
         $this->view->actionUrl = $this->_config->staticUrlBase . 'index.php/list/';

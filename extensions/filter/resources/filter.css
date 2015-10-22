@@ -38,3 +38,29 @@ span.gqb-button-edit	{
 span.gqb-button-edit:hover  {
 	background: url(images/icon-edit.png)  no-repeat center; 
 }
+
+#addFilterWindowOverlay {
+	width: 60vw;
+}
+
+#addFilterWindowOverlay #possiblevalues {
+	width: 100%;
+	margin-left: 0;
+}
+
+#addFilterWindowOverlay #property {
+	width: 100%;
+}
+
+#addFilterWindowOverlay .properties-row {
+	text-overflow: ellipsis;
+}
+
+#addFilterWindowOverlay .equals-row {
+	vertical-align: middle;
+	text-align: center;
+}
+
+#addFilterWindowOverlay .values-row {
+	text-overflow: ellipsis;
+}

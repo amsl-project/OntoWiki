@@ -57,6 +57,10 @@ class FilterController extends OntoWiki_Controller_Component
                 $this->view->values[$key]['title'] = $value['value'];
             }
         }
+
+        usort($this->view->values, function($a, $b) {
+            return strnatcasecmp($a['title'], $b['title']);
+        });
     }
 }
 

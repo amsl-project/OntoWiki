@@ -99,7 +99,7 @@ $translate = OntoWiki::getInstance()->translate;
             <h2 class="title"><?= $translate->translate('Add Filter'); ?></h2>
             <table>
                 <tr>
-                    <td>
+                    <td class="properties-row">
                         <select id="property" size="7">
                             <?php foreach($this->properties as $key => $property){ ?>
                             <option about="<?php echo $property['uri']; ?>" class="Resource"><?php echo $property["title"]; ?></option>
@@ -110,10 +110,10 @@ $translate = OntoWiki::getInstance()->translate;
                             <?php } ?>
                         </select>
                     </td>
-                    <td style="vertical-align:middle">
+                    <td class="equals-row">
                         <?= $translate->translate('equals'); ?>
                     </td>
-                    <td>
+                    <td class="values-row">
                         <select id="possiblevalues" size="7">
                                 <option><?= $translate->translate('none loaded'); ?></option>
                         </select>
