@@ -416,7 +416,8 @@ function populateRDFauthor(data, protect, resource, graph, workingmode) {
     protect  = arguments.length >= 2 ? protect : true;
     resource = arguments.length >= 3 ? resource : null;
     graph    = arguments.length >= 4 ? graph : null;
-    
+
+    RDFAUTHOR_DATATYPES_FIX = data;
     for (var currentSubject in data) {
         for (var currentProperty in data[currentSubject]) {
             var objects = data[currentSubject][currentProperty];
@@ -438,12 +439,14 @@ function populateRDFauthor(data, protect, resource, graph, workingmode) {
                     type: String(objSpec.type).replace('typed-', '')
                 }
 
-                if (objSpec.value) {
-                    if (objSpec.type == 'typed-literal') {
+
+                if (newObjectSpec.value) {
+                    if (newObjectSpec.type == 'literal') {
                         newObjectSpec.options = {
                             datatype: objSpec.datatype
                         }
-                    } else if (objSpec.lang) {
+                    }
+                    if (objSpec.lang) {
                         newObjectSpec.options = {
                             lang: objSpec.lang
                         }
@@ -451,8 +454,8 @@ function populateRDFauthor(data, protect, resource, graph, workingmode) {
                 }
 
                 var stmt = new Statement({
-                    subject: '<' + currentSubject + '>', 
-                    predicate: '<' + currentProperty + '>', 
+                    subject: '<' + currentSubject + '>',
+                    predicate: '<' + currentProperty + '>',
                     object: newObjectSpec
                 }, {
                     graph: graph, 
