@@ -81,7 +81,7 @@ $(document).ready(function(){
         var propLabel = $("#addwindow #property option:selected").html();
         var inverse = $("#addwindow #property option:selected").hasClass("InverseProperty");
 
-        var filtertype = $("#addwindow #resttype option:selected").html();
+        var filtertype = $("#addwindow #resttype option:selected").val();
         var negate = $("#negate").is(':checked');
         var value1 = $("#addwindow #value1").val();
         if(typeof value1 == "undefined"){
