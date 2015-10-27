@@ -113,6 +113,15 @@ $(document).ready(function(){
                 typedata = datatype;
             }
         }
+        // if value not empty, try to determine type from list of possible values
+        else {
+            var possible = $("#addwindow #possiblevalues > option");
+            if (possible.length) {
+                type = possible.first().attr("type");
+                typedata = possible.first().attr("datatype");
+            }
+
+        }
 
         filter.add("filterbox"+filter.count, prop, inverse, propLabel, filtertype, value1, value2, type, typedata, function(newfilter) {
             //react in filter box
