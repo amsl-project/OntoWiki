@@ -42,6 +42,14 @@
               ?collection amsl:metadataUsedByLibrary ?bib . filter (?bib = <http://lobid.org/organisation/DE-15>)
               }
               ORDER BY ?source";
+  ];
+  owconfig:config [
+
+         a owconfig:Config;
+         owconfig:id "credentials";
+
+         :username "" ;
+         :password "";
   ].
 
 :application :hideForAnonymousOnNoModels "false"^^xsd:boolean ;
