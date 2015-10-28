@@ -98,8 +98,13 @@ class MetadatasourceserviceController extends OntoWiki_Controller_Component
         // reconstruct the result data structure from list to map
         $result = array();
         foreach ($query_results as $key => $value) {
-            $metadata_source = $value['source'];
-            $metadata_collection = $value['collection'];
+            if(!$pretty){
+                $metadata_source = $value['source'];
+                $metadata_collection = $value['collection'];
+            }else{
+                $metadata_source = urldecode($value['source']);
+                $metadata_collection = urldecode($value['collection']);
+            }
             if (isset($result[$metadata_source])) {
                 $result[$metadata_source][] = $metadata_collection;
             } else {
@@ -111,6 +116,7 @@ class MetadatasourceserviceController extends OntoWiki_Controller_Component
         $json = Zend_Json::encode($result);
         if ($pretty) {
             $json = Zend_Json::prettyPrint($json, array("indent" => " "));
+            $json = str_replace('\/','/', $json);
         }
 
         // prepare json response
@@ -122,6 +128,4 @@ class MetadatasourceserviceController extends OntoWiki_Controller_Component
 
         return;
     }
-
-
 }
