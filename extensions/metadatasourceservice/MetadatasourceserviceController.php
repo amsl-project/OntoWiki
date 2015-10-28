@@ -77,7 +77,7 @@ class MetadatasourceserviceController extends OntoWiki_Controller_Component
         // Errorhandling -> Authentication failed probably due to incorrect username and password pair. Client needs to
         // inform administrator.
         if ($authResult->getCode() != 1) {
-            $this->getResponse()->setHttpResponseCode(400);
+            $this->getResponse()->setHttpResponseCode(500);
             $this->getResponse()->setException(new Exception('Dear client. We are sorry but the service is temporarily not available. The fault is on our side. Please inform the administrator that there is a problem with the configuration of the system regarding extension specific authentication and credentials.'));
             return;
         }
