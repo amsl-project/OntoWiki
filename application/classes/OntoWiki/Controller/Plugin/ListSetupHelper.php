@@ -174,13 +174,29 @@ class OntoWiki_Controller_Plugin_ListSetupHelper extends Zend_Controller_Plugin_
                 $request->setParam('instancesconfig', json_encode($config));
             }
 
+            // check if we have the property configuration saved
+            $session = new Zend_Session_Namespace('ONTOWIKI_USER_PROFILE');
+            $modelIri = $ontoWiki->selectedModel->getModelIri();
+            $listName = $list->getTitle();
+
+            if (isset($session->shownProperties)
+                && array_key_exists($modelIri, $session->shownProperties)
+                && array_key_exists($listName, $session->shownProperties[$modelIri])
+                && !count($list->getShownPropertiesPlain())) {
+                // init list configuration with saved config
+                $saved = $session->shownProperties[$modelIri][$listName];
+                foreach ($saved as $prop) {
+                    $list->addShownProperty($prop['uri'], $prop['name'], $prop['inverse']);
+                }
+            }
+
             //check for change-requests
             if (isset($request->instancesconfig)) {
                 $config = _json_decode($request->instancesconfig);
                 if (null === $config) {
                     throw new OntoWiki_Exception('Invalid parameter instancesconfig (json_decode failed)');
                 }
-// TODO is this a bug? why access sort->asc when it is null?
+                // TODO is this a bug? why access sort->asc when it is null?
                 if (isset($config['sort'])) {
                     if ($config['sort'] == null) {
                         $list->orderByUri($config['sort']['asc']);
@@ -190,6 +206,8 @@ class OntoWiki_Controller_Plugin_ListSetupHelper extends Zend_Controller_Plugin_
                 }
 
                 if (isset($config['shownProperties'])) {
+
+                    // add or remove property from list
                     foreach ($config['shownProperties'] as $prop) {
                         if ($prop['action'] == 'add') {
                             $list->addShownProperty($prop['uri'], $prop['label'], $prop['inverse']);
@@ -197,6 +215,9 @@ class OntoWiki_Controller_Plugin_ListSetupHelper extends Zend_Controller_Plugin_
                             $list->removeShownProperty($prop['uri'], $prop['inverse']);
                         }
                     }
+
+                    // get current list property configuration and persist it
+                    $session->shownProperties[$modelIri][$listName] = $list->getShownPropertiesPlain();
                 }
 
                 if (isset($config['filter'])) {
