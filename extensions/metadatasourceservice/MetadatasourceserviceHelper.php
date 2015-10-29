@@ -7,15 +7,16 @@
  */
 
 /**
- * Helper class for the History component.
+ * Helper class for the meta-data component.
  *
  * - register the tab for all navigations except the instances list
  *   (this should be undone if the history can be created from a Query2 too)
  *
- * @category OntoWiki
- * @package Extensions_History
- * @copyright Copyright (c) 2012, {@link http://aksw.org AKSW}
- * @license http://opensource.org/licenses/gpl-license.php GNU General Public License (GPL)
+ * @category   OntoWiki
+ * @package    Extensions_Metadatasourceservice
+ * @author     Reik Mueller
+ * @copyright  Copyright (c) 2015, {@link http://amsl.technology/}
+ * @license    http://opensource.org/licenses/gpl-license.php GNU General Public License (GPL)
  */
 class MetadatasourceserviceHelper extends OntoWiki_Component_Helper
 {
@@ -24,9 +25,9 @@ class MetadatasourceserviceHelper extends OntoWiki_Component_Helper
         OntoWiki::getInstance()->getNavigation()->register(
             'test',
             array(
-                'controller' => 'test',        // test controller
+                'controller' => 'Metadatasourceservice',        // test controller
                 'action'     => 'list',        // list action
-                'name'       => 'Test',
+                'name'       => 'Metadatasourceservice',
                 'priority'   => 30
             )
         );

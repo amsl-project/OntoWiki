@@ -67,44 +67,19 @@ class MetadatasourceserviceController extends OntoWiki_Controller_Component
             return;
         }
 
-        // authenticate with credentials stored in the configuration of this extension
-        $credentials = $this->_privateConfig->toArray()['credentials'];
-        $username = $credentials['username'];
-        $password = $credentials['password'];
-        $erfurt = $this->_owApp->erfurt;
-        $authResult = $erfurt->authenticate($username, $password);
-
-        // Errorhandling -> Authentication failed probably due to incorrect username and password pair. Client needs to
-        // inform administrator.
-        if ($authResult->getCode() != 1) {
-            $this->getResponse()->setHttpResponseCode(500);
-            $this->getResponse()->setException(new Exception('Dear client. We are sorry but the service is temporarily not available. The fault is on our side. Please inform the administrator that there is a problem with the configuration of the system regarding extension specific authentication and credentials.'));
-            return;
-        }
-
-        // reload selected model with new privileges
-        if ($this->_owApp->selectedModel instanceof Erfurt_Rdf_Model) {
-            $this->_owApp->selectedModel = $erfurt->getStore()->getModel((string)$this->_owApp->selectedModel);
-        }
-
         // querying the meta data sources with their collections
-        $model = new Erfurt_Owl_Model('http://amsl.technology/discovery/');
-        $query_results = $model->sparqlQuery($query);
-
-        // destroy authentication and delete session
-        Erfurt_Auth::getInstance()->clearIdentity();
-        Zend_Session::destroy(true);
+        $options = $this->_owApp->getConfig()->toArray()['store']['virtuoso'];
+        $options['is_open_source_version'] = '1';
+        $backend = new Erfurt_Store_Adapter_Virtuoso($options);
+        $backend->init();
+        $query_results = $backend->sparqlQuery($query);
 
         // reconstruct the result data structure from list to map
         $result = array();
         foreach ($query_results as $key => $value) {
-            if(!$pretty){
-                $metadata_source = $value['source'];
-                $metadata_collection = $value['collection'];
-            }else{
-                $metadata_source = urldecode($value['source']);
-                $metadata_collection = urldecode($value['collection']);
-            }
+            $metadata_source = $value['source'];
+            $metadata_collection = $value['collection'];
+
             if (isset($result[$metadata_source])) {
                 $result[$metadata_source][] = $metadata_collection;
             } else {
@@ -112,20 +87,20 @@ class MetadatasourceserviceController extends OntoWiki_Controller_Component
             }
         }
 
-        // encode the results in json (pretty printed if necessary)
+        // encode the results in JSON (pretty printed if necessary)
         $json = Zend_Json::encode($result);
         if ($pretty) {
             $json = Zend_Json::prettyPrint($json, array("indent" => " "));
             $json = str_replace('\/','/', $json);
         }
 
-        // prepare json response
+        // prepare JSON response
         $this->getHelper('Layout')->disableLayout();
         $this->getHelper('ViewRenderer')->setNoRender();
         $this->getResponse()->setHeader('Content-Type', 'application/json');
-        // write json to response
-        echo $json;
 
+        // write JSON to response
+        echo $json;
         return;
     }
 }
