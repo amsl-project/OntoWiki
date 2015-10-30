@@ -113,34 +113,18 @@ class OntoWiki_Controller_Plugin_ListSetupHelper extends Zend_Controller_Plugin_
                 $list->setStore($store); // store is not serialized in session! reset it
             }
 
-            //local function :)
-            function _json_decode($string)
-            {
-                /* PHP 5.3 DEPRECATED ; REMOVE IN PHP 6.0 */
-                if (get_magic_quotes_gpc()) {
-                    // add slashes for unicode chars in json
-                    $string = str_replace('\\u', '\\\\u', $string);
-                    //$string = str_replace('\\u000a','', $string);
-                    $string = stripslashes($string);
+            // load instances config
+            $config = [];
+
+            if (isset($request->instancesconfig)) {
+                $config = json_decode($request->instancesconfig, true);
+                if ($config === null) {
+                    throw new OntoWiki_Exception('Invalid parameter instancesconfig (json_decode failed)');
                 }
-
-                /* ---- */
-
-                return json_decode($string, true);
             }
 
             //a shortcut for search param
             if (isset($request->s)) {
-                if (isset($request->instancesconfig)) {
-                    $config = _json_decode($request->instancesconfig);
-                    if (null === $config) {
-                        throw new OntoWiki_Exception(
-                            'Invalid parameter instancesconfig (json_decode failed): ' . $this->_request->setup
-                        );
-                    }
-                } else {
-                    $config = array();
-                }
                 if (!isset($config['filter'])) {
                     $config['filter'] = array();
                 }
@@ -153,16 +137,6 @@ class OntoWiki_Controller_Plugin_ListSetupHelper extends Zend_Controller_Plugin_
             }
             //a shortcut for class param
             if (isset($request->class)) {
-                if (isset($request->instancesconfig)) {
-                    $config = _json_decode($request->instancesconfig);
-                    if (null === $config) {
-                        throw new OntoWiki_Exception(
-                            'Invalid parameter instancesconfig (json_decode failed): ' . $this->_request->setup
-                        );
-                    }
-                } else {
-                    $config = array();
-                }
                 if (!isset($config['filter'])) {
                     $config['filter'] = array();
                 }
@@ -175,34 +149,45 @@ class OntoWiki_Controller_Plugin_ListSetupHelper extends Zend_Controller_Plugin_
             }
 
             // check if we have the property configuration saved
-            $session = new Zend_Session_Namespace('ONTOWIKI_USER_PROFILE');
             $modelIri = $ontoWiki->selectedModel->getModelIri();
             $listName = $list->getTitle();
 
-            if (isset($session->shownProperties)
-                && array_key_exists($modelIri, $session->shownProperties)
-                && array_key_exists($listName, $session->shownProperties[$modelIri])
-                && !count($list->getShownPropertiesPlain())) {
-                // init list configuration with saved config
-                $saved = $session->shownProperties[$modelIri][$listName];
-                foreach ($saved as $prop) {
-                    $list->addShownProperty($prop['uri'], $prop['name'], $prop['inverse']);
+            $session = new Zend_Session_Namespace('ONTOWIKI_USER_PROFILE');
+
+            if (isset($session->config)) {
+                $persConfig = $session->config;
+                if (!array_key_exists($listName, $persConfig[$modelIri]))
+                    $persConfig[$modelIri][$listName] = [];
+            }
+            else {
+                $persConfig = [$modelIri => [$listName => []]];
+            }
+
+            $listConfig = $persConfig[$modelIri][$listName];
+
+            // init list configuration with saved config
+            if (array_key_exists('shownProperties', $listConfig) && !empty($listConfig['shownProperties']) && empty($list->getShownPropertiesPlain())) {
+                $config['shownProperties'] = [];
+
+                // mark following properties to be added
+                foreach ($listConfig['shownProperties'] as $prop) {
+                    $config['shownProperties'][] = ['uri' => $prop['uri'], 'label' => $prop['name'], 'inverse' => $prop['inverse'], 'action' => 'add'];
                 }
             }
 
-            //check for change-requests
-            if (isset($request->instancesconfig)) {
-                $config = _json_decode($request->instancesconfig);
-                if (null === $config) {
-                    throw new OntoWiki_Exception('Invalid parameter instancesconfig (json_decode failed)');
-                }
-                // TODO is this a bug? why access sort->asc when it is null?
+            if (array_key_exists('sort', $listConfig) && !empty($listConfig['sort']) && empty($list->getShownPropertiesPlain())) {
+                $config['sort'] = $listConfig['sort'];
+            }
+
+            // check for change-requests
+            if (!empty($config)) {
                 if (isset($config['sort'])) {
-                    if ($config['sort'] == null) {
-                        $list->orderByUri($config['sort']['asc']);
-                    } else {
+                    if ($config['sort'] !== null)
                         $list->setOrderProperty($config['sort']['uri'], $config['sort']['asc']);
-                    }
+
+                    $listConfig['sort'] = $config['sort'];
+                } else {
+                    $listConfig['sort'] = [];
                 }
 
                 if (isset($config['shownProperties'])) {
@@ -217,7 +202,7 @@ class OntoWiki_Controller_Plugin_ListSetupHelper extends Zend_Controller_Plugin_
                     }
 
                     // get current list property configuration and persist it
-                    $session->shownProperties[$modelIri][$listName] = $list->getShownPropertiesPlain();
+                    $listConfig['shownProperties'] = $list->getShownPropertiesPlain();
                 }
 
                 if (isset($config['filter'])) {
@@ -231,59 +216,61 @@ class OntoWiki_Controller_Plugin_ListSetupHelper extends Zend_Controller_Plugin_
                         }
 
                         if ($filter['action'] == 'add') {
-                            if ($filter['mode'] == 'box') {
-                                $list->addFilter(
-                                    $filter['property'],
-                                    isset($filter['isInverse']) ? $filter['isInverse'] : false,
-                                    isset($filter['propertyLabel']) ? $filter['propertyLabel'] : 'defaultLabel',
-                                    $filter['filter'],
-                                    isset($filter['value1']) ? $filter['value1'] : null,
-                                    isset($filter['value2']) ? $filter['value2'] : null,
-                                    isset($filter['valuetype']) ? $filter['valuetype'] : 'literal',
-                                    isset($filter['literaltype']) ? $filter['literaltype'] : null,
-                                    isset($filter['hidden']) ? $filter['hidden'] : false,
-                                    isset($filter['id']) ? $filter['id'] : null,
-                                    isset($filter['negate']) ? $filter['negate'] : false
-                                );
-                            } else {
-                                if ($filter['mode'] == 'search') {
+
+                            switch ($filter['mode']) {
+                                case 'box':
+                                    $list->addFilter(
+                                        $filter['property'],
+                                        isset($filter['isInverse']) ? $filter['isInverse'] : false,
+                                        isset($filter['propertyLabel']) ? $filter['propertyLabel'] : 'defaultLabel',
+                                        $filter['filter'],
+                                        isset($filter['value1']) ? $filter['value1'] : null,
+                                        isset($filter['value2']) ? $filter['value2'] : null,
+                                        isset($filter['valuetype']) ? $filter['valuetype'] : 'literal',
+                                        isset($filter['literaltype']) ? $filter['literaltype'] : null,
+                                        isset($filter['hidden']) ? $filter['hidden'] : false,
+                                        isset($filter['id']) ? $filter['id'] : null,
+                                        isset($filter['negate']) ? $filter['negate'] : false
+                                    );
+                                    break;
+                                case 'search':
                                     $list->addSearchFilter(
                                         $filter['searchText'],
                                         isset($filter['id']) ? $filter['id'] : null
                                     );
-                                } else {
-                                    if ($filter['mode'] == 'rdfsclass') {
-                                        $list->addTypeFilter(
-                                            $filter['rdfsclass'],
-                                            isset($filter['id']) ? $filter['id'] : null
-                                        );
-                                    } else {
-                                        if ($filter['mode'] == 'cnav') {
+                                    break;
+                                case 'rdfsclass':
+                                    $list->addTypeFilter(
+                                        $filter['rdfsclass'],
+                                        isset($filter['id']) ? $filter['id'] : null
+                                    );
+                                    break;
+                                case 'cnav':
+                                    $list->addTripleFilter(
+                                        NavigationHelper::getInstancesTriples($filter['uri'], $filter['cnav']),
+                                        isset($filter['id']) ? $filter['id'] : null
+                                    );
+                                    break;
+                                case 'query':
+                                    try {
+                                        //echo $filter->query."   ";
+                                        $query = Erfurt_Sparql_Query2::initFromString($filter['query']);
+                                        // TODO what the hell is this?!
+                                        if (!($query instanceof Exception)) {
                                             $list->addTripleFilter(
-                                                NavigationHelper::getInstancesTriples($filter['uri'], $filter['cnav']),
+                                                $query->getWhere()->getElements(),
                                                 isset($filter['id']) ? $filter['id'] : null
                                             );
-                                        } else {
-                                            if ($filter['mode'] == 'query') {
-                                                try {
-                                                    //echo $filter->query."   ";
-                                                    $query = Erfurt_Sparql_Query2::initFromString($filter['query']);
-// TODO what the hell is this?!
-                                                    if (!($query instanceof Exception)) {
-                                                        $list->addTripleFilter(
-                                                            $query->getWhere()->getElements(),
-                                                            isset($filter['id']) ? $filter['id'] : null
-                                                        );
-                                                    }
-                                                    //echo $query->getSparql();
-                                                } catch (Erfurt_Sparql_ParserException $e) {
-                                                    $ontoWiki->appendMessage('the query could not be parsed');
-                                                }
-                                            }
                                         }
+                                        //echo $query->getSparql();
+                                    } catch (Erfurt_Sparql_ParserException $e) {
+                                        $ontoWiki->appendMessage('the query could not be parsed');
                                     }
-                                }
+                                    break;
+                                default:
+                                    throw new OntoWiki_Exception('Invalid filter mode for list!');
                             }
+
                         } else {
                             $list->removeFilter($filter['id']);
                         }
@@ -302,6 +289,10 @@ class OntoWiki_Controller_Plugin_ListSetupHelper extends Zend_Controller_Plugin_
                     }
                 }
             }
+
+            // persist config
+            $persConfig[$modelIri][$listName] = $listConfig;
+            $session->config = $persConfig;
 
             if (isset($request->limit)) { // how many results per page
                 $list->setLimit($request->limit);
