@@ -44,14 +44,52 @@ function updatePossibleValues() {
                 return;
 
             if (possible.first().attr("type") === 'uri') {
-                $('#freeSearch').hide();
+                $('#equalsfilterselect').find('option[value=unequals]').removeAttr('disabled').show();
+
+                $('#resttype').find('option[value=contains]').attr('disabled', 'disabled').hide();
+                $('#resttype').find('option[value=larger]').attr('disabled', 'disabled').hide();
+                $('#resttype').find('option[value=smaller]').attr('disabled', 'disabled').hide();
+                $('#resttype').find('option[value=between]').attr('disabled', 'disabled').hide();
+                $('#resttype').val('bound');
             }
             else {
-                $('#freeSearch').show();
+                $('#equalsfilterselect').find('option[value=unequals]').attr('disabled', 'disabled').hide();
+
+                $('#resttype').find('option[value=contains]').removeAttr('disabled').show();
+                $('#resttype').find('option[value=larger]').removeAttr('disabled').show();
+                $('#resttype').find('option[value=smaller]').removeAttr('disabled').show();
+                $('#resttype').find('option[value=between]').removeAttr('disabled').show();
+                $('#resttype').val('contains');
+                //$('#freeSearch').show();
             }
+            $('#equalsfilterselect').val('equals');
+            updateRestType();
         });
     });
 }
+
+function updateRestType() {
+    var type = $("#resttype option:selected").val();
+    if (type == "contains" || type == "larger" || type == "smaller") {
+        if ($("#valueboxes").children().length != 1) {
+            $("#valueboxes").empty();
+            $("#valueboxes").append("<input type=\"text\" id=\"value1\"/>");
+        }
+    }
+    if (type == "between") {
+        if ($("#valueboxes").children().length != 2) {
+            $("#valueboxes").empty();
+            $("#valueboxes").append("<input type=\"text\" id=\"value1\"/>");
+            $("#valueboxes").append("<input type=\"text\" id=\"value2\"/>");
+        }
+    }
+    if (type == "bound") {
+        if ($("#valueboxes").children().length != 0) {
+            $("#valueboxes").empty();
+        }
+    }
+}
+
 function removeAllFilters() {
     // $("#addFilterWindowOverlay").hide();
     $.modal.close();
@@ -160,27 +198,7 @@ $(document).ready(function () {
     // contains, larger, smaller: one
     // between: two - not implemented
     // date: datepicker - not implemented
-    $("#resttype").change(function () {
-        var type = $("#resttype option:selected").val();
-        if (type == "contains" || type == "larger" || type == "smaller") {
-            if ($("#valueboxes").children().length != 1) {
-                $("#valueboxes").empty();
-                $("#valueboxes").append("<input type=\"text\" id=\"value1\"/>");
-            }
-        }
-        if (type == "between") {
-            if ($("#valueboxes").children().length != 2) {
-                $("#valueboxes").empty();
-                $("#valueboxes").append("<input type=\"text\" id=\"value1\"/>");
-                $("#valueboxes").append("<input type=\"text\" id=\"value2\"/>");
-            }
-        }
-        if (type == "bound") {
-            if ($("#valueboxes").children().length != 0) {
-                $("#valueboxes").empty();
-            }
-        }
-    });
+    $("#resttype").change(updateRestType);
 
     //$.dump(filter);
     //register the filter box for (other) filter events

@@ -297,6 +297,7 @@ Add;Filter hinzufügen
 Remove all;Alle Filter zurücksetzen
 Add Filter;Filter hinzufügen
 equals;gleich
+unequals;ungleich
 none loaded;keine Entsprechungen
 or;oder
 not;nicht
