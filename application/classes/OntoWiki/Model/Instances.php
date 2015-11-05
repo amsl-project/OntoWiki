@@ -710,11 +710,25 @@ class OntoWiki_Model_Instances extends OntoWiki_Model
                     }
                 } else {
                     if (!$isInverse) {
-                        $triple = $this->_resourceQuery->addTriple(
-                            $this->_resourceVar,
-                            $prop,
-                            $valueObj
-                        );
+                        if ($negate) {
+                            $valueVar = new Erfurt_Sparql_Query2_Var($propertyLabel);
+                            $triple = $this->_resourceQuery->addTriple(
+                                $this->_resourceVar,
+                                $prop,
+                                $valueVar
+                            );
+
+                            $filterObj = $this->_resourceQuery->addFilter(
+                                new Erfurt_Sparql_Query2_NotEquals($valueVar, $valueObj)
+                            );
+                        }
+                        else {
+                            $triple = $this->_resourceQuery->addTriple(
+                                $this->_resourceVar,
+                                $prop,
+                                $valueObj
+                            );
+                        }
                     } else {
                         $triple = $this->_resourceQuery->addTriple(
                             $valueObj,

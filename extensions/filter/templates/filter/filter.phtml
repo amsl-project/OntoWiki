@@ -111,7 +111,10 @@ $translate = OntoWiki::getInstance()->translate;
                         </select>
                     </td>
                     <td class="equals-row">
-                        <?= $translate->translate('equals'); ?>
+                        <select id="equalsfilterselect">
+                            <option value="equals" selected><?= $translate->translate('equals'); ?></option>
+                            <option value="unequals"><?= $translate->translate('unequals'); ?></option>
+                        </select>
                     </td>
                     <td class="values-row">
                         <select id="possiblevalues" size="7">
@@ -121,17 +124,19 @@ $translate = OntoWiki::getInstance()->translate;
                 </tr>
             </table>
             <div style="padding:10px;">
-                <?= $translate->translate('or'); ?><br/>
-                <input type="checkbox" id="negate"/> <?= $translate->translate('not'); ?> 
-                <select id="resttype">
-                        <option value="contains"><?= $translate->translate('contains'); ?></option>
-                        <option value="larger"><?= $translate->translate('larger'); ?></option>
-                        <option value="smaller"><?= $translate->translate('smaller'); ?></option>
-                        <option value="between"><?= $translate->translate('between'); ?></option>
-                        <option value="bound"><?= $translate->translate('bound'); ?></option>
-                </select>
-                <div id="valueboxes">
-                <input type="text" id="value1"/>
+                <div id="freeSearch">
+                    <?= $translate->translate('or'); ?><br/>
+                    <input type="checkbox" id="negate"/> <?= $translate->translate('not'); ?>
+                    <select id="resttype">
+                            <option value="contains"><?= $translate->translate('contains'); ?></option>
+                            <option value="larger"><?= $translate->translate('larger'); ?></option>
+                            <option value="smaller"><?= $translate->translate('smaller'); ?></option>
+                            <option value="between"><?= $translate->translate('between'); ?></option>
+                            <option value="bound"><?= $translate->translate('bound'); ?></option>
+                    </select>
+                    <div id="valueboxes">
+                    <input type="text" id="value1"/>
+                    </div>
                 </div>
                 <formset><a id="add" class="button minibutton"><?= $translate->translate('set'); ?></a>
                 <a id="addwindowhide" class="button minibutton"><?= $translate->translate('cancel'); ?></a></formset>
