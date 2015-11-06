@@ -150,7 +150,8 @@ $(document).ready(function () {
         var typedata = null;
 
         // if value entering is possible but nothing entered: check if user selected something in the possible values box
-        if (value1 == "" && $("#valueboxes").children().length == 1) {
+        var hasNoTextValue = (value1 == "" && $("#valueboxes").children().length == 1);
+        if ( hasNoTextValue || $("#addwindow #possiblevalues").val()) {
             if ($("#addwindow #possiblevalues option:selected").length == 0) {
                 return; // block add button
             }

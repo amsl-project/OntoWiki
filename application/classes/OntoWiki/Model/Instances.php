@@ -624,9 +624,10 @@ class OntoWiki_Model_Instances extends OntoWiki_Model
             }
         }
 
+        $var = new Erfurt_Sparql_Query2_Var($propertyLabel);
+
         switch ($filter) {
             case 'contains':
-                $var = new Erfurt_Sparql_Query2_Var($propertyLabel);
                 if (!$isInverse) {
                     $triple = $this->_resourceQuery->addTriple(
                         $this->_resourceVar,
@@ -661,12 +662,11 @@ class OntoWiki_Model_Instances extends OntoWiki_Model
                 break;
             case 'equals':
                 if ($valuetype == 'literal') {
-                    $valueVar = new Erfurt_Sparql_Query2_Var($propertyLabel);
                     if (!$isInverse) {
                         $triple = new Erfurt_Sparql_Query2_Triple(
                             $this->_resourceVar,
                             $prop,
-                            $valueVar
+                            $var
                         );
                     } else {
                         throw new RuntimeException(
@@ -683,15 +683,15 @@ class OntoWiki_Model_Instances extends OntoWiki_Model
                             $orExpression = new Erfurt_Sparql_Query2_ConditionalOrExpression();
                             $orExpression->addElement(
                                 new Erfurt_Sparql_Query2_UnaryExpressionNot(
-                                    new Erfurt_Sparql_Query2_bound($valueVar)
+                                    new Erfurt_Sparql_Query2_bound($var)
                                 )
                             );
-                            $orExpression->addElement(new Erfurt_Sparql_Query2_NotEquals($valueVar, $valueObj));
+                            $orExpression->addElement(new Erfurt_Sparql_Query2_NotEquals($var, $valueObj));
 
                             $filterObj = $optionalGP->addFilter($orExpression);
                         } else {
                             $filterObj = $optionalGP->addFilter(
-                                new Erfurt_Sparql_Query2_NotEquals($valueVar, $valueObj)
+                                new Erfurt_Sparql_Query2_NotEquals($var, $valueObj)
                             );
                         }
 
@@ -701,7 +701,7 @@ class OntoWiki_Model_Instances extends OntoWiki_Model
                         $this->_resourceQuery->addElement($triple);
                         $filterObj = $this->_resourceQuery->addFilter(
                             new Erfurt_Sparql_Query2_Regex(
-                                new Erfurt_Sparql_Query2_Str($valueVar),
+                                new Erfurt_Sparql_Query2_Str($var),
                                 new Erfurt_Sparql_Query2_RDFLiteral(
                                     '^' . str_replace("\\", "\\\\", preg_quote($value)) . '$'
                                 )
@@ -711,16 +711,23 @@ class OntoWiki_Model_Instances extends OntoWiki_Model
                 } else {
                     if (!$isInverse) {
                         if ($negate) {
-                            $valueVar = new Erfurt_Sparql_Query2_Var($propertyLabel);
-                            $triple = $this->_resourceQuery->addTriple(
+                            $optionalGP = new Erfurt_Sparql_Query2_OptionalGraphPattern();
+                            $optionalGP->addTriple(
                                 $this->_resourceVar,
                                 $prop,
-                                $valueVar
+                                $var
                             );
 
-                            $filterObj = $this->_resourceQuery->addFilter(
-                                new Erfurt_Sparql_Query2_NotEquals($valueVar, $valueObj)
+                            $orExpression = new Erfurt_Sparql_Query2_ConditionalOrExpression();
+                            $orExpression->addElement(
+                                new Erfurt_Sparql_Query2_UnaryExpressionNot(
+                                    new Erfurt_Sparql_Query2_bound($var)
+                                )
                             );
+                            $orExpression->addElement(new Erfurt_Sparql_Query2_NotEquals($var, $valueObj));
+
+                            $this->_resourceQuery->addElement($optionalGP);
+                            $filterObj = $this->_resourceQuery->addFilter($orExpression);
                         }
                         else {
                             $triple = $this->_resourceQuery->addTriple(
@@ -739,7 +746,6 @@ class OntoWiki_Model_Instances extends OntoWiki_Model
                 }
                 break;
             case 'larger':
-                $var = new Erfurt_Sparql_Query2_Var($propertyLabel);
                 if (!$isInverse) {
                     $triple = $this->_resourceQuery->addTriple(
                         $this->_resourceVar,
@@ -759,7 +765,6 @@ class OntoWiki_Model_Instances extends OntoWiki_Model
                 );
                 break;
             case 'smaller':
-                $var = new Erfurt_Sparql_Query2_Var($propertyLabel);
                 if (!$isInverse) {
                     $triple = $this->_resourceQuery->addTriple(
                         $this->_resourceVar,
@@ -779,7 +784,6 @@ class OntoWiki_Model_Instances extends OntoWiki_Model
                 );
                 break;
             case 'between':
-                $var = new Erfurt_Sparql_Query2_Var($propertyLabel);
                 if (!$isInverse) {
                     $triple = $this->_resourceQuery->addTriple(
                         $this->_resourceVar,
@@ -804,8 +808,6 @@ class OntoWiki_Model_Instances extends OntoWiki_Model
                 );
                 break;
             case 'bound':
-                $var = new Erfurt_Sparql_Query2_Var($propertyLabel);
-
                 if (!$isInverse) {
                     $triple = new Erfurt_Sparql_Query2_Triple(
                         $this->_resourceVar,
