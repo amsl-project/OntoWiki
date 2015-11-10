@@ -22,15 +22,6 @@ class MetadatasourceserviceHelper extends OntoWiki_Component_Helper
 {
     public function init()
     {
-        OntoWiki::getInstance()->getNavigation()->register(
-            'test',
-            array(
-                'controller' => 'Metadatasourceservice',        // test controller
-                'action'     => 'list',        // list action
-                'name'       => 'Metadatasourceservice',
-                'priority'   => 30
-            )
-        );
     }
 }
 
