@@ -17,7 +17,7 @@ fi
 
 mkdir $OWPATH/dumps/clean_$SESSION >/dev/null 2>&1
 chmod -R 777 $OWPATH/dumps/clean_$SESSION >/dev/null 2>&1
-curl -s -L "http://localhost:8890/sparql" --data-urlencode "default-graph-uri=" --data-urlencode "query=SELECT DISTINCT ?g WHERE { GRAPH ?g { ?s a ?p}}" --data-urlencode "format=text/csv" | sed "s/\"//g" | sed 1D | sort >$OWPATH/dumps/clean_$SESSION/graphs.lst
+curl -s -L "http://localhost:8890/sparql" --data-urlencode "default-graph-uri=" --data-urlencode "query=SELECT DISTINCT ?g WHERE { GRAPH ?g { ?s ?o ?p}}" --data-urlencode "format=text/csv" | sed "s/\"//g" | sed 1D | sort >$OWPATH/dumps/clean_$SESSION/graphs.lst
 
 while read GRAPH
 do
