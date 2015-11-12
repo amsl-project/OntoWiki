@@ -3,7 +3,12 @@
 # WARNING: If you do not use the htaccess at all or your htaccess is
 # ignored, then your config.ini can be loaded over the web !!!
 <Files "*.ini">
-    Deny from all
+    <IfModule mod_access.c>
+        Deny from all
+    </IfModule>
+    <IfModule mod_authz_host.c>
+        Require all denied
+    </IfModule>
 </Files>
 
 # OntoWiki does not requires Apache's rewrite engine to work. However,
