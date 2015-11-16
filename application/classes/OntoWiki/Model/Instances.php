@@ -624,10 +624,9 @@ class OntoWiki_Model_Instances extends OntoWiki_Model
             }
         }
 
-        $var = new Erfurt_Sparql_Query2_Var($propertyLabel);
-
         switch ($filter) {
             case 'contains':
+                $var = new Erfurt_Sparql_Query2_Var($propertyLabel);
                 if (!$isInverse) {
                     $triple = $this->_resourceQuery->addTriple(
                         $this->_resourceVar,
@@ -662,6 +661,7 @@ class OntoWiki_Model_Instances extends OntoWiki_Model
                 break;
             case 'equals':
                 if ($valuetype == 'literal') {
+                    $var = new Erfurt_Sparql_Query2_Var($propertyLabel);
                     if (!$isInverse) {
                         $triple = new Erfurt_Sparql_Query2_Triple(
                             $this->_resourceVar,
@@ -711,6 +711,7 @@ class OntoWiki_Model_Instances extends OntoWiki_Model
                 } else {
                     if (!$isInverse) {
                         if ($negate) {
+                            $var = new Erfurt_Sparql_Query2_Var($propertyLabel);
                             $optionalGP = new Erfurt_Sparql_Query2_OptionalGraphPattern();
                             $optionalGP->addTriple(
                                 $this->_resourceVar,
@@ -746,6 +747,7 @@ class OntoWiki_Model_Instances extends OntoWiki_Model
                 }
                 break;
             case 'larger':
+                $var = new Erfurt_Sparql_Query2_Var($propertyLabel);
                 if (!$isInverse) {
                     $triple = $this->_resourceQuery->addTriple(
                         $this->_resourceVar,
@@ -765,6 +767,7 @@ class OntoWiki_Model_Instances extends OntoWiki_Model
                 );
                 break;
             case 'smaller':
+                $var = new Erfurt_Sparql_Query2_Var($propertyLabel);
                 if (!$isInverse) {
                     $triple = $this->_resourceQuery->addTriple(
                         $this->_resourceVar,
@@ -784,6 +787,7 @@ class OntoWiki_Model_Instances extends OntoWiki_Model
                 );
                 break;
             case 'between':
+                $var = new Erfurt_Sparql_Query2_Var($propertyLabel);
                 if (!$isInverse) {
                     $triple = $this->_resourceQuery->addTriple(
                         $this->_resourceVar,
@@ -808,6 +812,7 @@ class OntoWiki_Model_Instances extends OntoWiki_Model
                 );
                 break;
             case 'bound':
+                $var = new Erfurt_Sparql_Query2_Var($propertyLabel);
                 if (!$isInverse) {
                     $triple = new Erfurt_Sparql_Query2_Triple(
                         $this->_resourceVar,
