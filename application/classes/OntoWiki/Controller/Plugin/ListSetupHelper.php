@@ -154,7 +154,7 @@ class OntoWiki_Controller_Plugin_ListSetupHelper extends Zend_Controller_Plugin_
 
             $session = new Zend_Session_Namespace('ONTOWIKI_USER_PROFILE');
 
-            if (isset($session->config)) {
+            if (isset($session->config) && array_key_exists($modelIri, $session->config)) {
                 $persConfig = $session->config;
                 if (!array_key_exists($listName, $persConfig[$modelIri]))
                     $persConfig[$modelIri][$listName] = [];
