@@ -775,15 +775,16 @@ function addProperty() {
                     subject: '<' + RDFAUTHOR_DEFAULT_SUBJECT + '>',
                     predicate: '<' + uri + '>',
                     object: {
-                        value: '',
+                        value: defaultValueForSchemaType(datatype),
                         options: {
-                           datatype: "http://www.w3.org/2001/XMLSchema#date"
+                           datatype: datatype
                         }
                     }
                 }, {
                     title: label,
                     graph: RDFAUTHOR_DEFAULT_GRAPH
                 });
+                statement._object.value = '';
             }
             else {
                 statement = new Statement({
@@ -806,4 +807,27 @@ function addProperty() {
     
     var selector = new Selector(RDFAUTHOR_DEFAULT_GRAPH, RDFAUTHOR_DEFAULT_SUBJECT, selectorOptions);
     selector.presentInContainer();
+}
+
+function defaultValueForSchemaType(schematype){
+    switch (schematype){
+        case 'http://www.w3.org/2001/XMLSchema#integer':
+            return '1';
+        case 'http://www.w3.org/2001/XMLSchema#string':
+            return '1';
+        case 'http://www.w3.org/2001/XMLSchema#decimal':
+            return '1';
+        case 'http://www.w3.org/2001/XMLSchema#float':
+            return '1';
+        case 'http://www.w3.org/2001/XMLSchema#boolean':
+            return 'true';
+        case 'http://www.w3.org/2001/XMLSchema#date':
+            return '2002-09-24';
+        case 'http://www.w3.org/2001/XMLSchema#time':
+            return '09:00:00';
+        default :
+            return '';
+
+
+    }
 }
