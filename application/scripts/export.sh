@@ -24,6 +24,8 @@ chmod -R 777 $OWPATH/dumps/export_$SESSION >/dev/null 2>&1
 
 IFS=' '  read -r ISQL_PROG virt_user virt_pw <<< "`exec $OWPATH/application/scripts/virtuoso.sh $OWPATH`"
 
+echo "LOAD ${OWPATH}/application/scripts/dump_graph.sql;" | $ISQL_PROG -U $virt_user -P $virt_pw > /dev/null 2>&1
+
 curl -s -L "http://localhost:8890/sparql" --data-urlencode "default-graph-uri=" --data-urlencode "query=SELECT DISTINCT ?g WHERE { GRAPH ?g { ?s ?o ?p}}" --data-urlencode "format=text/csv" | sed "s/\"//g" | sed 1D | sort >$OWPATH/dumps/export_$SESSION/graphs.lst
 
 while read GRAPH
