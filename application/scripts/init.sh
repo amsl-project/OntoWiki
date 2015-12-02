@@ -17,7 +17,7 @@ cp $OWPATH/sample-data/*ttl* /tmp/init_$SESSION >/dev/null 2>&1
 IFS=' '  read -r ISQL_PROG virt_user virt_pw <<< "`exec $OWPATH/application/scripts/virtuoso.sh $OWPATH`"
 echo "delete from DB.DBA.load_list;" | $ISQL_PROG -U $virt_user -P $virt_pw >/dev/null 2>&1
 echo "CREATE PROCEDURE create_silent_graphs () {
-    ld_dir('/tmp/init_$SESSION', '*.ttl', 'http://example.com/');
+    ld_dir('/tmp/init_$SESSION', '*.ttl*', null);
     rdf_loader_run();
     log_message(sprintf('Creating silent graphs: '));
     FOR (SELECT * FROM DB.DBA.load_list AS sub WHERE ll_state=2 OPTION (LOOP)) DO {
