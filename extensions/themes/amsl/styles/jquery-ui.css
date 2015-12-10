@@ -56,11 +56,11 @@
 
 /* Component containers
 ----------------------------------*/
-.ui-widget { font-family: sans-serif; font-size: 0.8em; background-color: #fff; color:#333; }
+.ui-widget { font-family: sans-serif; font-size: 0.8em; background-color: #F3F3F3; color:#333; }
 .window .ui-widget { font-size:1em; }
 .ui-widget .ui-widget { font-size: 1em; }
 .ui-widget input, .ui-widget select, .ui-widget textarea, .ui-widget button { font-family: sans-serif; font-size: 1em; }
-.ui-widget-content { border: 1px solid #cccccc; background-color:#fff; color: #333333; }
+.ui-widget-content { /*border: 1px solid #cccccc;*/ background-color:#F3F3F3; color: #333333; }
 /*.ui-widget-content a { color: #07c; position:relative; }*/
 .ui-widget-header
 {
@@ -357,13 +357,13 @@
 .ui-accordion { width: 100%; overflow:hidden;}
 .ui-accordion .ui-accordion-header
 {
-    font-size: 1em;
+    font-size: xx-small;
     padding:0.3em 0.5em 0.2em;
     cursor: pointer; position: relative; margin:0.2em 0 0 0; zoom: 1;
     border: 1px solid #cccccc;
-    background: url(../images/layout-windowtitle-gradient.png) repeat-x center #ddd;
-    color: #000000;
-    font-weight: bold;
+/*background: url(../images/layout-windowtitle-gradient.png) repeat-x center #ddd;*/
+color: #333;
+font-weight: bold;
 }
 .ui-accordion .ui-accordion-li-fix { display: inline; }
 .ui-accordion .ui-accordion-header-active { border-bottom: 0 !important; }
@@ -373,14 +373,14 @@
 .ui-accordion .ui-accordion-header .ui-icon { position: absolute; left: .5em; top: 50%; margin-top: -8px; }
 .ui-accordion .ui-accordion-content { padding: 0.5em; border-top: 0; margin: -1px 0 0.2em 0; position: relative; top: 1px; margin-bottom: 2px; overflow: auto; display: none; zoom: 1; }
 .ui-accordion .ui-accordion-content-active { display: block; }/*
- * jQuery UI Autocomplete 1.8.7
- *
- * Copyright 2010, AUTHORS.txt (http://jqueryui.com/about)
- * Dual licensed under the MIT or GPL Version 2 licenses.
- * http://jquery.org/license
- *
- * http://docs.jquery.com/UI/Autocomplete#theming
- */
+* jQuery UI Autocomplete 1.8.7
+*
+* Copyright 2010, AUTHORS.txt (http://jqueryui.com/about)
+* Dual licensed under the MIT or GPL Version 2 licenses.
+* http://jquery.org/license
+*
+* http://docs.jquery.com/UI/Autocomplete#theming
+*/
 .ui-autocomplete { position: absolute; cursor: default; }
 .ui-autocomplete a { color:#333; overflow:hidden; border-top:dotted 1px #666; margin-top:0 !important; }
 .ui-autocomplete .ui-menu-item:first-child a { border-top:none; margin-top:1px !important; }
