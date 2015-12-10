@@ -20,13 +20,14 @@ class CommunityController extends OntoWiki_Controller_Component
      */
     public function listAction()
     {
+        $resourceString = $this->_request->getParam('base');
+        $resource = new OntoWiki_Resource(urldecode($resourceString));
         $translate = $this->_owApp->translate;
         $singleResource = true;
         if ($this->_request->getParam('mode') === 'multi') {
             $windowTitle    = $translate->_('Discussion about elements of the list');
             $singleResource = false;
         } else {
-            $resource   = $this->_owApp->selectedResource;
             if ($resource->getTitle()) {
                 $title = $resource->getTitle();
             } else {
@@ -44,7 +45,7 @@ class CommunityController extends OntoWiki_Controller_Component
         }
 
         $helper = $this->_owApp->extensionManager->getComponentHelper('community');
-        $comments = $helper->getList($this->view, $singleResource, $limit);
+        $comments = $helper->getList($this->view, $singleResource, $limit, $resource);
         if ($comments === null) {
             $this->view->infomessage = 'There are no discussions yet.';
         } else {
@@ -68,7 +69,7 @@ class CommunityController extends OntoWiki_Controller_Component
         $date = date('c'); // xsd:datetime
         // $date  = date('Y-m-d\TH:i:s'); // xsd:dateTime
 
-        $resource        = (string)$this->_owApp->selectedResource;
+        $resource        = $this->getParam('base');
         $aboutProperty   = $this->_privateConfig->about->property;
         $creatorProperty = $this->_privateConfig->creator->property;
         $commentType     = $this->_privateConfig->comment->type;

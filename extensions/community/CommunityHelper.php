@@ -42,11 +42,16 @@ class CommunityHelper extends OntoWiki_Component_Helper
         }
     }
 
-    public function getList($view, $singleResource = true, $limit = null)
+    public function getList($view, $singleResource = true, $limit = null, $r = null)
     {
         $store      = $this->_owApp->erfurt->getStore();
         $graph      = $this->_owApp->selectedModel;
-        $resource   = $this->_owApp->selectedResource;
+        if($r == null){
+            $resource   = $this->_owApp->selectedResource;
+        }else{
+            $resource = $r;
+        }
+
 
         $aboutProperty   = $this->_privateConfig->about->property;
         $creatorProperty = $this->_privateConfig->creator->property;
