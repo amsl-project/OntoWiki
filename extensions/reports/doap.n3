@@ -1,0 +1,45 @@
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#>.
+@prefix doap: <http://usefulinc.com/ns/doap#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix owconfig: <http://ns.ontowiki.net/SysOnt/ExtensionConfig/> .
+@prefix extension: <http://ns.ontowiki.net/Extensions/> .
+@prefix foaf: <http://xmlns.com/foaf/0.1/> .
+@prefix event: <http://ns.ontowiki.net/SysOnt/Events/> .
+@prefix : <https://github.com/amsl-project/reports/doap.n3#> .
+
+<> foaf:primaryTopic :reports .
+:reports a doap:Project ;
+  doap:name "Standard Reports" ;
+  owconfig:privateNamespace <https://github.com/amsl-project/reports/doap.n3#> ;
+  owconfig:enabled "false"^^xsd:boolean ;
+  owconfig:defaultAction "init" ;
+  rdfs:label "Standard Reports" ;
+  owconfig:templates "templates" ;
+  owconfig:languages "languages/" ;
+  doap:description "Module for saving sparql queries and exposing them to individual OntoWiki users." ;
+  owconfig:authorLabel "AMSL" ;
+  doap:maintainer <http://amsl.technology> ;
+
+  owconfig:config [
+    a owconfig:Config;
+    owconfig:id "queries";
+
+    owconfig:config [
+      a owconfig:Config;
+      owconfig:id "0";
+
+      :label "Test Query" ;
+      :description "Test Query description" ;
+      :query "SELECT DISTINCT ?g WHERE { GRAPH ?g { ?s ?o ?p}}" ;
+      :parameter
+        "Class 1",
+        "Class 2";
+      :allowed_groups
+        "Group 1",
+        "Group 2";
+    ];
+  ] ;
+  doap:release :v1-0 .
+
+:v1-0 a doap:Version ;
+  doap:revision "1.0" .

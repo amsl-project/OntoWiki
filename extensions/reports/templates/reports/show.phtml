@@ -1,0 +1,15 @@
+<h1>Available Queries</h1>
+
+<ul>
+    <?php foreach ($this->queries as $id => $query): ?>
+        <li>
+            <label><?php echo $query->label ?></label>
+            <button id="showCSVButton" class="button" type="button">HTML</button>
+            <form method="get" action="/reports/report" style="display: inline">
+                <input type="hidden" name="queryID" value="<?php echo $id ?>">
+                <input type="hidden" name="format" value="text/csv">
+                <button id="showHTMLButton" class="button" type="submit">CSV</button>
+            </form>
+        </li>
+    <?php endforeach ?>
+</ul>
