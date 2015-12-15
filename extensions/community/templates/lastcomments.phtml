@@ -14,16 +14,15 @@
  */
 ?>
 <?php if ($this->has('infomessage')): ?>
-    <p class="messagebox info"><?php echo $this->_($this->infomessage) ?></p>
+    <p id="commentbox-noMessages"class="messagebox info"><?php echo $this->_($this->infomessage) ?></p>
 <?php endif?>
-
+    <div id="comment-list" style="max-height: 300px;">
+        <?php if ($this->has('comments')): ?>
+    <?php echo $this->comments; ?>
+        <?php endif?>
+    </div>
 <?php if ($this->has('comments')): ?>
-<div id="comment-list">
-<?php echo $this->comments; ?>
-</div>
-
-<?php if ($this->has('more')): ?>
-    <p class="messagebox info">There are more comments out there ...</p>
-<?php endif?>
-
+    <?php if ($this->has('more')): ?>
+        <p class="messagebox info">There are more comments out there ...</p>
+    <?php endif?>
 <?php endif?>

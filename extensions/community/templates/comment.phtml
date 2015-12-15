@@ -25,6 +25,7 @@ $uri = $resource->getNameSpace() . $resource->getLocalName();
                 event.preventDefault();
                 var data = $(this).serialize();
                 $.post('<?php echo $this->actionUrl ?>', data, function() {
+                    $('#commentbox-noMessages').remove();
                     $('#comment-list').load('http://localhost/OntoWiki-link/community/list?climit=5&base=<?php echo urlencode($uri) ?>');
                     <?php if ($this->context == 'main.window.community') : ?>
                     $('#comment-submit-form').parents('.content.has-innerwindows').eq(0).children('.innercontent').load(document.URL);
