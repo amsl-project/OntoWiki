@@ -11,6 +11,7 @@
 $config = Erfurt_App::getInstance()->getConfig();
 $urlBase = $config->urlBase;
 ?>
+<link rel="stylesheet" type="text/css" href="<?php echo ($urlBase . 'extensions/community/templates/lastchanges.css')?>">
 <?php if ($this->has('warningmessage')): ?>
     <p class="messagebox info"><?php echo $this->warningmessage ?></p>
 <?php endif?>
@@ -21,19 +22,24 @@ $urlBase = $config->urlBase;
 <?php if ($this->has('changes')): ?>
 <ol class="bullets-none separated has-contextmenu-area">
 <?php $odd = false; ?>
+    <div style="max-height: 300px;">
 <?php foreach($this->changes as $change): ?>
-    <li class="<?php echo $odd ? 'odd' : 'even'; $odd = !$odd; ?>">
-            <a resource="<?php echo $change['resource'] ?>" class="Resource hasMenu"
+
+    <li class="<?php echo $odd ? 'latestChangesOdd' : 'latestChangesEven'; $odd = !$odd; ?>">
+            <div style="margin-bottom: 8px;">
+                <p style="line-height: 2ex; font-size: 12px;"><a  resource="<?php echo $change['resource'] ?>" class="Resource hasMenu"
                about="<?php echo $change['resource'] ?>"
                href="<?php echo $change['rhref'] ?>">
                 <?php echo $change['rname'] ?>
-            </a> by
-            <a class="Resource hasMenu"
-               about="<?php echo $change['aresource'] ?>"
-               href="<?php echo $change['ahref'] ?>">
-                <?php echo $change['author'] ?>
-            </a>
+                </p>
+                </a>
+                <div style="position: relative; margin-top: -8px; font-size: xx-small;">
+                    by
+                    <a class="Resource hasMenu" about="<?php echo $change['aresource'] ?>" href="<?php echo $change['ahref'] ?>"><?php echo $change['author'] ?></a>
+                </div>
+            </div>
         </li>
+
 <div class="contextmenu">
     <a class="item" href="<?php echo $urlBase; ?>community/listlastchanges?page=1">
         <span class="icon icon-list" title="Show more">
@@ -42,5 +48,6 @@ $urlBase = $config->urlBase;
     </a>
 </div>
 <?php endforeach; ?>
+    </div>
 </ol>
 <?php endif?>

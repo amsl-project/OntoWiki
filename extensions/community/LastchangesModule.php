@@ -62,6 +62,7 @@ class LastchangesModule extends OntoWiki_Module
 
     public function getContents()
     {
+
         $url     = new OntoWiki_Url(array('route' => 'properties'), array('r'));
         $changes = array();
         if ($this->results) {
@@ -86,6 +87,10 @@ class LastchangesModule extends OntoWiki_Module
                     $change['resource'] = new OntoWiki_Resource((string)$change['resource'], $this->model);
                     $change['rname']    = $change['resource']->getTitle() ? $change['resource']->getTitle()
                         : OntoWiki_Utils::contractNamespace($change['resource']->getIri());
+                    if(preg_match('/[a-z0-9]{32}/' , $change['rname']) == 1){
+                        $change['rname'] = chunk_split($change['rname'],16, ' ');
+                        //$change['rname'] = substr($change['rname'], 0, 17) . '...';
+                    }
 
                     $changes[] = $change;
                 }
