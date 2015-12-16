@@ -9,7 +9,7 @@
 	url = https://github.com/AKSW/contextinfo.ontowiki.git
 [submodule "extensions/imagehelper"]
 	path = extensions/imagehelper
-	url = https://github.com/AKSW/imagehelper.ontowiki.git
+	url = https://github.com/amsl-project/imagehelper.ontowiki.git
 [submodule "extensions/issnimporter"]
 	path = extensions/issnimporter
 	url = https://github.com/amsl-project/issnimporter.ontowiki.git
