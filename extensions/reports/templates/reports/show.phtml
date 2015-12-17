@@ -1,13 +1,22 @@
-<ul>
+<div class="standard-report-module">
+    <ul class="report-list">
     <?php foreach ($this->queries as $id => $query): ?>
-        <li>
-            <label><?php echo $query->label ?></label>
-            <button id="showCSVButton" class="button" type="button">HTML</button>
-            <form method="get" action="/reports/report" style="display: inline">
-                <input type="hidden" name="queryID" value="<?php echo $id ?>">
-                <input type="hidden" name="format" value="text/csv">
-                <button id="showHTMLButton" class="button" type="submit">CSV</button>
-            </form>
+        <li class="item">
+            <label class="report-title"><?php echo $query->label ?></label>
+            <p><?php echo $query->description ?></p>
+            <span class="actions">
+                <form class="button-form" method="get" action="/reports/report">
+                    <input type="hidden" name="queryID" value="<?php echo $id ?>">
+                    <input type="hidden" name="format" value="text/csv">
+                    <button id="showHTMLButton" class="button" type="submit">HTML</button>
+                </form>
+                <form class="button-form" method="get" action="/reports/report">
+                    <input type="hidden" name="queryID" value="<?php echo $id ?>">
+                    <input type="hidden" name="format" value="text/csv">
+                    <button id="showHTMLButton" class="button" type="submit">CSV</button>
+                </form>
+            </span>
         </li>
     <?php endforeach ?>
-</ul>
+    </ul>
+</div>

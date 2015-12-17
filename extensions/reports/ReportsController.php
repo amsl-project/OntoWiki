@@ -47,11 +47,11 @@ class ReportsController extends OntoWiki_Controller_Component
         $f = fopen('php://memory', 'r+');
         if ($f) {
             // print fields to first line
-            fputcsv($f, array_keys($result[0]), "\t");
+            fputcsv($f, array_keys($result[0]), ",");
 
             // print content
             foreach ($result as $line) {
-                fputcsv($f, array_values($line), "\t");
+                fputcsv($f, array_values($line), ",");
             }
             rewind($f);
 
@@ -95,6 +95,10 @@ class ReportsController extends OntoWiki_Controller_Component
     {
         $this->view->placeholder('main.window.title')->set($this->_owApp->translate->_('Standard Reports'));
         $this->_owApp->getNavigation()->disableNavigation();
+
+        $this->view->headLink()->appendStylesheet(
+            $this->_componentUrlBase . 'resources/css/reports.css'
+        );
 
         // get query list
         $queries = $this->_privateConfig->queries;
