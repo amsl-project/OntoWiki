@@ -247,6 +247,7 @@ class ExconfController extends OntoWiki_Controller_Component
                     if ($arr == null) {
                         throw new OntoWiki_Exception('invalid json: ' . $this->_request->getParam('config'));
                     } else {
+                        $arr['private'] = $this->deleteEmptyKeys($arr['private']);
                         if (!file_exists($localIniPath)) {
                             @touch($localIniPath);
                             chmod($localIniPath, 0777);
@@ -295,6 +296,18 @@ class ExconfController extends OntoWiki_Controller_Component
             //no rendering
             $this->_helper->viewRenderer->setNoRender();
         }
+    }
+
+    private function deleteEmptyKeys($arr){
+        if(in_array("", array_keys($arr))){
+            unset($arr[""]);
+        }
+        foreach($arr as $key=>$value){
+            if(is_array($value)){
+                $arr[$key] = $this->deleteEmptyKeys($value);
+            }
+        }
+        return $arr;
     }
 
     public function explorerepoAction()
