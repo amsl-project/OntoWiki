@@ -21,6 +21,7 @@ fi
 mkdir -p /tmp/export_$SESSION
 mkdir $OWPATH/dumps/export_$SESSION >/dev/null 2>&1
 chmod -R 777 $OWPATH/dumps/export_$SESSION >/dev/null 2>&1
+chmod -R 777 /tmp/export_$SESSION >/dev/null 2>&1
 
 IFS=' '  read -r ISQL_PROG virt_user virt_pw <<< "`exec $OWPATH/application/scripts/virtuoso.sh $OWPATH`"
 
