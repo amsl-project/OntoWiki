@@ -1,0 +1,20 @@
+.standard-report-module .report-list {
+    margin: 0;
+    list-style-type: none;
+}
+
+.standard-report-module .report-title {
+    font-weight: bold;
+}
+
+.standard-report-module .item:not(:last-of-type) {
+    margin-bottom: 1em;
+}
+
+.standard-report-module .actions {
+    float: right;
+}
+
+.standard-report-module .button-form {
+    display: inline;
+}
