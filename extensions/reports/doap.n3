@@ -23,21 +23,6 @@
   owconfig:config [
     a owconfig:Config;
     owconfig:id "queries";
-
-    owconfig:config [
-      a owconfig:Config;
-      owconfig:id "0";
-
-      :label "Test Query" ;
-      :description "Test Query description" ;
-      :query "SELECT DISTINCT ?g WHERE { GRAPH ?g { ?s ?o ?p}}" ;
-      :parameter
-        "Class 1",
-        "Class 2";
-      :allowed_groups
-        "Group 1",
-        "Group 2";
-    ];
   ] ;
   doap:release :v1-0 .
 

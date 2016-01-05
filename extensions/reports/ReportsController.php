@@ -32,13 +32,26 @@ class ReportsController extends OntoWiki_Controller_Component
         $this->db_backend->init();
     }
 
-    private function runQuery($id)
+    private function runQuery($id, $parameter = NULL)
     {
         $cfg = $this->_privateConfig;
         if (!isset($cfg->queries) || !isset($cfg->queries->$id))
             throw new OntoWiki_Component_Exception("Can't find query with id $id!");
 
         $query = $cfg->queries->$id;
+
+        // check parameter
+        if ($query->parameter) {
+            if (!$parameter)
+                throw new OntoWiki_Component_Exception("No Parameter provided for query $id!");
+
+            foreach ($parameter as $param_id => $value) {
+                if (!$value)
+                    throw new OntoWiki_Component_Exception("Parameter $param_id is empty!");
+                $query->query = str_replace('$$' . $param_id . '$$', $value, $query->query);
+            }
+        }
+
         return $this->db_backend->sparqlQuery($query->query);
     }
 
@@ -68,7 +81,7 @@ class ReportsController extends OntoWiki_Controller_Component
         if (!isset($this->_request->queryID))
             throw new OntoWiki_Component_Exception('No query id specified!');
 
-
+        // get format
         if (!isset($this->_request->format))
             $format = 'text/html';
         else
@@ -77,9 +90,13 @@ class ReportsController extends OntoWiki_Controller_Component
         if (!in_array($format, $this->allowed_formats))
             throw new OntoWiki_Component_Exception("Format $format is not allowed!");
 
-        $result = $this->runQuery($this->_request->queryID);
+        $result = $this->runQuery($this->_request->queryID, $this->_request->parameter);
 
-        // TODO empty result
+        if (!$result) {
+            $this->view->placeholder('main.window.title')->set($this->_owApp->translate->_('No Results!'));
+            $this->_owApp->getNavigation()->disableNavigation();
+            return;
+        }
 
         $this->getResponse()->setHeader('Content-Type', $format);
 
@@ -101,7 +118,6 @@ class ReportsController extends OntoWiki_Controller_Component
         );
 
         // get query list
-        $queries = $this->_privateConfig->queries;
-        $this->view->queries = $queries;
+        $this->view->queries = $this->_privateConfig->queries;
     }
 }
