@@ -11,12 +11,19 @@
 
 class ReportsHelper extends OntoWiki_Component_Helper
 {
-    public function __construct()
+    public function init()
     {
-        $owApp = OntoWiki::getInstance();
+        $user = $this->_owApp->getUser();
+        $allowed_users = $this->_privateConfig->allowed_users;
+        $allowed_users = $allowed_users ? $allowed_users->toArray() : [];
+
+        // don't add menu entry for non-authorized users
+        if (!$user->isDbUser() && !in_array($user->getUri(), $allowed_users)) {
+            return;
+        }
 
         // register with extras menu
-        $translate  = $owApp->translate;
+        $translate  = $this->_owApp->translate;
         $url        = new OntoWiki_Url(array('controller' => 'reports', 'action' => 'show'));
         $extrasMenu = OntoWiki_Menu_Registry::getInstance()->getMenu('application')->getSubMenu('Extras');
         $extrasMenu->setEntry($translate->_('Standard Reports'), (string)$url);

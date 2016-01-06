@@ -76,8 +76,31 @@ class ReportsController extends OntoWiki_Controller_Component
         }
     }
 
+    private function checkAuth()
+    {
+        $user = $this->_owApp->getUser();
+        $allowed_users = $this->_privateConfig->allowed_users;
+        $allowed_users = $allowed_users ? $allowed_users->toArray() : [];
+
+        // access for dba as always allowed
+        if ($user->isDbUser())
+            return true;
+
+        if (!in_array($user->getUri(), $allowed_users)) {
+            $this->_response->setHttpResponseCode(403)->setBody('forbidden');
+            $this->getHelper('Layout')->disableLayout();
+            $this->getHelper('ViewRenderer')->setNoRender();
+            return false;
+        }
+
+        return true;
+    }
+
     public function reportAction()
     {
+        if (!$this->checkAuth())
+            return;
+
         if (!isset($this->_request->queryID))
             throw new OntoWiki_Component_Exception('No query id specified!');
 
@@ -110,6 +133,9 @@ class ReportsController extends OntoWiki_Controller_Component
 
     public function showAction()
     {
+        if (!$this->checkAuth())
+            return;
+
         $this->view->placeholder('main.window.title')->set($this->_owApp->translate->_('Standard Reports'));
         $this->_owApp->getNavigation()->disableNavigation();
 
