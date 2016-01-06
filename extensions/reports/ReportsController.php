@@ -39,6 +39,7 @@ class ReportsController extends OntoWiki_Controller_Component
             throw new OntoWiki_Component_Exception("Can't find query with id $id!");
 
         $query = $cfg->queries->$id;
+        $this->view->query = $query;
 
         // check parameter
         if ($query->parameter) {
@@ -76,6 +77,21 @@ class ReportsController extends OntoWiki_Controller_Component
         }
     }
 
+    private function returnHTML($result)
+    {
+        $header = array();
+        if (is_array($result) && isset($result[0]) && is_array($result[0])) {
+            $header = array_keys($result[0]);
+        } else if (is_bool($result)) {
+            $result = $result ? 'yes' : 'no';
+        } else if (is_int($result)) {
+            $result = (string)$result;
+        }
+
+        $this->view->data = $result;
+        $this->view->header = $header;
+    }
+
     private function checkAuth()
     {
         $user = $this->_owApp->getUser();
@@ -105,19 +121,28 @@ class ReportsController extends OntoWiki_Controller_Component
             throw new OntoWiki_Component_Exception('No query id specified!');
 
         // get format
-        if (!isset($this->_request->format))
+        if (isset($this->_request->html_format))
             $format = 'text/html';
+        else if (isset($this->_request->csv_format))
+            $format = 'text/csv';
         else
-            $format = $this->_request->format;
+            throw new OntoWiki_Component_Exception("Report format not specified or not allowed!");
 
-        if (!in_array($format, $this->allowed_formats))
-            throw new OntoWiki_Component_Exception("Format $format is not allowed!");
+        try {
+            $result = $this->runQuery($this->_request->queryID, $this->_request->parameter);
+        }
+        catch (Exception $e) {
+            $this->view->error = $e->getMessage();
+            $this->view->data = '';
+            $this->view->header = '';
+            return;
+        }
 
-        $result = $this->runQuery($this->_request->queryID, $this->_request->parameter);
-
+        // extra view for empty results
         if (!$result) {
             $this->view->placeholder('main.window.title')->set($this->_owApp->translate->_('No Results!'));
             $this->_owApp->getNavigation()->disableNavigation();
+            $this->view->no_results = true;
             return;
         }
 
@@ -127,7 +152,7 @@ class ReportsController extends OntoWiki_Controller_Component
             case 'text/csv':
                 return $this->returnCSV($result);
             case 'text/html':
-                throw new OntoWiki_Component_Exception("HTML format not implemented!");
+                return $this->returnHTML($result);
         }
     }
 

@@ -1,5 +1,36 @@
-<!--<script type="text/javascript" id="RDFauthorScript" src="--><?php //echo $this->libraryUrlBase ?><!--RDFauthor/src/rdfauthor.js"></script>-->
-
 <div class="standard-report-module">
-    No results for this query! <a href="/reports/show">Back</a>
+    <?php if ($this->has('error')): ?>
+        <fieldset>
+            <div class="messagebox error"><?php echo $this->error ?></div>
+        </fieldset>
+    <?php endif; ?>
+
+    <?php if ($this->has('no_results')): ?>
+        <div class="messagebox">No results for this query! <a href="/reports/show">Back</a></div>
+    <?php endif; ?>
+
+    <?php if (!$this->has('no_results')): ?>
+        <h3>Result for query '<?php echo $this->query->label ?>' <a href="/reports/show">All Reports</a></h3>
+        <fieldset>
+            <?php if (is_array($this->data)): ?>
+                <?php
+                if(class_exists("QuerybuildingHelper")){
+                    echo $this->partial('partials/resultset.phtml', array('data' => $this->data, 'header' => $this->header, 'caption'=>'Results', 'urlBase' => $this->urlBase));
+                } else {
+                    echo $this->partial(
+                        'partials/table.phtml',
+                        array(
+                            'data' => $this->data,
+                            'header' => $this->header,
+                            'tableClass' => 'query-result',
+                            'querylink' => true
+                        )
+                    );
+                }
+                ?>
+            <?php else: ?>
+                <pre><?php echo $this->escape($this->data) ?></pre>
+            <?php endif; ?>
+        </fieldset>
+    <?php endif; ?>
 </div>
