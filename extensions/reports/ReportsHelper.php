@@ -15,7 +15,7 @@ class ReportsHelper extends OntoWiki_Component_Helper
     {
         $user = $this->_owApp->getUser();
         $allowed_users = $this->_privateConfig->allowed_users;
-        $allowed_users = $allowed_users ? $allowed_users->toArray() : [];
+        $allowed_users = $allowed_users && $allowed_users instanceof Zend_Config ? $allowed_users->toArray() : [];
 
         // don't add menu entry for non-authorized users
         if (!$user->isDbUser() && !in_array($user->getUri(), $allowed_users)) {
