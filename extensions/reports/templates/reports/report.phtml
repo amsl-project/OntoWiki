@@ -6,11 +6,11 @@
     <?php endif; ?>
 
     <?php if ($this->has('no_results')): ?>
-        <div class="messagebox">No results for this query! <a href="/reports/show">Back</a></div>
+        <div class="messagebox">No results for this query! <a href="/reports/list">Back</a></div>
     <?php endif; ?>
 
     <?php if (!$this->has('no_results')): ?>
-        <h3>Result for query '<?php echo $this->query->label ?>' <a href="/reports/show">All Reports</a></h3>
+        <h3>Result for query '<?php echo $this->query->label ?>' <a href="/reports/list">All Reports</a></h3>
         <fieldset>
             <?php if (is_array($this->data)): ?>
                 <?php

@@ -24,7 +24,7 @@ class ReportsHelper extends OntoWiki_Component_Helper
 
         // register with extras menu
         $translate  = $this->_owApp->translate;
-        $url        = new OntoWiki_Url(array('controller' => 'reports', 'action' => 'show'));
+        $url        = new OntoWiki_Url(array('controller' => 'reports', 'action' => 'list'));
         $extrasMenu = OntoWiki_Menu_Registry::getInstance()->getMenu('application')->getSubMenu('Extras');
         $extrasMenu->setEntry($translate->_('Standard Reports'), (string)$url);
     }
