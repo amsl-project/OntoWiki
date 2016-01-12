@@ -749,25 +749,27 @@ function editPropertyListmode(event) {
 }
 
 function addProperty() {
-    var ID = RDFauthor.nextID();
-    var td1ID = 'rdfauthor-property-selector-' + ID;
-    var td2ID = 'rdfauthor-property-widget-' + ID;
 
-    $('.edit').each(function() {
-        $(this).fadeIn(effectTime);
-    });
-
-    $('table.rdfa')
-        .removeClass('hidden')
-        .show()
-        .children('tbody')
-        .prepend('<tr><td colspan="2" width="120"><div style="width:75%" id="' + td1ID + '"></div></td></tr>');
-
-    $('table.rdfa').parent().find('p.messagebox').hide();
     
     var selectorOptions = {
-        container: $('#' + td1ID),
+
+        container: $('body'),
         selectionCallback: function (uri, label, datatype) {
+            var ID = RDFauthor.nextID();
+            var td1ID = 'rdfauthor-property-selector-' + ID;
+            var td2ID = 'rdfauthor-property-widget-' + ID;
+
+            $('.edit').each(function() {
+                $(this).fadeIn(effectTime);
+            });
+
+            $('table.rdfa')
+                .removeClass('hidden')
+                .show()
+                .children('tbody')
+                .prepend('<tr><td colspan="2" width="120"><div style="width:75%" id="' + td1ID + '"></div></td></tr>');
+
+            $('table.rdfa').parent().find('p.messagebox').hide();
             var statement;
 
             if (datatype != undefined) {
