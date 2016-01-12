@@ -1,0 +1,30 @@
+<div class="standard-report-module">
+    <div id="report-accordion" class="report-list">
+    <?php foreach ($this->queries as $id => $query): ?>
+        <h3 class="report-title"><?php echo $query->label ?></h3>
+        <form class="" method="get" action="/reports/report">
+            <span class="actions">
+                <input type="hidden" name="queryID" value="<?php echo $id ?>">
+                <button id="showCSVButton" class="button" type="submit" name="csv_format" value="1">CSV</button>
+                <button id="showHTMLButton" class="button" type="submit" name="html_format" value="1">Show</button>
+            </span>
+            <p class="report-description"><?php echo $query->description ?></p>
+
+            <?php if ($query->parameter): ?>
+            <table class="parameter-table">
+            <?php foreach ($query->parameter as $param_id => $parameter): ?>
+                <tr>
+                    <td class="label">
+                        <label><?php echo $parameter->label ?></label>
+                    </td>
+                    <td>
+                        <input class="typeahead" type="text" name="parameter[<?php echo $param_id ?>]">
+                    </td>
+                </tr>
+            <?php endforeach ?>
+            </table>
+            <?php endif; ?>
+        </form>
+    <?php endforeach ?>
+    </div>
+</div>
