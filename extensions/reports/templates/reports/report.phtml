@@ -14,19 +14,15 @@
         <fieldset>
             <?php if (is_array($this->data)): ?>
                 <?php
-                if(class_exists("QuerybuildingHelper")){
-                    echo $this->partial('partials/resultset.phtml', array('data' => $this->data, 'header' => $this->header, 'caption'=>'Results', 'urlBase' => $this->urlBase));
-                } else {
-                    echo $this->partial(
-                        'partials/table.phtml',
-                        array(
-                            'data' => $this->data,
-                            'header' => $this->header,
-                            'tableClass' => 'query-result',
-                            'querylink' => true
-                        )
-                    );
-                }
+                echo $this->partial(
+                    'partials/table.phtml',
+                    array(
+                        'data' => $this->data,
+                        'header' => $this->header,
+                        'tableClass' => 'query-result',
+                        'querylink' => true
+                    )
+                );
                 ?>
             <?php else: ?>
                 <pre><?php echo $this->escape($this->data) ?></pre>

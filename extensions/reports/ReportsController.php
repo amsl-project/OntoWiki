@@ -32,6 +32,25 @@ class ReportsController extends OntoWiki_Controller_Component
         $this->db_backend->init();
     }
 
+    /**
+     * Validate parameter - this is very critical to prevent sparql injections
+     * For now we only allow urls and numeric types
+     *
+     * @param $value parameter value
+     * @return bool
+     */
+    private function validate_parameter($value)
+    {
+        // first check if it's numeric
+        if (is_numeric($value))
+            return true;
+        // it's an url?
+        else if (filter_var($value, FILTER_VALIDATE_URL))
+            return true;
+
+        return false;
+    }
+
     private function runQuery($id, $parameter = NULL)
     {
         $cfg = $this->_privateConfig;
@@ -49,6 +68,11 @@ class ReportsController extends OntoWiki_Controller_Component
             foreach ($parameter as $param_id => $value) {
                 if (!$value)
                     throw new OntoWiki_Component_Exception("Parameter $param_id is empty!");
+
+                if (!$this->validate_parameter($value)) {
+                    throw new OntoWiki_Component_Exception("Parameter $param_id has invalid value!");
+                }
+
                 $query->query = str_replace('$$' . $param_id . '$$', $value, $query->query);
             }
         }
@@ -138,10 +162,12 @@ class ReportsController extends OntoWiki_Controller_Component
             return;
         }
 
+        $this->_owApp->getNavigation()->disableNavigation();
+        $this->view->placeholder('main.window.title')->set($this->_owApp->translate->_('Report Results'));
+
         // extra view for empty results
         if (!$result) {
             $this->view->placeholder('main.window.title')->set($this->_owApp->translate->_('No Results!'));
-            $this->_owApp->getNavigation()->disableNavigation();
             $this->view->no_results = true;
             return;
         }
@@ -175,6 +201,9 @@ class ReportsController extends OntoWiki_Controller_Component
 
     public function completeAction()
     {
+        if (!$this->checkAuth())
+            return;
+
         if (!isset($this->_request->search))
             throw new OntoWiki_Component_Exception('No search parameter specified!');
         if (!isset($this->_request->query_id))
