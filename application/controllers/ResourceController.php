@@ -43,6 +43,7 @@ class ResourceController extends OntoWiki_Controller_Base
 
         $store      = $this->_owApp->erfurt->getStore();
         $graph      = $this->_owApp->selectedModel;
+        $importedGraphs   = $this->_owApp->selectedModel->getImports();
         $resource   = $this->_owApp->selectedResource;
         $navigation = $this->_owApp->navigation;
         $translate  = $this->_owApp->translate;
@@ -129,7 +130,7 @@ class ResourceController extends OntoWiki_Controller_Base
             foreach ($graphs as $g) {
                 $graphInfo[$g] = $titleHelper->getTitle($g, $this->_config->languages->locale);
 
-                if ($this->_erfurt->getAc()->isModelAllowed('edit', $g)) {
+                if ($this->_erfurt->getAc()->isModelAllowed('edit', $g) && !in_array($g, $importedGraphs)) {
                     $editableFlags[$g] = true;
                     $this->view->placeholder('update')->append(
                         array(
