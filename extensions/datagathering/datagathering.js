@@ -27,7 +27,12 @@ $(document).ready(function()
     // Click event for the View button
     $('#location_open').live('click', function(e) {
         if (e.which == 1) {
-            window.location = urlBase + 'resource/properties?r=' + encodeURIComponent($('#location_bar_input').val());
+            var val = $('#location_bar_input').val();
+            var cleanedVal = val.trim();
+            if(cleanedVal[0] == '<'){
+                cleanedVal = cleanedVal.slice(1, cleanedVal.length - 1);
+            }
+            window.location = urlBase + 'resource/properties?r=' + encodeURIComponent(cleanedVal);
         }
     });
 
