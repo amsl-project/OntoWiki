@@ -14,6 +14,9 @@ $urlBase = OntoWiki::getInstance()->getUrlBase();
 
     <?php if (!$this->has('no_results')): ?>
         <h3>Result for query '<?php echo $this->query->label ?>' <a href="<?php echo ($urlBase . 'reports/list')?>">All Reports</a></h3>
+        <?php if (count($this->data) >= $this->limit): ?>
+            <div class="messagebox warning">This report may be truncated! Use the CSV option to get all results.</div>
+        <?php endif; ?>
         <fieldset>
             <?php if (is_array($this->data)): ?>
                 <?php

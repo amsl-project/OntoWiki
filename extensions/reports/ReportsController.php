@@ -15,6 +15,7 @@ class ReportsController extends OntoWiki_Controller_Component
 {
     private $db_backend;
     private $allowed_formats = ['text/csv', 'text/html'];
+    private $html_limit = 200;
 
     public function init()
     {
@@ -51,7 +52,7 @@ class ReportsController extends OntoWiki_Controller_Component
         return false;
     }
 
-    private function runQuery($id, $parameter = NULL)
+    private function runQuery($id, $parameter = NULL, $limit)
     {
         $cfg = $this->_privateConfig;
         if (!isset($cfg->queries) || !isset($cfg->queries->$id))
@@ -76,6 +77,9 @@ class ReportsController extends OntoWiki_Controller_Component
                 $query->query = str_replace('$$' . $param_id . '$$', $value, $query->query);
             }
         }
+
+        if ($limit)
+            $query->query .= " LIMIT $this->html_limit";
 
         return $this->db_backend->sparqlQuery($query->query);
     }
@@ -114,6 +118,7 @@ class ReportsController extends OntoWiki_Controller_Component
 
         $this->view->data = $result;
         $this->view->header = $header;
+        $this->view->limit = $this->html_limit;
     }
 
     private function checkAuth($queryID = null, $set_response = true)
@@ -162,8 +167,11 @@ class ReportsController extends OntoWiki_Controller_Component
         else
             throw new OntoWiki_Component_Exception("Report format not specified or not allowed!");
 
+        // HACK limit results to reduce response time for html view
+        $limit = ($format === 'text/html');
+
         try {
-            $result = $this->runQuery($this->_request->queryID, $this->_request->parameter);
+            $result = $this->runQuery($this->_request->queryID, $this->_request->parameter, $limit);
         }
         catch (Exception $e) {
             $this->view->error = $e->getMessage();
@@ -229,9 +237,6 @@ class ReportsController extends OntoWiki_Controller_Component
         $search = $this->_request->search;
         $query_id = $this->_request->query_id;
         $parameter_id = $this->_request->parameter_id;
-//        $search = 'A';
-//        $query_id = '0';
-//        $parameter_id = '0';
 
         // find type
         $queries = $this->_privateConfig->queries->toArray();
