@@ -243,7 +243,12 @@ class ReportsController extends OntoWiki_Controller_Component
 
         $query = '
 PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
-SELECT DISTINCT ?uri ?literal WHERE {?uri rdfs:label ?literal . ?uri a <' . $type . '> . FILTER (isURI(?uri) && isLITERAL(?literal) && REGEX(?literal, "' . $search . '", "i") && REGEX(?literal, "^.{1,150}$")) } LIMIT 15';
+SELECT DISTINCT ?uri ?literal WHERE { ?uri a <' . $type . '> .
+{ ?uri rdfs:label ?literal } UNION
+{ ?uri <http://www.w3.org/2006/vcard/ns#organization-name> ?literal } UNION
+{ ?uri <http://xmlns.com/foaf/0.1/name> ?literal } UNION
+{ ?uri <http://purl.org/dc/elements/1.1/title> ?literal }
+FILTER (isURI(?uri) && isLITERAL(?literal) && REGEX(?literal, "' . $search . '", "i") && REGEX(?literal, "^.{1,150}$")) } LIMIT 15';
 
         $store = $this->_erfurt->getStore();
         $result = $store->sparqlQuery(
