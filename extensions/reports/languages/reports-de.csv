@@ -1,1 +1,6 @@
 Standard Reports;Standardberichte
+All Reports;Alle Berichte
+Report Results;Bericht
+No results for this query;Keine Ergebnisse für diese Abfrage
+This report has been truncated to %1$s results! Use the CSV option to get all results.;Dieser Bericht wurde auf %1$s Ergebnisse reduziert. Nutzen sie die CSV-Funktion, um alle Ergebnisse abzurufen.
+Result for query "%1$s";Ergebnisse für Abfrage "%1$s"

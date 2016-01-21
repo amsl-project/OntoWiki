@@ -1,5 +1,6 @@
 <?php
 $urlBase = OntoWiki::getInstance()->getUrlBase();
+$trans = OntoWiki::getInstance()->translate;
 ?>
 <div class="standard-report-module">
     <?php if ($this->has('error')): ?>
@@ -9,24 +10,23 @@ $urlBase = OntoWiki::getInstance()->getUrlBase();
     <?php endif; ?>
 
     <?php if ($this->has('no_results')): ?>
-        <div class="messagebox">No results for this query! <a href="<?php echo ($urlBase . 'reports/list')?>">Back</a></div>
+        <div class="messagebox"><?php echo $trans->_('No results for this query')?>! <a href="<?php echo ($urlBase . 'reports/list')?>"><?php echo $trans->_('Back')?></a></div>
     <?php endif; ?>
 
     <?php if (!$this->has('no_results')): ?>
-        <h3>Result for query '<?php echo $this->query->label ?>' <a href="<?php echo ($urlBase . 'reports/list')?>">All Reports</a></h3>
+        <h3><?php echo sprintf($trans->_('Result for query "%1$s"'), $this->query->label)?> <a href="<?php echo ($urlBase . 'reports/list')?>"><?php echo $trans->_('All Reports')?></a></h3>
         <?php if (count($this->data) >= $this->limit): ?>
-            <div class="messagebox warning">This report may be truncated! Use the CSV option to get all results.</div>
+            <div class="messagebox warning"><?php echo sprintf($trans->_('This report has been truncated to %1$s results! Use the CSV option to get all results.'), $this->limit)?></div>
         <?php endif; ?>
         <fieldset>
             <?php if (is_array($this->data)): ?>
                 <?php
                 echo $this->partial(
-                    'partials/table.phtml',
+                    'partials/resultset.phtml',
                     array(
                         'data' => $this->data,
                         'header' => $this->header,
-                        'tableClass' => 'query-result',
-                        'querylink' => true
+                        'urlBase' => $urlBase
                     )
                 );
                 ?>
