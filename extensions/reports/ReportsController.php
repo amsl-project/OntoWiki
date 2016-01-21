@@ -15,7 +15,8 @@ class ReportsController extends OntoWiki_Controller_Component
 {
     private $db_backend;
     private $allowed_formats = ['text/csv', 'text/html'];
-    private $html_limit = 200;
+    private $default_query_limit = 200;
+    private $current_limit = NULL;
 
     public function init()
     {
@@ -78,8 +79,11 @@ class ReportsController extends OntoWiki_Controller_Component
             }
         }
 
-        if ($limit)
-            $query->query .= " LIMIT $this->html_limit";
+        if ($limit) {
+            $this->current_limit = $query->get('limit', $this->default_query_limit);
+            $query->query .= " LIMIT $this->current_limit";
+        }
+
 
         return $this->db_backend->sparqlQuery($query->query);
     }
@@ -118,7 +122,7 @@ class ReportsController extends OntoWiki_Controller_Component
 
         $this->view->data = $result;
         $this->view->header = $header;
-        $this->view->limit = $this->html_limit;
+        $this->view->limit = $this->current_limit;
     }
 
     private function checkAuth($queryID = null, $set_response = true)
