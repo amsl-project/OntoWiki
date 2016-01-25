@@ -13,8 +13,12 @@
     font-size: 1em;
 }
 
-.standard-report-module .report-description {
-
+.standard-report-module input {
+    width: 90% !important;
+    height: 17px !important;
+    padding: 4px 4px !important;
+    font-size: 16px !important;
+    line-height: 30px;
 }
 
 .standard-report-module .item:not(:last-of-type) {

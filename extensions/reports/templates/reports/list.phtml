@@ -21,7 +21,11 @@ $urlBase = OntoWiki::getInstance()->getUrlBase();
                         <label><?php echo $parameter->label ?></label>
                     </td>
                     <td>
+                    <?php if (in_array($parameter->type, ['', 'http://www.w3.org/2001/XMLSchema#integer'])): ?>
+                        <input class="text" type="text" name="parameter[<?php echo $param_id ?>]">
+                    <?php else: ?>
                         <input class="typeahead" type="text" name="parameter[<?php echo $param_id ?>]">
+                    <?php endif; ?>
                     </td>
                 </tr>
             <?php endforeach ?>
