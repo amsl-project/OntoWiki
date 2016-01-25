@@ -186,6 +186,7 @@ class ReportsController extends OntoWiki_Controller_Component
 
         $this->_owApp->getNavigation()->disableNavigation();
         $this->view->placeholder('main.window.title')->set($this->_owApp->translate->_('Report Results'));
+        $this->view->headLink()->appendStylesheet($this->_componentUrlBase . 'resources/css/result.css');
 
         // extra view for empty results
         if (!$result) {

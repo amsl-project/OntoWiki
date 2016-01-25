@@ -2,6 +2,7 @@
 $urlBase = OntoWiki::getInstance()->getUrlBase();
 $trans = OntoWiki::getInstance()->translate;
 ?>
+
 <div class="standard-report-module">
     <?php if ($this->has('error')): ?>
         <fieldset>
@@ -16,7 +17,7 @@ $trans = OntoWiki::getInstance()->translate;
     <?php if (!$this->has('no_results')): ?>
         <h3><?php echo sprintf($trans->_('Result for query "%1$s"'), $this->query->label)?> <a href="<?php echo ($urlBase . 'reports/list')?>"><?php echo $trans->_('All Reports')?></a></h3>
         <?php if (count($this->data) >= $this->limit): ?>
-            <div class="messagebox warning"><?php echo sprintf($trans->_('This report has been truncated to %1$s results! Use the CSV option to get all results.'), $this->limit)?></div>
+            <div class="messagebox warning"><?php echo sprintf($trans->_('This report has been truncated to %1$s results! Please use the CSV option to get all results.'), $this->limit)?></div>
         <?php endif; ?>
         <fieldset>
             <?php if (is_array($this->data)): ?>
