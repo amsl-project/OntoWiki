@@ -15,6 +15,8 @@ class ReportsController extends OntoWiki_Controller_Component
 {
     private $db_backend;
     private $allowed_formats = ['text/csv', 'text/html'];
+    private $default_query_limit = 200;
+    private $current_limit = NULL;
 
     public function init()
     {
@@ -51,7 +53,7 @@ class ReportsController extends OntoWiki_Controller_Component
         return false;
     }
 
-    private function runQuery($id, $parameter = NULL)
+    private function runQuery($id, $parameter = NULL, $limit)
     {
         $cfg = $this->_privateConfig;
         if (!isset($cfg->queries) || !isset($cfg->queries->$id))
@@ -76,6 +78,12 @@ class ReportsController extends OntoWiki_Controller_Component
                 $query->query = str_replace('$$' . $param_id . '$$', $value, $query->query);
             }
         }
+
+        if ($limit) {
+            $this->current_limit = $query->get('limit', $this->default_query_limit);
+            $query->query .= " LIMIT $this->current_limit";
+        }
+
 
         return $this->db_backend->sparqlQuery($query->query);
     }
@@ -114,6 +122,7 @@ class ReportsController extends OntoWiki_Controller_Component
 
         $this->view->data = $result;
         $this->view->header = $header;
+        $this->view->limit = $this->current_limit;
     }
 
     private function checkAuth($queryID = null, $set_response = true)
@@ -162,8 +171,11 @@ class ReportsController extends OntoWiki_Controller_Component
         else
             throw new OntoWiki_Component_Exception("Report format not specified or not allowed!");
 
+        // HACK limit results to reduce response time for html view
+        $limit = ($format === 'text/html');
+
         try {
-            $result = $this->runQuery($this->_request->queryID, $this->_request->parameter);
+            $result = $this->runQuery($this->_request->queryID, $this->_request->parameter, $limit);
         }
         catch (Exception $e) {
             $this->view->error = $e->getMessage();
@@ -174,6 +186,7 @@ class ReportsController extends OntoWiki_Controller_Component
 
         $this->_owApp->getNavigation()->disableNavigation();
         $this->view->placeholder('main.window.title')->set($this->_owApp->translate->_('Report Results'));
+        $this->view->headLink()->appendStylesheet($this->_componentUrlBase . 'resources/css/result.css');
 
         // extra view for empty results
         if (!$result) {
@@ -229,9 +242,6 @@ class ReportsController extends OntoWiki_Controller_Component
         $search = $this->_request->search;
         $query_id = $this->_request->query_id;
         $parameter_id = $this->_request->parameter_id;
-//        $search = 'A';
-//        $query_id = '0';
-//        $parameter_id = '0';
 
         // find type
         $queries = $this->_privateConfig->queries->toArray();
@@ -243,7 +253,12 @@ class ReportsController extends OntoWiki_Controller_Component
 
         $query = '
 PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
-SELECT DISTINCT ?uri ?literal WHERE {?uri rdfs:label ?literal . ?uri a <' . $type . '> . FILTER (isURI(?uri) && isLITERAL(?literal) && REGEX(?literal, "' . $search . '", "i") && REGEX(?literal, "^.{1,150}$")) } LIMIT 15';
+SELECT DISTINCT ?uri ?literal WHERE { ?uri a <' . $type . '> .
+{ ?uri rdfs:label ?literal } UNION
+{ ?uri <http://www.w3.org/2006/vcard/ns#organization-name> ?literal } UNION
+{ ?uri <http://xmlns.com/foaf/0.1/name> ?literal } UNION
+{ ?uri <http://purl.org/dc/elements/1.1/title> ?literal }
+FILTER (isURI(?uri) && isLITERAL(?literal) && REGEX(?literal, "' . $search . '", "i") && REGEX(?literal, "^.{1,150}$")) } LIMIT 15';
 
         $store = $this->_erfurt->getStore();
         $result = $store->sparqlQuery(

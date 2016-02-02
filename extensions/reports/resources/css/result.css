@@ -1,0 +1,13 @@
+/*get horizontal scrollbar to the page bottom*/
+
+.content {
+    overflow: visible !important;
+}
+
+.slidehelper {
+    overflow: visible !important;
+}
+
+table.separated-vertical {
+    background: #F3F3F3;
+}
