@@ -14,6 +14,8 @@ var effectTime = 250;
 var dragZIndex = 1000;
 var menuZIndex = 1000;
 
+addPropertyButton = undefined;
+
 // number of chars entered before autocompleting starts
 var autoCompleteMinChars = 3;
 
@@ -357,6 +359,7 @@ $(document).ready(function() {
     });
 
     $('.edit.save').click(function() {
+        $('.property-add').css("display", "inline");
         RDFauthor.commit();
     });
 
