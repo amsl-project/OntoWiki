@@ -282,32 +282,36 @@ class ResourceController extends OntoWiki_Controller_Base
         /*
          * toolbar disabled for 0.9.5 (reactived hopefully later :) ) */
 
-        if ($graph->isEditable()) {
-            $toolbar = $this->_owApp->toolbar;
-            $toolbar->appendButton(
-                OntoWiki_Toolbar::EDITADD, array('name' => 'Add Instance', 'class' => 'init-resource')
-            );
-            $toolbar->prependButton(OntoWiki_Toolbar::SEPARATOR);
-            $toolbar->prependButton(
-                OntoWiki_Toolbar::CANCEL,
-                array(
-                     '+class' => 'hidden',
-                     'title'  => 'SHIFT + ALT + c'
-                )
-            );
+        if($_SESSION['ONTOWIKI']['archive'] == ''){
+            if ($graph->isEditable() ) {
+                $toolbar = $this->_owApp->toolbar;
+                $toolbar->appendButton(
+                    OntoWiki_Toolbar::EDITADD, array('name' => 'Add Instance', 'class' => 'init-resource')
+                );
+                $toolbar->prependButton(OntoWiki_Toolbar::SEPARATOR);
+                $toolbar->prependButton(
+                    OntoWiki_Toolbar::CANCEL,
+                    array(
+                        '+class' => 'hidden',
+                        'title'  => 'SHIFT + ALT + c'
+                    )
+                );
 
-            $toolbar->prependButton(
-                OntoWiki_Toolbar::SAVE,
-                array(
-                     '+class' => 'hidden',
-                     'title'  => 'SHIFT + ALT + s'
-                )
-            );
-            // ->appendButton(OntoWiki_Toolbar::EDIT, array('name' => 'Edit Instances', 'class' => 'edit-enable'))
-            // ->appendButton(OntoWiki_Toolbar::SEPARATOR)
-            // ->appendButton(OntoWiki_Toolbar::DELETE, array('name' => 'Delete Selected', 'class' => 'submit'))
-            $this->view->placeholder('main.window.toolbar')->set($toolbar);
+                $toolbar->prependButton(
+                    OntoWiki_Toolbar::SAVE,
+                    array(
+                        '+class' => 'hidden',
+                        'title'  => 'SHIFT + ALT + s'
+                    )
+                );
+                // ->appendButton(OntoWiki_Toolbar::EDIT, array('name' => 'Edit Instances', 'class' => 'edit-enable'))
+                // ->appendButton(OntoWiki_Toolbar::SEPARATOR)
+                // ->appendButton(OntoWiki_Toolbar::DELETE, array('name' => 'Delete Selected', 'class' => 'submit'))
+                $this->view->placeholder('main.window.toolbar')->set($toolbar);
+            }
         }
+
+
         /*
 
             $url = new OntoWiki_Url(
