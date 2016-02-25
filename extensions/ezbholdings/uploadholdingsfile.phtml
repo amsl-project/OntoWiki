@@ -1,0 +1,23 @@
+<?php
+/**
+ * OntoWiki rdf upload import import template
+ */
+$translate = OntoWiki::getInstance()->translate;
+$urlBase = OntoWiki::getInstance()->getUrlBase();
+//$default_licensee = OntoWiki::getInstance()->getConfig()->readOnly();
+?>
+<fieldset class="activeForm" id="importdata">
+        <div>
+            <label for="file-input">
+                <?php echo sprintf(
+                    $this->_('File (max. %1$sB)'),
+                    preg_replace('/([kMG])/', ' $1', ini_get('upload_max_filesize'))
+                ) ?>
+            </label>
+            <input type="file" id="file-input" name="source" />
+            <br class="clearall"/>
+        </div>
+    <?php if (isset($this->success) && $this->success == true): ?>
+        SUCCESS
+    <?php endif; ?>
+</fieldset>
