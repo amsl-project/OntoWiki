@@ -27,15 +27,15 @@ class EzbholdingsController extends OntoWiki_Controller_Component
         $action = $this->_request->getActionName();
 
         $this->view->placeholder('main.window.title')->set('Process EZB-holdings File');
-        $this->view->formActionUrl    = $this->_config->urlBase . 'ezbholdings/uploadholdingsfile';
-        $this->view->formEncoding     = 'multipart/form-data';
-        $this->view->formClass        = 'simple-input input-justify-left';
-        $this->view->formMethod       = 'post';
-        $this->view->formName         = 'importdata';
+        $this->view->formActionUrl = $this->_config->urlBase . 'ezbholdings/uploadholdingsfile';
+        $this->view->formEncoding = 'multipart/form-data';
+        $this->view->formClass = 'simple-input input-justify-left';
+        $this->view->formMethod = 'post';
+        $this->view->formName = 'importdata';
         $this->view->supportedFormats = $this->_erfurt->getStore()->getSupportedImportFormats();
 
-        $this->_owApp     = OntoWiki::getInstance();
-        $this->_model     = $this->_owApp->selectedModel;
+        $this->_owApp = OntoWiki::getInstance();
+        $this->_model = $this->_owApp->selectedModel;
         $this->_translate = $this->_owApp->translate;
 
         // add a standard toolbar
@@ -60,26 +60,43 @@ class EzbholdingsController extends OntoWiki_Controller_Component
         );
     }
 
-    private function init2(){
+    private function init2()
+    {
         $options = $this->_owApp->getConfig()->toArray()['store']['virtuoso'];
         $options['is_open_source_version'] = '1';
         $this->backend = new Erfurt_Store_Adapter_Virtuoso($options);
         $this->backend->init();
     }
 
-    public function holdingsfilefromdiscoveryAction(){
+    public function holdingsfilefromdiscoveryAction()
+    {
         // get the url of the holdings file from the discovery graph
-        $url = 'http://localhost/OntoWiki-link/files/get?setResource=http://amsl.technology/discovery/Dokument/HoldingsFile_UBL';
-        $holdingFileData = $this->downloadHoldingsFile($url);
-        $this->processHoldingsFile($holdingFileData);
+        $config = $this->_privateConfig->toArray();
+        $holdingFileData = $this->downloadHoldingsFile($config['amslURL']);
+        $holdingFileDataLines = explode(PHP_EOL, $holdingFileData);
+        $holdingFileCSVData = null;
+        $counter = 0;
+        $line_deleted = false;
+        foreach ($holdingFileDataLines as $line) {
+            if (!$line_deleted) {
+                $counter++;
+                if ($counter == 1 && strpos($line, 'publication_title') === 0) {
+                    $line_deleted = true;
+                    continue;
+                }
+            }
+            $holdingFileCSVData[] = str_getcsv($line, "\t");
+        }
+        $this->processHoldingsFile($holdingFileCSVData);
+        $this->getHelper('Layout')->disableLayout();
+        $this->getHelper('ViewRenderer')->setNoRender();
     }
 
-    public function uploadholdingsfileAction(){
+    public function uploadholdingsfileAction()
+    {
         $this->view->placeholder('main.window.title')->set('Upload a counter xml file');
 
         if ($this->_request->isPost()) {
-            $this->init2();
-
             $upload = new Zend_File_Transfer();
             $filesArray = $upload->getFileInfo();
 
@@ -97,8 +114,7 @@ class EzbholdingsController extends OntoWiki_Controller_Component
                     break;
                 case ($filesArray['source']['error'] == UPLOAD_ERR_PARTIAL):
                     $message = $message = $this->_translate->translate(
-                        'The file was only partially uploaded.')
-                    ;
+                        'The file was only partially uploaded.');
                     break;
                 case ($filesArray['source']['error'] >= UPLOAD_ERR_NO_FILE):
                     $message = $message = $this->_translate->translate(
@@ -120,7 +136,7 @@ class EzbholdingsController extends OntoWiki_Controller_Component
             $fp = fopen($file, 'r');
             $counter = 0;
             $line_deleted = false;
-            while ( !feof($fp) ) {
+            while (!feof($fp)) {
                 $line = fgets($fp, 2048);
                 if (!$line_deleted) {
                     $counter++;
@@ -137,16 +153,18 @@ class EzbholdingsController extends OntoWiki_Controller_Component
         }
     }
 
-    private function downloadHoldingsFile($url){
+    private function downloadHoldingsFile($url)
+    {
         $curlSession = curl_init();
         curl_setopt($curlSession, CURLOPT_URL, $url);
         curl_setopt($curlSession, CURLOPT_BINARYTRANSFER, true);
         curl_setopt($curlSession, CURLOPT_RETURNTRANSFER, true);
-        curl_setopt($curlSession,CURLOPT_ENCODING, '');
+        curl_setopt($curlSession, CURLOPT_ENCODING, '');
         $holdingFileData = curl_exec($curlSession);
         curl_close($curlSession);
         return $holdingFileData;
     }
+
     private function openHoldingsFile()
     {
         $data = file_get_contents('./uploads/7693d633a58a61fbe164f6db3f970afa');
@@ -155,10 +173,12 @@ class EzbholdingsController extends OntoWiki_Controller_Component
     }
 
 
-        private function processHoldingsFile($holdingFileData){
+    private function processHoldingsFile($holdingFileData)
+    {
+        $this->init2();
         $licensePackages = $this->getLicensePackages();
-        foreach($licensePackages as $packageData){
-            if($this->isInContractPeriod($packageData['contract'])) {
+        foreach ($licensePackages as $packageData) {
+            if ($this->isInContractPeriod($packageData['contract'])) {
                 $this->deleteHoldings($packageData['paket']);
                 foreach ($holdingFileData as $holdingsDataset) {
                     if (isset($holdingsDataset[16])) {
@@ -173,34 +193,36 @@ class EzbholdingsController extends OntoWiki_Controller_Component
         }
     }
 
-    private function deleteHoldings($package){
+    private function deleteHoldings($package)
+    {
         // get all holdings associated with a certain package
-        $query = 'select distinct ?holding FROM <http://ubl.amsl.technology/erm/> where { ?holding <http://vocab.ub.uni-leipzig.de/amsl/holdingOf> <'. $package . '> }';
+        $query = 'select distinct ?holding FROM <http://ubl.amsl.technology/erm/> where { ?holding <http://vocab.ub.uni-leipzig.de/amsl/holdingOf> <' . $package . '> }';
         $query_results = $this->backend->sparqlQuery($query);
         // delete all these holdings
-        foreach($query_results as $resultSet){
+        foreach ($query_results as $resultSet) {
             $holding = $resultSet['holding'];
             $this->backend->deleteMatchingStatements('http://ubl.amsl.technology/erm/', $holding, null, null);
         }
     }
 
-    private function createHolding($package, $holdingsDataset){
+    private function createHolding($package, $holdingsDataset)
+    {
         // create holding id
         $holding = 'http://vocab.ub.uni-leipzig.de/amsl/' . md5(rand());
         // write holding
         $objectSpec = array();
-        $objectSpec['type']  = 'uri';
+        $objectSpec['type'] = 'uri';
         $objectSpec['value'] = 'http://vocab.ub.uni-leipzig.de/amsl/Holding';
-        $this->backend->addStatement('http://ubl.amsl.technology/erm/', $holding, 'a', $objectSpec );
+        $this->backend->addStatement('http://ubl.amsl.technology/erm/', $holding, 'a', $objectSpec);
         // write association of holding and package
-        $objectSpec['type']  = 'uri';
+        $objectSpec['type'] = 'uri';
         $objectSpec['value'] = $package;
         $this->backend->addStatement('http://ubl.amsl.technology/erm/', $holding, 'http://vocab.ub.uni-leipzig.de/amsl/holdingOf', $objectSpec);
         // write properties of holding
-        foreach($this->getProperties() as $propertySet) {
+        foreach ($this->getProperties() as $propertySet) {
             $subject = $holding;
             $predicate = $propertySet['property'];
-            if($holdingsDataset[$propertySet['ezbIndex']] != "") {
+            if ($holdingsDataset[$propertySet['ezbIndex']] != "") {
                 $objectSpec['value'] = $holdingsDataset[$propertySet['ezbIndex']];
                 switch ($propertySet['type']) {
                     case 'literal':
@@ -219,104 +241,113 @@ class EzbholdingsController extends OntoWiki_Controller_Component
         }
     }
 
-    private function isInContractPeriod($contract){
+    private function isInContractPeriod($contract)
+    {
         $startResultSet = $this->getRessourceDetail($contract, 'http://vocab.ub.uni-leipzig.de/amsl/licenseStartDate');
         $endResultSet = $this->getRessourceDetail($contract, 'http://vocab.ub.uni-leipzig.de/amsl/licenseEndDate');
 
-        if(isset($startResultSet[0]['detail'])){
+        if (isset($startResultSet[0]['detail'])) {
             $start = $startResultSet[0]['detail'];
-        }else{
+        } else {
             return false;
         }
-        if(isset($endResultSet[0]['detail'])){
+        if (isset($endResultSet[0]['detail'])) {
             $end = $endResultSet[0]['detail'];
         }
 
         $currentTime = date('Y-m-d');
-        if($currentTime >= $start && (!isset($end) || $currentTime <= $end)){
+        if ($currentTime >= $start && (!isset($end) || $currentTime <= $end)) {
             return true;
         }
         return false;
     }
 
-    private function getLicensePackages(){
+    private function getRessourceDetail($contract, $property){
+        $query = 'select distinct ?detail FROM <http://ubl.amsl.technology/erm/> where {<' . $contract . '> <' . $property . '> ?detail . }';
+        $query_results = $this->backend->sparqlQuery($query);
+        return $query_results;
+    }
+
+    private function getLicensePackages()
+    {
 
         $query = 'select distinct ?paket ?anchor ?contract FROM <http://ubl.amsl.technology/erm/> where {?paket a <http://vocab.ub.uni-leipzig.de/amsl/LicensePackage> . ?paket <http://vocab.ub.uni-leipzig.de/amsl/ezbAnchor> ?anchor . ?paket <http://vocab.ub.uni-leipzig.de/amsl/contractContainingPackage> ?contract . }';
         $query_results = $this->backend->sparqlQuery($query);
         return $query_results;
     }
 
-    private function getProperties(){
+    private function getProperties()
+    {
         $properties = array();
         $properties[] = array(
-            'ezbIndex'  => 0,
-            'property'  => 'http://purl.org/dc/elements/1.1/title',
-            'type'  => 'literal',
+            'ezbIndex' => 0,
+            'property' => 'http://purl.org/dc/elements/1.1/title',
+            'type' => 'literal',
         );
         $properties[] = array(
-            'ezbIndex'  => 1,
-            'property'  => 'http://vocab.ub.uni-leipzig.de/amsl/pissn',
-            'type'  => 'issn',
+            'ezbIndex' => 1,
+            'property' => 'http://vocab.ub.uni-leipzig.de/amsl/pissn',
+            'type' => 'issn',
         );
         $properties[] = array(
-            'ezbIndex'  => 2,
-            'property'  => 'http://vocab.ub.uni-leipzig.de/amsl/eissn',
-            'type'  => 'issn',
+            'ezbIndex' => 2,
+            'property' => 'http://vocab.ub.uni-leipzig.de/amsl/eissn',
+            'type' => 'issn',
         );
         $properties[] = array(
-            'ezbIndex'  => 3,
-            'property'  => 'http://vocab.ub.uni-leipzig.de/amsl/dateFirstIssueOnline',
-            'type'  => 'literal',
+            'ezbIndex' => 3,
+            'property' => 'http://vocab.ub.uni-leipzig.de/amsl/dateFirstIssueOnline',
+            'type' => 'literal',
         );
         $properties[] = array(
-            'ezbIndex'  => 4,
-            'property'  => 'http://vocab.ub.uni-leipzig.de/amsl/numberFirstVolumeOnline',
-            'type'  => 'literal',
+            'ezbIndex' => 4,
+            'property' => 'http://vocab.ub.uni-leipzig.de/amsl/numberFirstVolumeOnline',
+            'type' => 'literal',
         );
         $properties[] = array(
-            'ezbIndex'  => 5,
-            'property'  => 'http://vocab.ub.uni-leipzig.de/amsl/numberFirstIssueOnline',
-            'type'  => 'literal',
+            'ezbIndex' => 5,
+            'property' => 'http://vocab.ub.uni-leipzig.de/amsl/numberFirstIssueOnline',
+            'type' => 'literal',
         );
         $properties[] = array(
-            'ezbIndex'  => 6,
-            'property'  => 'http://vocab.ub.uni-leipzig.de/amsl/dateLastIssueOnline',
-            'type'  => 'literal',
+            'ezbIndex' => 6,
+            'property' => 'http://vocab.ub.uni-leipzig.de/amsl/dateLastIssueOnline',
+            'type' => 'literal',
         );
         $properties[] = array(
-            'ezbIndex'  => 7,
-            'property'  => 'http://vocab.ub.uni-leipzig.de/amsl/numberLastVolumeOnline',
-            'type'  => 'literal',
+            'ezbIndex' => 7,
+            'property' => 'http://vocab.ub.uni-leipzig.de/amsl/numberLastVolumeOnline',
+            'type' => 'literal',
         );
         $properties[] = array(
-            'ezbIndex'  => 8,
-            'property'  => 'http://vocab.ub.uni-leipzig.de/amsl/numberLastIssueOnline',
-            'type'  => 'literal',
+            'ezbIndex' => 8,
+            'property' => 'http://vocab.ub.uni-leipzig.de/amsl/numberLastIssueOnline',
+            'type' => 'literal',
         );
         $properties[] = array(
-            'ezbIndex'  => 9,
-            'property'  => 'http://vocab.ub.uni-leipzig.de/amsl/primaryAccessURI',
-            'type'  => 'uri',
+            'ezbIndex' => 9,
+            'property' => 'http://vocab.ub.uni-leipzig.de/amsl/primaryAccessURI',
+            'type' => 'uri',
         );
         $properties[] = array(
-            'ezbIndex'  => 10,
-            'property'  => 'http://vocab.ub.uni-leipzig.de/amsl/embargoInfo',
-            'type'  => 'value',
+            'ezbIndex' => 10,
+            'property' => 'http://vocab.ub.uni-leipzig.de/amsl/embargoInfo',
+            'type' => 'value',
         );
         $properties[] = array(
-            'ezbIndex'  => 11,
-            'property'  => 'http://vocab.ub.uni-leipzig.de/amsl/coverageDepth',
-            'type'  => 'literal',
+            'ezbIndex' => 11,
+            'property' => 'http://vocab.ub.uni-leipzig.de/amsl/coverageDepth',
+            'type' => 'literal',
         );
         $properties[] = array(
-            'ezbIndex'  => 12,
-            'property'  => 'http://vocab.ub.uni-leipzig.de/amsl/coverageNotes',
-            'type'  => 'literal',
+            'ezbIndex' => 12,
+            'property' => 'http://vocab.ub.uni-leipzig.de/amsl/coverageNotes',
+            'type' => 'literal',
         );
         $properties[] = array(
-            'ezbIndex'  => 13,
-            'property'  => 'http://purl.org/dc/elements/1.1/publisher',
-            'type'  => 'literal',
+            'ezbIndex' => 13,
+            'property' => 'http://purl.org/dc/elements/1.1/publisher',
+            'type' => 'literal',
         );
         return $properties;
     }
