@@ -34,7 +34,7 @@ class CommentModule extends OntoWiki_Module
 
         // comment form part
         if ((isset($this->_owApp->selectedModel))
-            && ($this->_owApp->erfurt->getAc()->isModelAllowed('edit', $this->_owApp->selectedModel))
+            && ($this->_owApp->erfurt->getAc()->isModelAllowed('edit', $this->_owApp->selectedModel, true))
         ) {
             $limit = $this->_privateConfig->limit;
             $actionUrl = new OntoWiki_Url(array('controller' => 'community', 'action' => 'comment'), array());
