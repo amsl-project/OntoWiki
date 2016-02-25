@@ -7,10 +7,9 @@
  */
 
 /**
- * Helper class for the meta-data component.
+ * Meta data source service controller.
  *
- * - register the tab for all navigations except the instances list
- *   (this should be undone if the history can be created from a Query2 too)
+ * This controller provides information about meta data sources used by the system.
  *
  * @category   OntoWiki
  * @package    Extensions_Metadatasourceservice
@@ -18,10 +17,15 @@
  * @copyright  Copyright (c) 2015, {@link http://amsl.technology/}
  * @license    http://opensource.org/licenses/gpl-license.php GNU General Public License (GPL)
  */
-class MetadatasourceserviceHelper extends OntoWiki_Component_Helper
+class ChronjobsController extends OntoWiki_Controller_Component
 {
-    public function init()
+
+    /**
+     *
+     * @throws Zend_Controller_Response_Exception
+     */
+    public function listAction()
     {
+        $this->_owApp->getNavigation()->disableNavigation();
     }
 }
-
