@@ -212,12 +212,12 @@ class EzbholdingsController extends OntoWiki_Controller_Component
         // write holding
         $objectSpec = array();
         $objectSpec['type'] = 'uri';
-        $objectSpec['value'] = 'http://vocab.ub.uni-leipzig.de/amsl/Holding';
+        $objectSpec['value'] = 'http://vocab.ub.uni-leipzig.de/amsl/HoldingsItem';
         $this->backend->addStatement('http://ubl.amsl.technology/erm/', $holding, 'a', $objectSpec);
         // write association of holding and package
         $objectSpec['type'] = 'uri';
         $objectSpec['value'] = $package;
-        $this->backend->addStatement('http://ubl.amsl.technology/erm/', $holding, 'http://vocab.ub.uni-leipzig.de/amsl/holdingOf', $objectSpec);
+        $this->backend->addStatement('http://ubl.amsl.technology/erm/', $holding, 'http://vocab.ub.uni-leipzig.de/amsl/holdingsItemOf', $objectSpec);
         // write properties of holding
         foreach ($this->getProperties() as $propertySet) {
             $subject = $holding;
@@ -330,23 +330,33 @@ class EzbholdingsController extends OntoWiki_Controller_Component
             'type' => 'uri',
         );
         $properties[] = array(
-            'ezbIndex' => 10,
+            'ezbIndex' => 12,
             'property' => 'http://vocab.ub.uni-leipzig.de/amsl/embargoInfo',
             'type' => 'value',
         );
         $properties[] = array(
-            'ezbIndex' => 11,
+            'ezbIndex' => 13,
             'property' => 'http://vocab.ub.uni-leipzig.de/amsl/coverageDepth',
             'type' => 'literal',
         );
         $properties[] = array(
-            'ezbIndex' => 12,
+            'ezbIndex' => 14,
             'property' => 'http://vocab.ub.uni-leipzig.de/amsl/coverageNotes',
             'type' => 'literal',
         );
         $properties[] = array(
-            'ezbIndex' => 13,
+            'ezbIndex' => 15,
             'property' => 'http://purl.org/dc/elements/1.1/publisher',
+            'type' => 'literal',
+        );
+        $properties[] = array(
+            'ezbIndex' => 11,
+            'property' => 'http://vocab.ub.uni-leipzig.de/amsl/coverageNotes/ezbTitleID',
+            'type' => 'literal',
+        );
+        $properties[] = array(
+            'ezbIndex' => 22,
+            'property' => 'http://vocab.ub.uni-leipzig.de/amsl/coverageNotes/zdbID',
             'type' => 'literal',
         );
         return $properties;
