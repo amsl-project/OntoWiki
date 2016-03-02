@@ -70,7 +70,7 @@
                         </div>
                         <ul class="bullets-none">
                             <?php foreach ($this->values[$graph][$uri] as $entry): ?>
-                                <?php if ($entry['url']): ?>
+                                <?php if ($entry['url'] && substr( $entry['object'], 0, 4 ) !== 'tel:') : ?>
                                     <li>
                                         <a resource="<?php echo $entry['uri'] ?>" 
                                            rel="<?php echo $currentPredicate['curi'] ?>" 
