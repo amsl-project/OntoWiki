@@ -1,0 +1,14 @@
+<?php
+$urlBase = OntoWiki::getInstance()->getUrlBase();
+?>
+Values of property <?php echo $this->propertyTitle ?>:
+<div class="literal-list-view-module">
+    <ul>
+        <?php foreach ($this->results as $result): ?>
+            <li>
+                    <label><?php echo $result['value'] ?></label>
+                </li>
+        <?php endforeach ?>
+
+    </ul>
+</div>

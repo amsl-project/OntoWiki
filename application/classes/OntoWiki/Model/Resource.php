@@ -338,6 +338,7 @@ class OntoWiki_Model_Resource extends OntoWiki_Model
                                     $allValuesAreLiterals = false;
                                 }
                             }
+
                             if (!$allValuesAreLiterals) {
                                 $hasMoreUrl = new OntoWiki_Url(
                                     array('route' => 'instances', 'action' => 'list'),
@@ -373,7 +374,7 @@ class OntoWiki_Model_Resource extends OntoWiki_Model
                                 );
                             } else {
                                 $hasMoreUrl = new OntoWiki_Url(
-                                    array('controller' => 'queries', 'action' => 'editor'),
+                                    array('controller' => 'listview', 'action' => 'list'),
                                     array()
                                 );
                                 $hasMoreUrl->setParam(
@@ -382,6 +383,12 @@ class OntoWiki_Model_Resource extends OntoWiki_Model
                                 )->setParam(
                                     'immediate',
                                     true
+                                )->setParam(
+                                    'subject',
+                                    $this->_uri
+                                )->setParam(
+                                    'property',
+                                    $predicateUri
                                 );
                             }
 
