@@ -193,7 +193,9 @@ class OntoWiki_Controller_Plugin_ListSetupHelper extends Zend_Controller_Plugin_
 
                     $listConfig['sort'] = $config['sort'];
                 } else {
-                    $listConfig['sort'] = [];
+                 //   $listConfig['sort'] = [];
+                    $listConfig['sort'] = array('uri' => 'http://www.w3.org/2000/01/rdf-schema#label' , 'asc' => 'true');
+                    $list->setOrderProperty($listConfig['sort']['uri'], $listConfig['sort']['asc']);
                 }
 
                 if (isset($config['shownProperties'])) {
