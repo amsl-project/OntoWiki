@@ -14,6 +14,8 @@ class ListviewController extends OntoWiki_Controller_Component
 
     public function listAction()
     {
+        $translate = $this->_owApp->translate;
+
         $this->view->placeholder('main.window.title')->set('Listview');
         $this->addModuleContext('main.window.listmodules.list');
         OntoWiki::getInstance()->getNavigation()->disableNavigation();
@@ -30,7 +32,8 @@ class ListviewController extends OntoWiki_Controller_Component
         $result = $this->_owApp->selectedModel->sparqlQuery(
             $query
         );
-        $this->view->placeholder('main.window.title')->set('Listview for Resource ' . $subjectTitle);
+
+        $this->view->placeholder('main.window.title')->set($this->_owApp->translate->_('List-view for Resource') . ': ' . $subjectTitle);
         $this->view->subjectUri = $subjectUri;
         $this->view->subjectTitle = $subjectTitle;
         $this->view->propertyUri = $propertyUri;

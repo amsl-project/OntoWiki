@@ -1,7 +1,8 @@
 <?php
-$urlBase = OntoWiki::getInstance()->getUrlBase();
+$translate = OntoWiki::getInstance()->translate;
 ?>
-Values of property <?php echo $this->propertyTitle ?>:
+<br>
+<?php echo($translate->translate("Values of property"))?>: <?php echo $this->propertyTitle ?><br><br>
 <div class="literal-list-view-module">
     <ul>
         <?php foreach ($this->results as $result): ?>

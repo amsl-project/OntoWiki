@@ -15,10 +15,9 @@
   rdfs:label "Special view for literal Lists" ;
   doap:description "Do not disable!" ;
   owconfig:authorLabel "AKSW" ;
+  owconfig:templates "templates" ;
+  owconfig:languages "languages/" ;
   doap:maintainer <http://aksw.org> ;
-  owconfig:pluginEvent event:onPostBootstrap ;
-    owconfig:pluginEvent event:onBeforeInitController ;
-    owconfig:pluginEvent event:onPreBootstrap ;
   owconfig:hasModule :Default .
 :Default a owconfig:Module ;
   rdfs:label "Default" ;
