@@ -25,7 +25,8 @@ class FilterModule extends OntoWiki_Module
 
     public function init()
     {
-
+        $listHelper       = Zend_Controller_Action_HelperBroker::getStaticHelper('List');
+        $this->_instances = $listHelper->getLastList();
     }
 
 
@@ -36,9 +37,6 @@ class FilterModule extends OntoWiki_Module
 
     public function getContents()
     {
-        $listHelper       = Zend_Controller_Action_HelperBroker::getStaticHelper('List');
-        $this->_instances = $listHelper->getLastList();
-
         if (!($this->_instances instanceof OntoWiki_Model_Instances)) {
             return "Error: List not found";
         }
@@ -50,7 +48,7 @@ class FilterModule extends OntoWiki_Module
         $this->view->headLink()->appendStylesheet($this->view->moduleUrl . 'resources/filter.css');
         //$this->view->headScript()->appendFile($this->view->moduleUrl . 'resources/jquery.dump.js');
 
-        $this->view->properties        = $this->_instances->getAllProperties(false);
+        $this->view->properties        = $this->_instances->getAllPropertiesBySingleQuery(false);
         usort($this->view->properties, function($a, $b) {
             return strnatcasecmp($a['title'], $b['title']);
         });
