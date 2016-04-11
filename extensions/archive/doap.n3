@@ -11,7 +11,7 @@
 :archive a doap:Project ;
   doap:name "Archive" ;
   owconfig:privateNamespace <https://github.com/AKSW/archive/raw/master/doap.n3#> ;
-  owconfig:enabled "true"^^xsd:boolean ;
+  owconfig:enabled "false"^^xsd:boolean ;
   rdfs:label "Archive" ;
   doap:description "Archive plugin" ;
   owconfig:authorLabel "AMSL" ;
