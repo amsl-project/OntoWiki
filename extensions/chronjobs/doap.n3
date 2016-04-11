@@ -9,24 +9,13 @@
 
 <> foaf:primaryTopic :chonjobs .
 :chonjobs a doap:Project ;
-  doap:name "chonjobs" ;
+  doap:name "cronjobs" ;
   owconfig:privateNamespace <https://github.com/AKSW/chonjobs/raw/master/doap.n3#> ;
   owconfig:enabled "true"^^xsd:boolean ;
-  rdfs:label "ChonJobs" ;
+  rdfs:label "CronJobs" ;
   doap:description "Used to provide automated, scheduled but also manually triggeralbe processing." ;
   owconfig:authorLabel "AMSL" ;
-  doap:maintainer <http://amsl.technology>;
-
-  owconfig:config [
-
-      a owconfig:Config;
-      owconfig:id "queries";
-  ];
-  owconfig:config [
-
-        a owconfig:Config;
-        owconfig:id "scripts";
-    ].
+  doap:maintainer <http://amsl.technology>.
 
 :application :hideForAnonymousOnNoModels "false"^^xsd:boolean ;
   doap:release :v1-0 .

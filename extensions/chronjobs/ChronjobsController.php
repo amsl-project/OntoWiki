@@ -27,7 +27,6 @@ class ChronjobsController extends OntoWiki_Controller_Component
     public function listAction()
     {
         $this->_owApp->getNavigation()->disableNavigation();
-        $hallo = $this;
     }
 
     public function runAction()
@@ -41,34 +40,60 @@ class ChronjobsController extends OntoWiki_Controller_Component
         }
 
         $storageData = $this->readStorage();
+
+        $newJobs = 0;
+        $oldJobs = count($storageData);
         foreach ($jobs as $job) {
             $data = null;
+
+            // merge numbers of already executed (and thus documented) jobs and (possibly new) configured jobs
+            $hasJobNumber = false;
             $jobnumber = 0;
-            foreach($storageData as $data){
-                if($data[0] == $job['name']){
+            foreach($storageData as $d){
+                if($d[0] == $job['name']){
+                    $data = $d;
+                    $hasJobNumber = true;
                     break;
                 }
                 $jobnumber++;
             }
+
+            if($hasJobNumber){
+                $finalJobNumber = $jobnumber;
+            }else{
+                $newJobs++;
+                $finalJobNumber = $oldJobs + $newJobs;
+            }
+
             if ($this->hasToBeExecuted($job['rhythm'], $job['date'], $job['time'], $job['rectify'], $data)) {
-                if ($job['type'] == 'script') {
+//            if(true){
+            if ($job['type'] == 'script') {
                     $controllerAndmethod = explode('/', $job['value']);
                     if (count($controllerAndmethod) == 2) {
-                        $storageData[$jobnumber][1] = date('d.m.Y');
+                        $storageData[$finalJobNumber][0] = $job['name'];
+                        $storageData[$finalJobNumber][1] = date('d.m.Y');
                         $url = new OntoWiki_Url(array('controller' => $controllerAndmethod[0], 'action' => $controllerAndmethod[1]));
                         $ch = curl_init();
                         curl_setopt($ch, CURLOPT_URL, (string)$url);
                         curl_setopt($ch, CURLOPT_HEADER, 0);
                         curl_exec($ch);
                         curl_close($ch);
-                        $storageData[$jobnumber][2] = 'success';
+                        $storageData[$finalJobNumber][2] = 'success';
                     }
                 } elseif ($job['type'] == 'query') {
-
+                    $storageData[$finalJobNumber][0] = $job['name'];
+                    $storageData[$finalJobNumber][1] = date('d.m.Y');
+                    $options = $this->_owApp->getConfig()->toArray()['store']['virtuoso'];
+                    $options['is_open_source_version'] = '1';
+                    $backend = new Erfurt_Store_Adapter_Virtuoso($options);
+                    $backend->init();
+                    $query_results = $backend->sparqlQuery($job['value']);
+                    $storageData[$finalJobNumber][2] = 'success';
                 }
-                $this->writeStorage($storageData);
             }
         }
+
+        $this->writeStorage($storageData);
 
         $this->getHelper('Layout')->disableLayout();
         $this->getHelper('ViewRenderer')->setNoRender();
@@ -92,10 +117,12 @@ class ChronjobsController extends OntoWiki_Controller_Component
         $path = realpath(null) . '/extensions/chronjobs/resources/store.txt';
         $writing = fopen($path, 'w');
         ftruncate($writing, 0);
+        $lines = array();
         foreach($storageData as $dataset){
-            $line = implode('#', $dataset);
-            fputs($writing, $line);
+            $lines[] = implode('#', $dataset);
         }
+        $fileContent = implode(PHP_EOL, $lines);
+        fputs($writing, $fileContent);
         fclose($writing);
 
     }
@@ -135,7 +162,7 @@ class ChronjobsController extends OntoWiki_Controller_Component
                 return false;
             } else {
                 $actualTime = date('h:i');
-                if($time > $actualTime){
+                if($time < $actualTime){
                     return true;
                 }else{
                     return false;
