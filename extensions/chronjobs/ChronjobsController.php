@@ -65,8 +65,8 @@ class ChronjobsController extends OntoWiki_Controller_Component
                 $finalJobNumber = $oldJobs + $newJobs;
             }
 
-            if ($this->hasToBeExecuted($job['rhythm'], $job['date'], $job['time'], $job['rectify'], $data)) {
-//            if(true){
+//            if ($this->hasToBeExecuted($job['rhythm'], $job['date'], $job['time'], $job['rectify'], $data)) {
+            if(true){
             if ($job['type'] == 'script') {
                     $controllerAndmethod = explode('/', $job['value']);
                     if (count($controllerAndmethod) == 2) {
@@ -87,7 +87,7 @@ class ChronjobsController extends OntoWiki_Controller_Component
                     $options['is_open_source_version'] = '1';
                     $backend = new Erfurt_Store_Adapter_Virtuoso($options);
                     $backend->init();
-                    $query_results = $backend->sparqlQuery($job['value']);
+                    $query_results = $backend->_execSparqlUpdate($job['value']);
                     $storageData[$finalJobNumber][2] = 'success';
                 }
             }
