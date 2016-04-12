@@ -13,6 +13,7 @@
   owconfig:privateNamespace <https://github.com/AKSW/adaptivecache/raw/master/doap.n3#> ;
   owconfig:enabled "true"^^xsd:false ;
   owconfig:evaluationBase 1000 ;
+  owconfig:mode 1 ;
   rdfs:label "Adaptive Cache" ;
   doap:description "Generates a list of queries that are relevant for caching." ;
   owconfig:authorLabel "AMSL" ;
