@@ -35,7 +35,7 @@ class ChronjobsHelper extends OntoWiki_Component_Helper
         $translate  = $this->_owApp->translate;
         $url        = new OntoWiki_Url(array('controller' => 'chronjobs', 'action' => 'run'));
         $extrasMenu = OntoWiki_Menu_Registry::getInstance()->getMenu('application')->getSubMenu('Extras');
-        $extrasMenu->setEntry($translate->_('ChronJobs'), (string)$url);
+    //    $extrasMenu->setEntry($translate->_('ChronJobs'), (string)$url);
     }
 }
 
