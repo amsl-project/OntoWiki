@@ -184,5 +184,5 @@ try {
 $event = new Erfurt_Event('onPostBootstrap');
 $event->bootstrap = $application->getBootstrap();
 $event->trigger();
-
+$_SESSION['ONTOWIKI']['adaptiveCache'] = false;
 $application->run();

@@ -1,0 +1,27 @@
+<?php
+$urlBase = OntoWiki::getInstance()->getUrlBase();
+?>
+<br>
+<b>Meta-data: </b><br>
+Size of log-file (MByte): <?php echo $this->logFileSize ?><br>
+Amount of queries used for evaluation: <?php echo $this->totalAmountOfQueries ?><br>
+Number of equal-queries (eq): <?php echo $this->numberOfQueries ?><b>*</b> (<?php echo(round((($this->numberOfQueries / $this->totalAmountOfQueries) * 100), 1)) ?>% of evaluation basis)<br>
+<br><hr><br>
+<b>Using full data set: </b> <?php echo(($this->mode == '1')?'<- this mode is in use':'') ?><br>
+<b>Number of eq to be cached: <?php echo $this->cachedQueries ?> (<?php echo(round((($this->cachedQueries / $this->numberOfQueries) * 100), 1)) ?>% of *)</b><br>
+Average number of calls per eq: <?php echo $this->expectedValue ?><br>
+Standard deviation of calls per eq: <?php echo $this->standardDeviation ?><br>
+Number of eq within standard deviation: <?php echo $this->rnumberOfQueries ?> (<?php echo(round((($this->rnumberOfQueries / $this->numberOfQueries) * 100), 2)) ?>% of *)<br>
+Number of eq above standard deviation: <?php echo ($this->numberOfQueries - $this->rnumberOfQueries) ?> (<?php echo(round(((($this->numberOfQueries - $this->rnumberOfQueries) / $this->numberOfQueries) * 100), 2)) ?>% of *)<br>
+<br><hr><br>
+<b>Cutting off peaks for average: </b>  <?php echo(($this->mode == '2')?'<- this mode is in use':'') ?> <br>
+<b>Adapted number of eq to be cached: <?php echo $this->rcachedQueries ?> (<?php echo(round((($this->rcachedQueries / $this->rnumberOfQueries) * 100), 1)) ?>% of *)</b><br>
+Adapted average number of calls per eq: <?php echo $this->rexpectedValue ?><br>
+Adapted standard deviation of calls per eq: <?php echo $this->rstandardDeviation ?><br>
+<br><hr><br>
+<b>Cache peaks only (with more than <?php echo (floor($this->expectedValue + $this->standardDeviation)) ?> calls): </b>  <?php echo(($this->mode == '3')?'<- this mode is in use':'') ?> <br>
+<b>Adapted number of eq to be cached: <?php echo $this->pcachedQueries ?> (<?php echo(round((($this->pcachedQueries / $this->numberOfQueries) * 100), 1)) ?>% of *)</b><br>
+Adapted average number of calls per eq: <?php echo $this->pexpectedValue ?><br>
+Adapted standard deviation of calls per eq: <?php echo $this->pstandardDeviation ?><br>
+Share of peak-queries of evaluation base: <?php echo(round((($this->ptotalAmount / $this->totalAmountOfQueries) * 100), 1)) ?>% of *<br>
+<br>
