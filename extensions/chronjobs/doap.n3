@@ -15,7 +15,18 @@
   rdfs:label "CronJobs" ;
   doap:description "Used to provide automated, scheduled but also manually triggeralbe processing." ;
   owconfig:authorLabel "AMSL" ;
-  doap:maintainer <http://amsl.technology>.
+  doap:maintainer <http://amsl.technology>;
+  owconfig:config [
+      a owconfig:Config;
+      owconfig:id "example";
+      owconfig:name "Example";
+      owconfig:type "script";
+      owconfig:value "chronjobs/example";
+      owconfig:rhythm "yearly";
+      owconfig:date "3";
+      owconfig:time "01:00";
+      owconfig:rectify "false";
+    ] .
 
 :application :hideForAnonymousOnNoModels "false"^^xsd:boolean ;
   doap:release :v1-0 .
