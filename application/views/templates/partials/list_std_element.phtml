@@ -96,6 +96,7 @@ $viewUrl = new OntoWiki_Url(array('controller' => 'resource','action' => 'proper
                             //print the value itself until OW_SHOW_MAX
                             if (isset($value['url']) && $value['url'] !== null && $i<OW_SHOW_MAX+1): //show uris until OW_SHOW_MAX ?>
                                 <li>
+                                <?php if (substr( $value['uri'], 0, 4 ) !== 'tel:') : ?>
                                     <a about="<?php echo $this->instanceUri ?>"
                                        class="hasMenu"
                                        rel="<?php echo $this->curie($property['uri']) ?>"
@@ -103,6 +104,9 @@ $viewUrl = new OntoWiki_Url(array('controller' => 'resource','action' => 'proper
                                        resource="<?php echo $value['uri'] ?>">
                                            <?php echo $value['value']; ?>
                                     </a>
+                                    <?php else: ?>
+                                        <?php echo ($value['value']) ?>
+                                    <?php endif; ?>
                                 </li>
                             <?php elseif (isset($value['url']) && $value['url'] !== null): //don't show uri value, which are > OW_SHOW_MAX ?>
                                 <li>
@@ -157,6 +161,7 @@ $viewUrl = new OntoWiki_Url(array('controller' => 'resource','action' => 'proper
                                     $this->instanceData[$this->instanceUri][$property['varName']][0]['uri']
                                 );
                             ?>
+                            <?php if (substr( $this->instanceData[$this->instanceUri][$property['varName']][0]['value'], 0, 4 ) !== 'tel:') : ?>
                             <a about="<?php echo $this->instanceUri ?>"
                                 href="<?php echo $viewUrl ?>"
                                class="hasMenu"
@@ -164,6 +169,9 @@ $viewUrl = new OntoWiki_Url(array('controller' => 'resource','action' => 'proper
                                resource="<?php echo $this->instanceData[$this->instanceUri][$property['varName']][0]['uri'] ?>">
                                             <?php echo $this->instanceData[$this->instanceUri][$property['varName']][0]['value'] ?>
                             </a>
+                                <?php else: ?>
+                                    <?php echo $this->instanceData[$this->instanceUri][$property['varName']][0]['value'] ?>
+                                <?php endif; ?>
                         </div>
                         <?php else: ?>
                         <div class="has-contextmenu-area">
