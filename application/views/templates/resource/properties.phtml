@@ -69,15 +69,15 @@
                             <?php endif ?>
                         </div>
                         <ul class="bullets-none">
-                            <?php foreach ($this->values[$graph][$uri] as $entry): ?>
+                            <?php $current_value = 0; foreach ($this->values[$graph][$uri] as $entry): $current_value++;?>
                                 <?php if ($entry['url'] && substr( $entry['object'], 0, 4 ) !== 'tel:') : ?>
-                                    <li>
+                                    <li <?php if ($current_value > OW_SHOW_MAX) : ?> style="display: none;" <?php endif; ?>>
                                         <a resource="<?php echo $entry['uri'] ?>" 
                                            rel="<?php echo $currentPredicate['curi'] ?>" 
                                            class="expandable hasMenu" href="<?php echo $entry['url'] ?>"><?php echo $entry['object'] ?></a>
                                     </li>
                                 <?php else: ?>
-                                    <li property="<?php echo $currentPredicate['curi']; ?>" 
+                                    <li  <?php if ($current_value > OW_SHOW_MAX) : ?> style="display: none;" <?php endif; ?> property="<?php echo $currentPredicate['curi']; ?>"
                                         data-object-hash="<?php echo $entry['object_hash']; ?>"
                                         content="<?php echo $this->escape(isset($entry['content']) ? $entry['content'] : $entry['object']); ?>"
                                         <?php if (isset($entry['lang']) && !empty($entry['lang'])): ?>
