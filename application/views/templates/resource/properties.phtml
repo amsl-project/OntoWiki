@@ -90,7 +90,7 @@
                                     ?></li>
                                 <?php endif; ?>
                             <?php endforeach; ?>
-                            <?php if (isset($currentPredicate['has_more']) && $currentPredicate['has_more']): ?>
+                            <?php if (isset($currentPredicate['has_more']) && $currentPredicate['has_more'] && $current_value > OW_SHOW_MAX): ?>
                                 <a href="<?php echo $currentPredicate['has_more_link'] ?>">[<?php echo $this->_('more') ?>]</a>
                             <?php endif; ?>
                         </ul>
