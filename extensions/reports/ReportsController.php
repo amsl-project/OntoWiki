@@ -199,6 +199,7 @@ class ReportsController extends OntoWiki_Controller_Component
 
         switch ($format) {
             case 'text/csv':
+                $this->getResponse()->setHeader('Content-Disposition', 'attachment; filename=report.csv');
                 return $this->returnCSV($result);
             case 'text/html':
                 return $this->returnHTML($result);
