@@ -435,4 +435,6 @@
         // start RDFauthor
         createInstanceFromClassURI(classResource, dataCallback);
     }
+    // expose
+    window.navigationAddElement = navigationAddElement;
 })();
