@@ -511,8 +511,6 @@ $(document).ready(function() {
                 }
                 options.workingMode = 'clone';
                 RDFauthor.start(null, options);
-
-                RDFauthor.start();
             });
         });
     })
