@@ -78,10 +78,35 @@ class ShowpropertiesModule extends OntoWiki_Module
             $this->view->reverseProperties = $this->filterProperties($this->_instances->getAllProperties(true));
         } else {
             $this->view->properties        = $this->_instances->getAllPropertiesBySingleQuery(false);
-            $this->view->reverseProperties = $this->_instances->getAllProperties(true);
+
+            // Dear person who will work on that later:
+            // The following line of code is replaced by the latter for good reasons.
+            //
+            // Background:
+            // Retrieving inverse properties is done by loading all triples (concrete predicates ans objects only)
+            // containing the actual subject as object where the set of different predicates is the set of inverse
+            // properties of the current subject.
+            //
+            // Reason for change:
+            // As the amount of triples for calculating inverse properties can be huge (15000 and more) this task is time
+            // consuming. Since the value of that feature is yet not applicable to the user is is enough to comment it out.
+            // More over processing is done on many pages even if the user does not want to use the module.
+            //
+            // This slows down the system significantly!!!
+            // (more than 2min (in words "two minutes") of delay are overwhelming - and lead to time outs at the web-server)
+            //
+            // Advice for a possible refactoring:
+            // The user might be more patient in waiting for system response if longer delays are rare and if she awaits
+            // some unusual task to be done. Instead of pre-processing the data every time the module is shown using AJAX
+            // while working with the module could be appreciated by the user.
+            //
+
+//            $this->view->reverseProperties = $this->_instances->getAllProperties(true);
+            $this->view->reverseProperties = array();
         }
 
         return $this->render('showproperties');
+
     }
 
     public function getStateId()
