@@ -46,14 +46,8 @@ class OutboundservicesController extends OntoWiki_Controller_Component
         $options['is_open_source_version'] = '1';
         $backend = new Erfurt_Store_Adapter_Virtuoso($options);
         $backend->init();
-        $query_results = $backend->sparqlQuery($query);
-
-        // encode the results in JSON (pretty printed if necessary)
-        $json = Zend_Json::encode($query_results);
-        if ($pretty) {
-            $json = Zend_Json::prettyPrint($json, array("indent" => " "));
-            $json = str_replace('\/','/', $json);
-        }
+        $query_results = $backend->sparqlQuery($query, array("result_format" => Erfurt_Store::RESULTFORMAT_EXTENDED, "jsonEncode" => "true"));
+        $json = $query_results;
 
         // prepare JSON response
         $this->getHelper('Layout')->disableLayout();

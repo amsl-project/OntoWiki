@@ -1076,6 +1076,18 @@ class ServiceController extends Zend_Controller_Action
             $output = $event->output;
         }
 
+        foreach ($output[$resourceUri] as $k => $v) {
+            if (false !== strrpos($k, "http://vocab.ub.uni-leipzig.de")) {
+                $query = 'SELECT ?range  FROM <http://vocab.ub.uni-leipzig.de/terms/> FROM <http://vocab.ub.uni-leipzig.de/amsl/> WHERE { <' . $k . '> <http://www.w3.org/2000/01/rdf-schema#range> ?range . }';
+                $range = $model->sparqlQuery(
+                    $query, array('result_format' => 'plain')
+                );
+                if(sizeof($range) == 1) {
+                    $output[$resourceUri][$k][0]["range"] = $range[0]["range"];
+                }
+            }
+        }
+        
         // send the response
         $response->setHeader('Content-Type', 'application/json');
         $response->setBody(json_encode($output));
