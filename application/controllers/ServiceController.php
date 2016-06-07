@@ -1078,16 +1078,45 @@ class ServiceController extends Zend_Controller_Action
 
         foreach ($output[$resourceUri] as $k => $v) {
             if (false !== strrpos($k, "http://vocab.ub.uni-leipzig.de")) {
-                $query = 'SELECT ?range  FROM <http://vocab.ub.uni-leipzig.de/terms/> FROM <http://vocab.ub.uni-leipzig.de/amsl/> WHERE { <' . $k . '> <http://www.w3.org/2000/01/rdf-schema#range> ?range . }';
-                $range = $model->sparqlQuery(
+                $query = 'SELECT ?type ?range ?owlOneOf ?displayAs WHERE {
+<'. $k .'> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> ?type .
+OPTIONAL {
+<'. $k .'> <http://www.w3.org/2000/01/rdf-schema#range> ?range
+OPTIONAL { ?range <http://www.w3.org/2002/07/owl#oneOf> ?owlOneOf }  }
+OPTIONAL { ?range <http://ns.ontowiki.net/SysOnt/displayAs> ?displayAs } }';
+                $data = $model->sparqlQuery(
                     $query, array('result_format' => 'plain')
                 );
-                if(sizeof($range) == 1) {
-                    $output[$resourceUri][$k][0]["range"] = $range[0]["range"];
+                if(sizeof($data) > 0) {
+                    $ranges = array();
+                    $ranges[] = $data[0]["range"];
+                    $types = array();
+                    $types[] = $data[0]["type"];
+                    $output[$resourceUri][$k][0]["range"] = $ranges;
+                    $output[$resourceUri][$k][0]["owlOneOf"] = $data[0]["owlOneOf"];
+                    $output[$resourceUri][$k][0]["displayAs"] = $data[0]["displayAs"];
+                    $output[$resourceUri][$k][0]["type"] = $types;
+                    $dropDownContent = "";
+                    if($data[0]["owlOneOf"] != ""){
+                        $test1 = 0;
+                        $query = "PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+SELECT DISTINCT ?elem ?label
+WHERE {
+<" . $ranges[0] . "> <http://www.w3.org/2002/07/owl#oneOf> ?list .
+?list rdf:rest*/rdf:first ?elem .
+OPTIONAL {
+?elem <http://www.w3.org/2000/01/rdf-schema#label> ?label .
+FILTER(lang(?label) = 'de')
+}}";
+                        $dropDownContent = $model->sparqlQuery(
+                            $query, array('result_format' => 'extended')
+                        );
+                        $output[$resourceUri][$k][0]["dropDownContent"] = $dropDownContent;
+                    }
                 }
             }
         }
-        
+
         // send the response
         $response->setHeader('Content-Type', 'application/json');
         $response->setBody(json_encode($output));
