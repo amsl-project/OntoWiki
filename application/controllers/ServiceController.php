@@ -1093,7 +1093,7 @@ OPTIONAL { ?range <http://ns.ontowiki.net/SysOnt/displayAs> ?displayAs } }';
                     $types = array();
                     $types[] = $data[0]["type"];
                     $output[$resourceUri][$k][0]["range"] = $ranges;
-                    if($data[0]["owlOneOf"] === "" || $data[0]["owlOneOf"] === "null" || $data[0]["owlOneOf"] == null || $data[0]["owlOneOf"] == undefined){
+                    if($data[0]["owlOneOf"] === "" || $data[0]["owlOneOf"] === "null" || $data[0]["owlOneOf"] == null){
                         $data[0]["owlOneOf"] = "";
                     }
                     $output[$resourceUri][$k][0]["owlOneOf"] = $data[0]["owlOneOf"];
