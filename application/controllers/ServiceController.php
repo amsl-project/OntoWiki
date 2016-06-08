@@ -1093,12 +1093,14 @@ OPTIONAL { ?range <http://ns.ontowiki.net/SysOnt/displayAs> ?displayAs } }';
                     $types = array();
                     $types[] = $data[0]["type"];
                     $output[$resourceUri][$k][0]["range"] = $ranges;
+                    if($data[0]["owlOneOf"] === "" || $data[0]["owlOneOf"] === "null" || $data[0]["owlOneOf"] == null || $data[0]["owlOneOf"] == undefined){
+                        $data[0]["owlOneOf"] = "";
+                    }
                     $output[$resourceUri][$k][0]["owlOneOf"] = $data[0]["owlOneOf"];
                     $output[$resourceUri][$k][0]["displayAs"] = $data[0]["displayAs"];
                     $output[$resourceUri][$k][0]["type"] = $types;
                     $dropDownContent = "";
                     if($data[0]["owlOneOf"] != ""){
-                        $test1 = 0;
                         $query = "PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
 SELECT DISTINCT ?elem ?label
 WHERE {
