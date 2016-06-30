@@ -518,6 +518,7 @@ $(document).ready(function() {
     // add property
     $('.property-add').click(function() {
         if(typeof(RDFauthor) === 'undefined' || ((typeof(RDFAUTHOR_STATUS) != 'undefined') && (RDFAUTHOR_STATUS === 'inactive'))) {
+            RDFAUTHOR_START_FIX = "addProperty";
             loadRDFauthor(function () {
                 RDFauthor.setOptions({
                     onSubmitSuccess: function () {
