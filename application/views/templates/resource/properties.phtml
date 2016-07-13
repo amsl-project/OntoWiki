@@ -77,7 +77,7 @@
                                            class="expandable hasMenu" href="<?php echo $entry['url'] ?>"><?php echo $entry['object'] ?></a>
                                     </li>
                                 <?php else: ?>
-                                    <li  <?php if ($current_value > OW_SHOW_MAX) : ?> style="display: none;" <?php endif; ?> property="<?php echo $currentPredicate['url']; ?>"
+                                    <li  <?php if ($current_value > OW_SHOW_MAX) : ?> style="display: none;" <?php endif; ?> property="<?php echo $currentPredicate['uri']; ?>"
                                         data-object-hash="<?php echo $entry['object_hash']; ?>"
                                         content="<?php echo $this->escape(isset($entry['content']) ? $entry['content'] : $entry['object']); ?>"
                                         <?php if (isset($entry['lang']) && !empty($entry['lang'])): ?>
