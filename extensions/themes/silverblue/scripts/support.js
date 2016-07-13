@@ -418,6 +418,7 @@ function populateRDFauthor(data, protect, resource, graph, workingmode) {
     graph    = arguments.length >= 4 ? graph : null;
 
     RDFAUTHOR_DATATYPES_FIX = data;
+
     for (var currentSubject in data) {
         for (var currentProperty in data[currentSubject]) {
             var objects = data[currentSubject][currentProperty];
@@ -653,6 +654,18 @@ function resourceURL(resourceURI) {
  */
 function editProperty(event) {
     var element = $.event.fix(event).target;
+    var t2 = $(element.closest("td"));
+    var t3 = t2.find("li");
+    var t4 = $(t3[0]);
+    var t5 = t4.attr("property");
+
+    if(t5 == undefined){
+        var t6 = t4.find("a");
+        var t5 = t6.attr("rel");
+    }
+
+    RDFAUTHOR_START_FIX = "editSingleTerm";
+    EDIT_SINGLE_PROPERTY = t5;
 
     $('.toolbar a.save').removeClass('hidden');
     $('.toolbar a.cancel').removeClass('hidden');
