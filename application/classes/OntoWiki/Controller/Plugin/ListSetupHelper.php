@@ -189,6 +189,17 @@ class OntoWiki_Controller_Plugin_ListSetupHelper extends Zend_Controller_Plugin_
             if (!empty($config)) {
                 if (isset($config['sort'])) {
                     if ($config['sort'] !== null)
+                        $sortParam = $config['sort']['uri'];
+                    $query = new Erfurt_Sparql_SimpleQuery();
+                    $query->setProloguePart('SELECT DISTINCT ?range')
+                        ->setWherePart('WHERE { <' . $sortParam . '> <http://www.w3.org/2000/01/rdf-schema#range> ?range . }');
+
+                    $result = $store->sparqlQuery($query);
+                    if($result[0]['range'] === "http://www.w3.org/2001/XMLSchema#integer"){
+                        $_SESSION['ONTOWIKI']['StringSort'] = false;
+                    }else{
+                        $_SESSION['ONTOWIKI']['StringSort'] = true;
+                    }
                         $list->setOrderProperty($config['sort']['uri'], $config['sort']['asc']);
 
                     $listConfig['sort'] = $config['sort'];
