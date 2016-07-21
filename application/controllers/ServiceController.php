@@ -1077,30 +1077,31 @@ class ServiceController extends Zend_Controller_Action
         }
 
         foreach ($output[$resourceUri] as $k => $v) {
-
-            $query = 'SELECT ?type ?range ?owlOneOf ?displayAs WHERE {
+            if ($k != "http://www.w3.org/1999/02/22-rdf-syntax-ns#type") {
+                $query = 'SELECT ?type ?range ?owlOneOf ?displayAs WHERE {
 <'. $k .'> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> ?type .
 OPTIONAL {
 <'. $k .'> <http://www.w3.org/2000/01/rdf-schema#range> ?range
 OPTIONAL { ?range <http://www.w3.org/2002/07/owl#oneOf> ?owlOneOf }  }
 OPTIONAL { ?range <http://ns.ontowiki.net/SysOnt/displayAs> ?displayAs } }';
-            $data = $model->sparqlQuery(
-                $query, array('result_format' => 'plain')
-            );
-            if(sizeof($data) > 0) {
-                $ranges = array();
-                $ranges[] = $data[0]["range"];
-                $types = array();
-                $types[] = $data[0]["type"];
-                $output[$resourceUri][$k][0]["range"] = $ranges;
-                if($data[0]["owlOneOf"] === "" || $data[0]["owlOneOf"] === "null" || $data[0]["owlOneOf"] == null){
-                    $data[0]["owlOneOf"] = "";
-                }
-                $output[$resourceUri][$k][0]["owlOneOf"] = $data[0]["owlOneOf"];
-                $output[$resourceUri][$k][0]["displayAs"] = $data[0]["displayAs"];
-                $output[$resourceUri][$k][0]["type"] = $types;
-                if($data[0]["owlOneOf"] != ""){
-                    $query = "PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+                $data = $model->sparqlQuery(
+                    $query, array('result_format' => 'plain')
+                );
+                if(sizeof($data) > 0) {
+                    $ranges = array();
+                    $ranges[] = $data[0]["range"];
+                    $types = array();
+                    $types[] = $data[0]["type"];
+                    $output[$resourceUri][$k][0]["range"] = $ranges;
+                    if($data[0]["owlOneOf"] === "" || $data[0]["owlOneOf"] === "null" || $data[0]["owlOneOf"] == null){
+                        $data[0]["owlOneOf"] = "";
+                    }
+                    $output[$resourceUri][$k][0]["owlOneOf"] = $data[0]["owlOneOf"];
+                    $output[$resourceUri][$k][0]["displayAs"] = $data[0]["displayAs"];
+                    $output[$resourceUri][$k][0]["type"] = $types;
+                    $dropDownContent = "";
+                    if($data[0]["owlOneOf"] != ""){
+                        $query = "PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
 SELECT DISTINCT ?elem ?label
 WHERE {
 <" . $ranges[0] . "> <http://www.w3.org/2002/07/owl#oneOf> ?list .
@@ -1109,10 +1110,11 @@ OPTIONAL {
 ?elem <http://www.w3.org/2000/01/rdf-schema#label> ?label .
 FILTER(lang(?label) = 'de')
 }}";
-                    $dropDownContent = $model->sparqlQuery(
-                        $query, array('result_format' => 'extended')
-                    );
-                    $output[$resourceUri][$k][0]["dropDownContent"] = $dropDownContent;
+                        $dropDownContent = $model->sparqlQuery(
+                            $query, array('result_format' => 'extended')
+                        );
+                        $output[$resourceUri][$k][0]["dropDownContent"] = $dropDownContent;
+                    }
                 }
             }
         }
