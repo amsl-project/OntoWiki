@@ -962,6 +962,30 @@ class ServiceController extends Zend_Controller_Action
         }
 
         $properties = $properties['results']['bindings'];
+
+        $displayProperties = array();
+        if (!empty($properties)) {
+            foreach ($properties as $p) {
+                array_push($displayProperties, $p["uri"]["value"]);
+            }
+        }
+
+
+        foreach ($output->addOptionalPropertyValues as $key => $value) {
+            $isIn = false;
+            foreach ($properties as $item){
+                if($item['uri']['value'] == $key){
+                    $isIn = true;
+                    break;
+                }
+            }
+            if(!$isIn) {
+                $a = array("type" => "uri",
+                    "value" => $key);
+                array_push($properties, array("uri" => $a));
+            }
+        }
+
         // feed title helper w/ URIs
         $titleHelper = new OntoWiki_Model_TitleHelper($model);
         $titleHelper->addResources($properties, 'uri');
@@ -1099,7 +1123,7 @@ OPTIONAL { ?range <http://ns.ontowiki.net/SysOnt/displayAs> ?displayAs } }';
                     $output[$resourceUri][$k][0]["owlOneOf"] = $data[0]["owlOneOf"];
                     $output[$resourceUri][$k][0]["displayAs"] = $data[0]["displayAs"];
                     $output[$resourceUri][$k][0]["type"] = $types;
-                    $dropDownContent = "";
+
                     if($data[0]["owlOneOf"] != ""){
                         $query = "PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
 SELECT DISTINCT ?elem ?label
@@ -1118,6 +1142,47 @@ FILTER(lang(?label) = 'de')
                 }
             }
         }
+
+        foreach ($output["addOptionalPropertyValues"] as $k => $v) {
+            if ($k != "http://www.w3.org/1999/02/22-rdf-syntax-ns#type") {
+                $query = 'SELECT ?range WHERE {
+
+<'. $k .'> <http://www.w3.org/2000/01/rdf-schema#range> ?range
+}';
+                $data = $model->sparqlQuery(
+                    $query, array('result_format' => 'plain')
+                );
+                if(sizeof($data) > 0) {
+                    $ranges = array();
+                    $ranges[] = $data[0]["range"];
+                    $output["addOptionalPropertyValues"][$k]["ranges"] = $ranges;
+                }
+            }
+        }
+
+        $inititialData = array();
+        $additionalData = array();
+
+        foreach($output[$resourceUri] as $key => $value){
+            $isIn = false;
+            foreach($displayProperties as $propp){
+                if($propp == $key){
+                    $isIn = true;
+                    $inititialData[$key] = $value;
+                }
+            }
+            if(!$isIn){
+                $additionalData[$key] = $value;
+            }
+        }
+
+        if($workingMode == 'clone'){
+            $test = 0;
+        }
+
+        $output[$resourceUri] = $inititialData;
+        $output["additionalData"] = $additionalData;
+        $output["displayProperties"] = $displayProperties;
 
         // send the response
         $response->setHeader('Content-Type', 'application/json');

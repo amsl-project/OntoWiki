@@ -394,6 +394,35 @@ $(document).ready(function() {
                 RDFauthor.cancel();
             }
             loadRDFauthor(function () {
+                var serviceURI = urlBase + 'service/rdfauthorinit';
+                var prototypeResource = selectedResource.URI;
+                RDFauthor.reset();
+
+                $.getJSON(serviceURI, {
+                    mode: 'clone',
+                    uri: prototypeResource
+                }, function(data) {
+                    if (data.hasOwnProperty('propertyOrder')) {
+                        var propertyOrder = data.propertyOrder;
+                        delete data.propertyOrder;
+                    }
+                    else {
+                        var propertyOrder = null;
+                    }
+
+                    var addPropertyValues = data['addPropertyValues'];
+                    var addOptionalPropertyValues = data['addOptionalPropertyValues'];
+                    RDFAUTHOR_DISPLAY_FIX = data['displayProperties'];
+                    RDFAUTHOR_DATATYPES_FIX_ADDITIONAL_DATA = data['additionalData'];
+                    delete data['addPropertyValues'];
+                    delete data['addOptionalPropertyValues'];
+                    delete data.additionalData;
+                    delete data.displayProperties;
+                    // get default resource uri for subjects in added statements (issue 673)
+                    // grab first object key
+                    for (var subjectUri in data) {break;};
+
+                    populateRDFauthor(data, true, subjectUri, selectedGraph.URI);
                 RDFauthor.setOptions({
                     onSubmitSuccess: function () {
                         // var mainInnerContent = $('.window .content.has-innerwindows').eq(0).find('.innercontent');
@@ -444,6 +473,7 @@ $(document).ready(function() {
                 });
 
                 RDFauthor.start();
+                });
 
                 $('.edit').each(function() {
                     $(this).fadeIn(effectTime, function() {
@@ -474,8 +504,12 @@ $(document).ready(function() {
 
                 var addPropertyValues = data['addPropertyValues'];
                 var addOptionalPropertyValues = data['addOptionalPropertyValues'];
+                RDFAUTHOR_DISPLAY_FIX = data['displayProperties'];
+                RDFAUTHOR_DATATYPES_FIX_ADDITIONAL_DATA = data['additionalData'];
                 delete data['addPropertyValues'];
                 delete data['addOptionalPropertyValues'];
+                delete data.additionalData;
+                delete data.displayProperties;
                 // get default resource uri for subjects in added statements (issue 673)
                 // grab first object key
                 for (var subjectUri in data) {break;};
@@ -520,6 +554,34 @@ $(document).ready(function() {
         if(typeof(RDFauthor) === 'undefined' || ((typeof(RDFAUTHOR_STATUS) != 'undefined') && (RDFAUTHOR_STATUS === 'inactive'))) {
             RDFAUTHOR_START_FIX = "addProperty";
             loadRDFauthor(function () {
+                var serviceURI = urlBase + 'service/rdfauthorinit';
+                var prototypeResource = selectedResource.URI;
+                RDFauthor.reset();
+
+                $.getJSON(serviceURI, {
+                    mode: 'clone',
+                    uri: prototypeResource
+                }, function(data) {
+                    if (data.hasOwnProperty('propertyOrder')) {
+                        var propertyOrder = data.propertyOrder;
+                        delete data.propertyOrder;
+                    }
+                    else {
+                        var propertyOrder = null;
+                    }
+
+                    var addPropertyValues = data['addPropertyValues'];
+                    var addOptionalPropertyValues = data['addOptionalPropertyValues'];
+                    RDFAUTHOR_DISPLAY_FIX = data['displayProperties'];
+                    RDFAUTHOR_DATATYPES_FIX_ADDITIONAL_DATA = data['additionalData'];
+                    delete data['addPropertyValues'];
+                    delete data['addOptionalPropertyValues'];
+                    delete data.additionalData;
+                    delete data.displayProperties;
+                    // get default resource uri for subjects in added statements (issue 673)
+                    // grab first object key
+                    for (var subjectUri in data) {break;};
+                    populateRDFauthor(data, true, subjectUri, selectedGraph.URI);
                 RDFauthor.setOptions({
                     onSubmitSuccess: function () {
                         // var mainInnerContent = $('.window .content.has-innerwindows').eq(0).find('.innercontent');
@@ -572,6 +634,7 @@ $(document).ready(function() {
                 RDFauthor.start($('head'));
                 $('.edit-enable').addClass('active');
                 setTimeout("addProperty()",500);
+                });
             });
         } else {
             addProperty();

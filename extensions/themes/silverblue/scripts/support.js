@@ -417,10 +417,16 @@ function populateRDFauthor(data, protect, resource, graph, workingmode) {
     resource = arguments.length >= 3 ? resource : null;
     graph    = arguments.length >= 4 ? graph : null;
 
-    RDFAUTHOR_DATATYPES_FIX = data;
+    var currentSubject;
+    for (currentSubject in data) {
+        break;
+    }
+    var fullDataSet = $.extend({}, data[currentSubject], RDFAUTHOR_DATATYPES_FIX_ADDITIONAL_DATA);
+    RDFAUTHOR_DATATYPES_FIX[currentSubject] = fullDataSet;
 
     for (var currentSubject in data) {
         for (var currentProperty in data[currentSubject]) {
+            if($.inArray(currentProperty, RDFAUTHOR_DISPLAY_FIX) !== -1 || currentProperty == "http://www.w3.org/1999/02/22-rdf-syntax-ns#type") {
             var objects = data[currentSubject][currentProperty];
 
             for (var i = 0; i < objects.length; i++) {
@@ -475,6 +481,7 @@ function populateRDFauthor(data, protect, resource, graph, workingmode) {
                 }
 
                 RDFauthor.addStatement(stmt);
+                }
             }
         }
     }
@@ -519,8 +526,12 @@ function createInstanceFromClassURI(type, dataCallback) {
             }
             var addPropertyValues = data['addPropertyValues'];
             var addOptionalPropertyValues = data['addOptionalPropertyValues'];
+            RDFAUTHOR_DISPLAY_FIX = Object.keys(data['addPropertyValues']);
+            RDFAUTHOR_DATATYPES_FIX_ADDITIONAL_DATA = data['additionalData'];
             delete data.addPropertyValues;
             delete data.addOptionalPropertyValues;
+            delete data.additionalData;
+            delete data.displayProperties;
 
             // get default resource uri for subjects in added statements (issue 673)
             // grab first object key
@@ -582,6 +593,8 @@ function editResourceFromURI(resource) {
         }, function(data) {
             var addPropertyValues = data['addPropertyValues'];
             var addOptionalPropertyValues = data['addOptionalPropertyValues'];
+            RDFAUTHOR_DISPLAY_FIX = Object.keys(data['addPropertyValues']);
+            RDFAUTHOR_DATATYPES_FIX_ADDITIONAL_DATA = data['additionalData'];
             delete data.addPropertyValues;
             delete data.addOptionalPropertyValues;
 			if (data.hasOwnProperty('propertyOrder')) {
