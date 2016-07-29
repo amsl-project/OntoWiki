@@ -424,28 +424,40 @@ function populateRDFauthor(data, protect, resource, graph, workingmode) {
     var fullDataSet = $.extend({}, data[currentSubject], RDFAUTHOR_DATATYPES_FIX_ADDITIONAL_DATA);
     RDFAUTHOR_DATATYPES_FIX[currentSubject] = fullDataSet;
 
+if(window.RDFAUTHOR_START_FIX != undefined) {
+    if (RDFAUTHOR_START_FIX == "editSingleTerm") {
+        var reduced = {};
+        reduced[currentSubject] = {};
+        reduced[currentSubject][EDIT_SINGLE_PROPERTY] = RDFAUTHOR_DATATYPES_FIX[currentSubject][EDIT_SINGLE_PROPERTY];
+        data = reduced;
+    }
+    if (RDFAUTHOR_START_FIX == "addProperty") {
+        var reduced = {};
+        reduced[currentSubject] = {};
+        reduced[currentSubject][EDIT_SINGLE_PROPERTY] = RDFAUTHOR_DATATYPES_FIX[currentSubject][EDIT_SINGLE_PROPERTY];
+        data = reduced;
+        RDFAUTHOR_DISPLAY_FIX.push(EDIT_SINGLE_PROPERTY);
+    }
+}
+
     for (var currentSubject in data) {
         for (var currentProperty in data[currentSubject]) {
-            if($.inArray(currentProperty, RDFAUTHOR_DISPLAY_FIX) !== -1 || currentProperty == "http://www.w3.org/1999/02/22-rdf-syntax-ns#type") {
-            var objects = data[currentSubject][currentProperty];
-
-            for (var i = 0; i < objects.length; i++) {
+            if($.inArray(currentProperty, RDFAUTHOR_DISPLAY_FIX) !== -1 || currentProperty == "http://www.w3.org/1999/02/22-rdf-syntax-ns#type" || RDFAUTHOR_START_FIX == "addProperty") {
+                var objects = data[currentSubject][currentProperty];
+                for (var i = 0; i < objects.length; i++) {
                 var objSpec = objects[i];
-
-                if ( objSpec.type == 'uri' ) { 
-                    var value = '<' + objSpec.value + '>'; 
-                } else if ( objSpec.type == 'bnode' ) { 
+                if ( objSpec.type == 'uri') {
+                    var value = '<' + objSpec.value + '>';
+                } else if ( objSpec.type == 'bnode' ) {
                     var value = '_:' + objSpec.value;
                 } else {
                     // IE fix, object keys with empty strings are removed
-                    var value = objSpec.value ? objSpec.value : ""; 
+                    var value = objSpec.value ? objSpec.value : "";
                 }
-
                 var newObjectSpec = {
-                    value : value,
+                    value: value,
                     type: String(objSpec.type).replace('typed-', '')
                 }
-
 
                 if (newObjectSpec.value) {
                     if (newObjectSpec.type == 'literal') {
@@ -470,6 +482,7 @@ function populateRDFauthor(data, protect, resource, graph, workingmode) {
                     protected: protect ? true : false, 
                     hidden: objSpec.hidden ? objSpec.hidden : false
                 });
+
 
                 if (workingmode == 'class') {
                     // remove all values except for type
@@ -684,49 +697,82 @@ function editProperty(event) {
     $('.toolbar a.cancel').removeClass('hidden');
 
     loadRDFauthor(function () {
-        RDFauthor.setOptions({
-            saveButtonTitle: 'Save Changes', 
-            cancelButtonTitle: 'Cancel',
-            title: $('.section-mainwindows .window').eq(0).children('.title').eq(0).text(), 
-            loadOwStylesheet: false,
-            onSubmitSuccess: function () {
-                $('.edit').each(function() {
-                    $(this).fadeOut(effectTime);
-                });
-                $('.edit-enable').removeClass('active');
+        var serviceURI = urlBase + 'service/rdfauthorinit';
+        var prototypeResource = selectedResource.URI;
+        RDFauthor.reset();
 
-                // HACK: reload whole page after 1000 ms
-                /*
-                   window.setTimeout(function () {
-                    window.location.href = window.location.href;
-                }, 1000);
-                */
-            }, 
-            onCancel: function () {
-                $('.edit').each(function() {
-                    $(this).fadeOut(effectTime);
-                });
-                $('.edit-enable').removeClass('active');
-            }, 
-            viewOptions: {
-                type: RDFAUTHOR_VIEW_MODE,
-                container: function (statement) {
-                    var element = RDFauthor.elementForStatement(statement);
-                    var parent  = $(element).closest('div');
-
-                    if (!parent.hasClass('ontowiki-processed')) {
-                        parent.children().each(function () {
-                            $(this).hide();
-                        });
-                        parent.addClass('ontowiki-processed');
-                    }
-
-                    return parent.get(0);
-                }
+        $.getJSON(serviceURI, {
+            mode: 'edit',
+            uri: prototypeResource
+        }, function(data) {
+            if (data.hasOwnProperty('propertyOrder')) {
+                var propertyOrder = data.propertyOrder;
+                delete data.propertyOrder;
             }
-        });
+            else {
+                var propertyOrder = null;
+            }
 
-        RDFauthor.start($(element).closest('td'));
+            var addPropertyValues = data['addPropertyValues'];
+            var addOptionalPropertyValues = data['addOptionalPropertyValues'];
+            RDFAUTHOR_DISPLAY_FIX = data['displayProperties'];
+            RDFAUTHOR_DATATYPES_FIX_ADDITIONAL_DATA = data['additionalData'];
+            delete data['addPropertyValues'];
+            delete data['addOptionalPropertyValues'];
+            delete data.additionalData;
+            delete data.displayProperties;
+            // get default resource uri for subjects in added statements (issue 673)
+            // grab first object key
+            for (var subjectUri in data) {
+                break;
+            }
+            ;
+
+            populateRDFauthor(data, true, subjectUri, selectedGraph.URI);
+            RDFauthor.setOptions({
+                saveButtonTitle: 'Save Changes',
+                cancelButtonTitle: 'Cancel',
+                title: $('.section-mainwindows .window').eq(0).children('.title').eq(0).text(),
+                loadOwStylesheet: false,
+                onSubmitSuccess: function () {
+                    $('.edit').each(function () {
+                        $(this).fadeOut(effectTime);
+                    });
+                    $('.edit-enable').removeClass('active');
+
+                    // HACK: reload whole page after 1000 ms
+                    /*
+                     window.setTimeout(function () {
+                     window.location.href = window.location.href;
+                     }, 1000);
+                     */
+                },
+                onCancel: function () {
+                    $('.edit').each(function () {
+                        $(this).fadeOut(effectTime);
+                    });
+                    $('.edit-enable').removeClass('active');
+                },
+                viewOptions: {
+                    type: RDFAUTHOR_VIEW_MODE,
+                    container: function (statement) {
+                        var element = RDFauthor.elementForStatement(statement);
+                        var parent = $(element).closest('div');
+
+                        if (!parent.hasClass('ontowiki-processed')) {
+                            parent.children().each(function () {
+                                $(this).hide();
+                            });
+                            parent.addClass('ontowiki-processed');
+                        }
+
+                        return parent.get(0);
+                    }
+                }
+            });
+
+            RDFauthor.start($(element).closest('td'));
+        });
         $('.edit-enable').addClass('active');
         $('.edit').each(function() {
             var button = this;

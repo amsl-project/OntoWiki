@@ -515,6 +515,16 @@ class ServiceController extends Zend_Controller_Action
             $insert = json_decode($this->_request->getParam('insert', '{}'), true);
             $delete = json_decode($this->_request->getParam('delete', '{}'), true);
 
+            foreach($insert as $subkey => $currentSubject){
+                foreach($currentSubject as $prdkey => $currentProperty){
+                    foreach($currentProperty as $itemkey => $item) {
+                        if ($item["value"] == "") {
+                            unset($insert[$subkey][$prdkey][$itemkey]);
+                        }
+                    }
+                }
+            }
+
             $changeReason = $this->_request->getParam('changeReason', null);
 
             if ($this->_request->has('delete_hashed')) {
@@ -1125,6 +1135,8 @@ OPTIONAL { ?range <http://ns.ontowiki.net/SysOnt/displayAs> ?displayAs } }';
                     $output[$resourceUri][$k][0]["type"] = $types;
 
                     if($data[0]["owlOneOf"] != ""){
+                        $_owApp = OntoWiki::getInstance();
+                        $lang = $_owApp->language;
                         $query = "PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
 SELECT DISTINCT ?elem ?label
 WHERE {
@@ -1132,7 +1144,7 @@ WHERE {
 ?list rdf:rest*/rdf:first ?elem .
 OPTIONAL {
 ?elem <http://www.w3.org/2000/01/rdf-schema#label> ?label .
-FILTER(lang(?label) = 'de')
+FILTER(lang(?label) = '". $lang ."')
 }}";
                         $dropDownContent = $model->sparqlQuery(
                             $query, array('result_format' => 'extended')
