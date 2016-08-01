@@ -996,6 +996,21 @@ class ServiceController extends Zend_Controller_Action
             }
         }
 
+        foreach ($output->addPropertyValues as $key => $value) {
+            $isIn = false;
+            foreach ($properties as $item){
+                if($item['uri']['value'] == $key){
+                    $isIn = true;
+                    break;
+                }
+            }
+            if(!$isIn) {
+                $a = array("type" => "uri",
+                    "value" => $key);
+                array_push($properties, array("uri" => $a));
+            }
+        }
+
         // feed title helper w/ URIs
         $titleHelper = new OntoWiki_Model_TitleHelper($model);
         $titleHelper->addResources($properties, 'uri');

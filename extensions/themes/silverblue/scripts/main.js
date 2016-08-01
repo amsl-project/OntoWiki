@@ -331,6 +331,7 @@ $(document).ready(function() {
 
     // init new resource based on type
     $('.init-resource').click(function(event) {
+        RDFAUTHOR_START_FIX = "newResource";
         // parse .resource-list and query for all types
         if ($('.resource-list').length != 0) {
             var types = $('.resource-list').rdf()
@@ -381,6 +382,7 @@ $(document).ready(function() {
 
     // edit mode
     $('.edit-enable').click(function() {
+        RDFAUTHOR_START_FIX = "editMode";
         var button = this;
         if ($(button).hasClass('active')) {
             RDFauthor.cancel();
@@ -485,6 +487,7 @@ $(document).ready(function() {
     });
 
     $('.clone-resource').click(function() {
+        RDFAUTHOR_START_FIX = "clone";
         loadRDFauthor(function () {
             var serviceURI = urlBase + 'service/rdfauthorinit';
             var prototypeResource = selectedResource.URI;

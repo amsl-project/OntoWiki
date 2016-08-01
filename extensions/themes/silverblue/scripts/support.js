@@ -444,33 +444,49 @@ if(window.RDFAUTHOR_START_FIX != undefined) {
         for (var currentProperty in data[currentSubject]) {
             if($.inArray(currentProperty, RDFAUTHOR_DISPLAY_FIX) !== -1 || currentProperty == "http://www.w3.org/1999/02/22-rdf-syntax-ns#type" || RDFAUTHOR_START_FIX == "addProperty") {
                 var objects = data[currentSubject][currentProperty];
+                if(objects == undefined){
+                    return;
+                }
                 for (var i = 0; i < objects.length; i++) {
                 var objSpec = objects[i];
-                if ( objSpec.type == 'uri') {
-                    var value = '<' + objSpec.value + '>';
-                } else if ( objSpec.type == 'bnode' ) {
-                    var value = '_:' + objSpec.value;
-                } else {
-                    // IE fix, object keys with empty strings are removed
-                    var value = objSpec.value ? objSpec.value : "";
-                }
-                var newObjectSpec = {
-                    value: value,
-                    type: String(objSpec.type).replace('typed-', '')
-                }
+                    //the old way
+                    if(objSpec.range == undefined) {
+                        if (objSpec.type == 'uri') {
+                            var value = '<' + objSpec.value + '>';
+                        } else if (objSpec.type == 'bnode') {
+                            var value = '_:' + objSpec.value;
+                        } else {
+                            // IE fix, object keys with empty strings are removed
+                            var value = objSpec.value ? objSpec.value : "";
+                        }
+                        var newObjectSpec = {
+                            value: value,
+                            type: String(objSpec.type).replace('typed-', '')
+                        }
+                        if (newObjectSpec.value) {
+                            if (newObjectSpec.type == 'literal') {
+                                newObjectSpec.options = {
+                                    datatype: objSpec.datatype
+                                }
+                            }
+                            if (objSpec.lang) {
+                                newObjectSpec.options = {
+                                    lang: objSpec.lang
+                                }
+                            }
+                        }
+                    }else{
+                        //the new way
+                        var value = objSpec.value ? objSpec.value : "";
+                        var newObjectSpec = {
+                            value: value,
+                            type: String(objSpec.range[0]).replace('typed-', '')
+                        }
 
-                if (newObjectSpec.value) {
-                    if (newObjectSpec.type == 'literal') {
-                        newObjectSpec.options = {
-                            datatype: objSpec.datatype
-                        }
                     }
-                    if (objSpec.lang) {
-                        newObjectSpec.options = {
-                            lang: objSpec.lang
-                        }
-                    }
-                }
+
+
+
 
                 var stmt = new Statement({
                     subject: '<' + currentSubject + '>',
@@ -492,8 +508,10 @@ if(window.RDFAUTHOR_START_FIX != undefined) {
                         stmt._hidden = true;
                     }
                 }
+                if((RDFAUTHOR_START_FIX != "editMode" && RDFAUTHOR_START_FIX != "editSingleTerm") || (objSpec.type[0] != "http://www.w3.org/2002/07/owl#DataTypeProperty" && objSpec.type[0] != "http://www.w3.org/2002/07/owl#DatatypeProperty")){
+                    RDFauthor.addStatement(stmt);
+                }
 
-                RDFauthor.addStatement(stmt);
                 }
             }
         }
