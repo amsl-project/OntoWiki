@@ -426,12 +426,12 @@ class OntoWiki_Menu_Registry
             );
 
             // add class menu entries
-            if ($owApp->erfurt->getAc()->isModelAllowed('edit', $owApp->selectedModel)) {
-                $classMenu->appendEntry(
-                    'Create Instance',
-                    "javascript:createInstanceFromClassURI('$resource');"
-                );
-            }
+//            if ($owApp->erfurt->getAc()->isModelAllowed('edit', $owApp->selectedModel)) {
+//                $classMenu->appendEntry(
+//                    'Create Instance',
+//                    "javascript:createInstanceFromClassURI('$resource');"
+//                );
+//            }
         }
 
         return $classMenu;
