@@ -500,7 +500,7 @@ if(window.RDFAUTHOR_START_FIX != undefined) {
                 });
 
 
-                if (workingmode == 'class') {
+                if (workingmode == 'class' || RDFAUTHOR_START_FIX == "addProperty") {
                     // remove all values except for type
                     if ( stmt.predicateURI() !== 'http://www.w3.org/1999/02/22-rdf-syntax-ns#type' ) {
                         stmt._object.value = "";

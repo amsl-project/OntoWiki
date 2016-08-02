@@ -1136,35 +1136,37 @@ OPTIONAL { ?range <http://ns.ontowiki.net/SysOnt/displayAs> ?displayAs } }';
                 $data = $model->sparqlQuery(
                     $query, array('result_format' => 'plain')
                 );
-                if(sizeof($data) > 0) {
-                    $ranges = array();
-                    $ranges[] = $data[0]["range"];
-                    $types = array();
-                    $types[] = $data[0]["type"];
-                    $output[$resourceUri][$k][0]["range"] = $ranges;
-                    if($data[0]["owlOneOf"] === "" || $data[0]["owlOneOf"] === "null" || $data[0]["owlOneOf"] == null){
-                        $data[0]["owlOneOf"] = "";
-                    }
-                    $output[$resourceUri][$k][0]["owlOneOf"] = $data[0]["owlOneOf"];
-                    $output[$resourceUri][$k][0]["displayAs"] = $data[0]["displayAs"];
-                    $output[$resourceUri][$k][0]["type"] = $types;
+                for($itemCount = 0; $itemCount < sizeOf($output[$resourceUri][$k]); $itemCount++) {
+                    if (sizeof($data) > 0) {
+                        $ranges = array();
+                        $ranges[] = $data[0]["range"];
+                        $types = array();
+                        $types[] = $data[0]["type"];
+                        $output[$resourceUri][$k][$itemCount]["range"] = $ranges;
+                        if ($data[0]["owlOneOf"] === "" || $data[0]["owlOneOf"] === "null" || $data[0]["owlOneOf"] == null) {
+                            $data[0]["owlOneOf"] = "";
+                        }
+                        $output[$resourceUri][$k][$itemCount]["owlOneOf"] = $data[0]["owlOneOf"];
+                        $output[$resourceUri][$k][$itemCount]["displayAs"] = $data[0]["displayAs"];
+                        $output[$resourceUri][$k][$itemCount]["type"] = $types;
 
-                    if($data[0]["owlOneOf"] != ""){
-                        $_owApp = OntoWiki::getInstance();
-                        $lang = $_owApp->language;
-                        $query = "PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+                        if ($data[0]["owlOneOf"] != "") {
+                            $_owApp = OntoWiki::getInstance();
+                            $lang = $_owApp->language;
+                            $query = "PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
 SELECT DISTINCT ?elem ?label
 WHERE {
 <" . $ranges[0] . "> <http://www.w3.org/2002/07/owl#oneOf> ?list .
 ?list rdf:rest*/rdf:first ?elem .
 OPTIONAL {
 ?elem <http://www.w3.org/2000/01/rdf-schema#label> ?label .
-FILTER(lang(?label) = '". $lang ."')
+FILTER(lang(?label) = '" . $lang . "')
 }}";
-                        $dropDownContent = $model->sparqlQuery(
-                            $query, array('result_format' => 'extended')
-                        );
-                        $output[$resourceUri][$k][0]["dropDownContent"] = $dropDownContent;
+                            $dropDownContent = $model->sparqlQuery(
+                                $query, array('result_format' => 'extended')
+                            );
+                            $output[$resourceUri][$k][$itemCount]["dropDownContent"] = $dropDownContent;
+                        }
                     }
                 }
             }
