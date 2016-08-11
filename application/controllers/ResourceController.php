@@ -141,6 +141,13 @@ class ResourceController extends OntoWiki_Controller_Base
                     );
                 } else {
                     $editableFlags[$g] = false;
+                    $this->view->placeholder('update')->append(
+                        array(
+                            'sourceGraph'    => $g,
+                            'queryEndpoint'  => $this->_config->urlBase . 'sparql/',
+                            'updateEndpoint' => $this->_config->urlBase . 'update/'
+                        )
+                    );
                 }
             }
 
