@@ -438,11 +438,16 @@ if(window.RDFAUTHOR_START_FIX != undefined) {
         data = reduced;
         RDFAUTHOR_DISPLAY_FIX.push(EDIT_SINGLE_PROPERTY);
     }
+    if (RDFAUTHOR_START_FIX == "editMode") {
+        if($.inArray("http://www.w3.org/1999/02/22-rdf-syntax-ns#type", RDFAUTHOR_DISPLAY_FIX)){
+            RDFAUTHOR_DISPLAY_FIX.splice( $.inArray("http://www.w3.org/1999/02/22-rdf-syntax-ns#type", RDFAUTHOR_DISPLAY_FIX), 1 );
+        }
+    }
 }
 
     for (var currentSubject in data) {
         for (var currentProperty in data[currentSubject]) {
-            if($.inArray(currentProperty, RDFAUTHOR_DISPLAY_FIX) !== -1 || currentProperty == "http://www.w3.org/1999/02/22-rdf-syntax-ns#type" || RDFAUTHOR_START_FIX == "addProperty") {
+            if($.inArray(currentProperty, RDFAUTHOR_DISPLAY_FIX) !== -1 || RDFAUTHOR_START_FIX == "addProperty") {
                 var objects = data[currentSubject][currentProperty];
                 if(objects == undefined){
                     return;
