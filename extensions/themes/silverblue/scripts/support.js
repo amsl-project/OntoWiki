@@ -439,8 +439,13 @@ if(window.RDFAUTHOR_START_FIX != undefined) {
         RDFAUTHOR_DISPLAY_FIX.push(EDIT_SINGLE_PROPERTY);
     }
     if (RDFAUTHOR_START_FIX == "editMode") {
-        if($.inArray("http://www.w3.org/1999/02/22-rdf-syntax-ns#type", RDFAUTHOR_DISPLAY_FIX)){
+        if($.inArray("http://www.w3.org/1999/02/22-rdf-syntax-ns#type", RDFAUTHOR_DISPLAY_FIX) !== -1){
             RDFAUTHOR_DISPLAY_FIX.splice( $.inArray("http://www.w3.org/1999/02/22-rdf-syntax-ns#type", RDFAUTHOR_DISPLAY_FIX), 1 );
+        }
+    }
+    if (RDFAUTHOR_START_FIX == "newResource") {
+        if($.inArray("http://www.w3.org/1999/02/22-rdf-syntax-ns#type", RDFAUTHOR_DISPLAY_FIX == -1)){
+            RDFAUTHOR_DISPLAY_FIX.push("http://www.w3.org/1999/02/22-rdf-syntax-ns#type");
         }
     }
 }
