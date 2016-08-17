@@ -990,9 +990,16 @@ class ServiceController extends Zend_Controller_Action
                 }
             }
             if(!$isIn) {
-                $a = array("type" => "uri",
+                $uriA = array("type" => "uri",
                     "value" => $key);
-                array_push($properties, array("uri" => $a));
+                if(isset($value["type"])){
+                    $valueB = array("type" => "typed-literal",
+                        "datatype" => $value["type"]);
+                    array_push($properties, array("uri" => $uriA, "value" => $valueB));
+                }else{
+                    array_push($properties, array("uri" => $uriA));
+                }
+
             }
         }
 
@@ -1005,9 +1012,15 @@ class ServiceController extends Zend_Controller_Action
                 }
             }
             if(!$isIn) {
-                $a = array("type" => "uri",
+                $uriA = array("type" => "uri",
                     "value" => $key);
-                array_push($properties, array("uri" => $a));
+                if(isset($value["type"] )){
+                    $valueB = array("type" => "typed-literal",
+                        "datatype" => $value["type"]);
+                    array_push($properties, array("uri" => $uriA, "value" => $valueB));
+                }else{
+                    array_push($properties, array("uri" => $uriA));
+                }
             }
         }
 
