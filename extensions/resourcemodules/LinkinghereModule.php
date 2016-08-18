@@ -33,16 +33,18 @@ class LinkinghereModule extends OntoWiki_Module
                 'WHERE {
                     ?subject ?uri <' . (string)$this->_owApp->selectedResource . '> .
                 }'
-            )->setLimit(6);
+            );
 
         $result           = $this->_owApp->selectedModel->sparqlQuery($query, array('result_format' => 'extended'));
         $_predicatesResult = array();
+
         if (isset($result['results']['bindings'])) {
             foreach ($result['results']['bindings'] as $row) {
                 if ($row['subject']['type'] === 'uri') {
-                    $_predicatesResult[] = array(
-                        'uri' => $row['uri']['value']
-                    );
+                    if(!isset($_predicatesResult[$row['uri']['value']])){
+                        $_predicatesResult[$row['uri']['value']] = array();
+                    }
+                    $_predicatesResult[$row['uri']['value']][] = $row['subject']['value'];
                 }
             }
         }
@@ -71,8 +73,6 @@ class LinkinghereModule extends OntoWiki_Module
     {
         $titleHelper = new OntoWiki_Model_TitleHelper($this->_owApp->selectedModel);
 
-        $query = new Erfurt_Sparql_SimpleQuery();
-
         $results = false;
 
         $_predicates = $this->_predicates;
@@ -82,25 +82,16 @@ class LinkinghereModule extends OntoWiki_Module
 
         $titleHelper->addResources($_predicates, 'uri');
 
-        foreach ($_predicates as $predicate) {
-            $predicateUri = $predicate['uri'];
+        foreach ($_predicates as $predicate => $subjects1) {
+            $predicateUri = $predicate;
 
             $url->setParam('r', $predicateUri, true); // create properties url for the relation
             $properties[$predicateUri]['uri']   = $predicateUri;
             $properties[$predicateUri]['url']   = (string)$url;
             $properties[$predicateUri]['title'] = $titleHelper->getTitle($predicateUri, $this->_lang);
 
-            $query->resetInstance()
-                ->setProloguePart('SELECT DISTINCT ?uri')
-                ->setWherePart(
-                    'WHERE {
-                        ?uri <' . $predicateUri . '> <' . (string)$this->_owApp->selectedResource . '> .
-                        FILTER (isURI(?uri))
-                    }'
-                )
-                ->setLimit(OW_SHOW_MAX + 1);
-
-            if ($subjects = $this->_owApp->selectedModel->sparqlQuery($query)) {
+            if (true) {
+                $subjects = $subjects1;
                 $results = true;
 
                 // has_more is used for the dots
@@ -110,14 +101,17 @@ class LinkinghereModule extends OntoWiki_Module
                 } else {
                     $properties[$predicateUri]['has_more'] = false;
                 }
-
+                $subs = array();
+                foreach($subjects as $sub){
+                    $subs[] = array("uri" => $sub);
+                }
                 $subjectTitleHelper = new OntoWiki_Model_TitleHelper($this->_owApp->selectedModel);
-                $subjectTitleHelper->addResources($subjects, 'uri');
-
-                foreach ($subjects as $subject) {
-                    $subjectUri       = $subject['uri'];
+                $subjectTitleHelper->addResources($subjects);
+                foreach ($subjects as $subject1) {
+                    $subject = array();
+                    $subjectUri       = $subject1;
                     $subject['title'] = $subjectTitleHelper->getTitle($subjectUri, $this->_lang);
-
+                    $subject['uri'] = $subjectUri;
                     // set URL
                     $url->setParam('r', $subjectUri, true);
                     $subject['url'] = (string)$url;
