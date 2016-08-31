@@ -32,10 +32,6 @@ class OutboundservicesController extends OntoWiki_Controller_Component
     {
         // getting the required parameters from the http request
         $action = $this->getRequest()->getParam('do');
-        $pretty = false;
-        if ($this->getRequest()->getParam('pretty') == 'true') {
-            $pretty = true;
-        }
 
         // loading the query associated with the user action
         $array = $this->_privateConfig->toArray();
@@ -46,7 +42,7 @@ class OutboundservicesController extends OntoWiki_Controller_Component
         $options['is_open_source_version'] = '1';
         $backend = new Erfurt_Store_Adapter_Virtuoso($options);
         $backend->init();
-        $query_results = $backend->sparqlQuery($query, array("result_format" => Erfurt_Store::RESULTFORMAT_EXTENDED, "jsonEncode" => "true"));
+        $query_results = $backend->sparqlQuery($query, array("result_format" => Erfurt_Store::RESULTFORMAT_PLAIN, "jsonEncode" => "true"));
         $json = $query_results;
 
         // prepare JSON response
@@ -55,7 +51,7 @@ class OutboundservicesController extends OntoWiki_Controller_Component
         $this->getResponse()->setHeader('Content-Type', 'application/json');
 
         // write JSON to response
-        echo $json;
+        echo Zend_Json::encode($json);
         return;
     }
 }
