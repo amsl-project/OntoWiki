@@ -196,7 +196,7 @@ class EzbholdingsController extends OntoWiki_Controller_Component
     private function deleteHoldings($package)
     {
         // get all holdings associated with a certain package
-        $query = 'select distinct ?holding FROM <http://ubl.amsl.technology/erm/> where { ?holding <http://vocab.ub.uni-leipzig.de/amsl/holdingOf> <' . $package . '> }';
+        $query = 'select distinct ?holding FROM <http://ubl.amsl.technology/erm/> where { ?holding <http://vocab.ub.uni-leipzig.de/amsl/holdingsItemOf> <' . $package . '> }';
         $query_results = $this->backend->sparqlQuery($query);
         // delete all these holdings
         foreach ($query_results as $resultSet) {
@@ -208,7 +208,7 @@ class EzbholdingsController extends OntoWiki_Controller_Component
     private function createHolding($package, $holdingsDataset)
     {
         // create holding id
-        $holding = 'http://vocab.ub.uni-leipzig.de/amsl/' . md5(rand());
+        $holding = 'http://ubl.amsl.technology/erm/' . md5(rand());
         // write holding
         $objectSpec = array();
         $objectSpec['type'] = 'uri';
@@ -351,12 +351,12 @@ class EzbholdingsController extends OntoWiki_Controller_Component
         );
         $properties[] = array(
             'ezbIndex' => 11,
-            'property' => 'http://vocab.ub.uni-leipzig.de/amsl/coverageNotes/ezbTitleID',
+            'property' => 'http://vocab.ub.uni-leipzig.de/amsl/ezbTitleID',
             'type' => 'literal',
         );
         $properties[] = array(
             'ezbIndex' => 22,
-            'property' => 'http://vocab.ub.uni-leipzig.de/amsl/coverageNotes/zdbID',
+            'property' => 'http://vocab.ub.uni-leipzig.de/amsl/zdbID',
             'type' => 'literal',
         );
         return $properties;
