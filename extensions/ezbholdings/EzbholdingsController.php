@@ -213,7 +213,7 @@ class EzbholdingsController extends OntoWiki_Controller_Component
         $objectSpec = array();
         $objectSpec['type'] = 'uri';
         $objectSpec['value'] = 'http://vocab.ub.uni-leipzig.de/amsl/HoldingsItem';
-        $this->backend->addStatement('http://ubl.amsl.technology/erm/', $holding, 'rdf:type', $objectSpec);
+        $this->backend->addStatement('http://ubl.amsl.technology/erm/', $holding, 'http://www.w3.org/1999/02/22-rdf-syntax-ns#type', $objectSpec);
         // write association of holding and package
         $objectSpec['type'] = 'uri';
         $objectSpec['value'] = $package;
