@@ -20,6 +20,7 @@
 class EzbholdingsController extends OntoWiki_Controller_Component
 {
     var $backend = null;
+    var $meta = array();
 
     public function init()
     {
@@ -165,23 +166,78 @@ class EzbholdingsController extends OntoWiki_Controller_Component
         return $holdingFileData;
     }
 
+    /**
+     * This is a convenience function that examines the cross-product of packages x anchors x contracts and creates the
+     * following structure:
+     * root:
+     * - paketA
+     *    - anchors
+     *       - anchorA
+     *       - anchorB
+     *    - contracts
+     *       - contractA
+     *       - contractB
+     * - paketB
+     *    ...
+     *
+     * @return array
+     */
+    private function getFoldedPackageData()
+    {
+        $licensePackages = $this->getLicensePackages();
+        $result = array();
+        foreach ($licensePackages as $data) {
+            // create packet
+            if (!isset($result[$data["paket"]])) {
+                $result[$data["paket"]] = array();
+            }
+
+            // create anchor-list
+            if (!isset($result[$data["paket"]]["anchors"])) {
+                $result[$data["paket"]]["anchors"] = array();
+            }
+
+            // create anchor
+            if (!in_array($data["anchor"], $result[$data["paket"]]["anchors"])) {
+                $result[$data["paket"]]["anchors"][] = $data["anchor"];
+            }
+
+            // create contract-list
+            if (!isset($result[$data["paket"]]["contracts"])) {
+                $result[$data["paket"]]["contracts"] = array();
+            }
+
+            // create contract
+            if (!in_array($data["contract"], $result[$data["paket"]]["contracts"])) {
+                $result[$data["paket"]]["contracts"][] = $data["contract"];
+            }
+        }
+        return $result;
+    }
+
     private function processHoldingsFile($holdingFileData)
     {
         $this->init2();
-        $licensePackages = $this->getLicensePackages();
-        $alreadyDeletedHoldings = array();
-        foreach ($licensePackages as $packageData) {
-            if ($this->isInContractPeriod($packageData['contract'])) {
-                if(!in_array($packageData['paket'], $alreadyDeletedHoldings)){
-                    $this->deleteHoldings($packageData['paket']);
-                    $alreadyDeletedHoldings[]=$packageData['paket'];
+        $data = $this->getFoldedPackageData();
+        foreach ($data as $paket => $paketdata) {
+            $writeNewHoldings = false;
+            foreach ($paketdata["contracts"] as $contract) {
+                if ($this->isInContractPeriod($contract)) {
+                    $this->deleteHoldings($paket);
+                    $writeNewHoldings = true;
+                    break;
                 }
-                foreach ($holdingFileData as $holdingsDataset) {
-                    if (isset($holdingsDataset[16])) {
-                        $holdingsAnchor = $holdingsDataset[16];
-                        $licensePackageAnchor = $packageData['anchor'];
-                        if ($licensePackageAnchor === $holdingsAnchor) {
-                            $this->createHolding($packageData['paket'], $holdingsDataset);
+            }
+
+            if ($writeNewHoldings) {
+                foreach ($paketdata["anchors"] as $anchor) {
+                    foreach ($holdingFileData as $holdingsDataset) {
+                        if (isset($holdingsDataset[16])) {
+                            $holdingsAnchor = $holdingsDataset[16];
+                            $licensePackageAnchor = $anchor;
+                            if ($licensePackageAnchor === $holdingsAnchor) {
+                                $this->createHolding($paket, $holdingsDataset);
+                            }
                         }
                     }
                 }
@@ -258,7 +314,8 @@ class EzbholdingsController extends OntoWiki_Controller_Component
         return false;
     }
 
-    private function getRessourceDetail($contract, $property){
+    private function getRessourceDetail($contract, $property)
+    {
         $query = 'select distinct ?detail FROM <http://ubl.amsl.technology/erm/> where {<' . $contract . '> <' . $property . '> ?detail . }';
         $query_results = $this->backend->sparqlQuery($query);
         return $query_results;
