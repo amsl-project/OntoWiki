@@ -85,7 +85,7 @@ class EzbholdingsController extends OntoWiki_Controller_Component
                     continue;
                 }
             }
-            $holdingFileCSVData[] = str_getcsv($line, "\t");
+            $holdingFileCSVData[] = str_getcsv($line, ",");
         }
         $this->processHoldingsFile($holdingFileCSVData);
         $this->getHelper('Layout')->disableLayout();
@@ -145,7 +145,7 @@ class EzbholdingsController extends OntoWiki_Controller_Component
                         continue;
                     }
                 }
-                $holdingFileData[] = str_getcsv($line, "\t");
+                $holdingFileData[] = str_getcsv($line, ",");
             }
             fclose($fp);
             $this->processHoldingsFile($holdingFileData);
@@ -165,21 +165,17 @@ class EzbholdingsController extends OntoWiki_Controller_Component
         return $holdingFileData;
     }
 
-    private function openHoldingsFile()
-    {
-        $data = file_get_contents('./uploads/7693d633a58a61fbe164f6db3f970afa');
-        $test = mb_detect_encoding($data);
-        $ahoj = 0;
-    }
-
-
     private function processHoldingsFile($holdingFileData)
     {
         $this->init2();
         $licensePackages = $this->getLicensePackages();
+        $alreadyDeletedHoldings = array();
         foreach ($licensePackages as $packageData) {
             if ($this->isInContractPeriod($packageData['contract'])) {
-                $this->deleteHoldings($packageData['paket']);
+                if(!in_array($packageData['paket'], $alreadyDeletedHoldings)){
+                    $this->deleteHoldings($packageData['paket']);
+                    $alreadyDeletedHoldings[]=$packageData['paket'];
+                }
                 foreach ($holdingFileData as $holdingsDataset) {
                     if (isset($holdingsDataset[16])) {
                         $holdingsAnchor = $holdingsDataset[16];
