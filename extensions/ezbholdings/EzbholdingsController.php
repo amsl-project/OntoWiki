@@ -22,6 +22,7 @@ class EzbholdingsController extends OntoWiki_Controller_Component
     var $backend = null;
     var $meta = array();
 
+
     public function init()
     {
         parent::init();
@@ -59,6 +60,8 @@ class EzbholdingsController extends OntoWiki_Controller_Component
                 'active' => true
             )
         );
+
+        $meta["tripleWritte"] = array();
     }
 
     private function init2()
@@ -86,7 +89,7 @@ class EzbholdingsController extends OntoWiki_Controller_Component
                     continue;
                 }
             }
-            $holdingFileCSVData[] = str_getcsv($line, ",");
+            $holdingFileCSVData[] = str_getcsv($line, "\t");
         }
         $this->processHoldingsFile($holdingFileCSVData);
         $this->getHelper('Layout')->disableLayout();
