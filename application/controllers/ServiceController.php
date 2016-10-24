@@ -980,7 +980,7 @@ class ServiceController extends Zend_Controller_Action
             }
         }
 
-
+        if(isset($output->addOptionalPropertyValues)){
         foreach ($output->addOptionalPropertyValues as $key => $value) {
             $isIn = false;
             foreach ($properties as $item){
@@ -1001,8 +1001,9 @@ class ServiceController extends Zend_Controller_Action
                 }
 
             }
-        }
+        }}
 
+        if(isset($output->addPropertyValues)){
         foreach ($output->addPropertyValues as $key => $value) {
             $isIn = false;
             foreach ($properties as $item){
@@ -1022,7 +1023,7 @@ class ServiceController extends Zend_Controller_Action
                     array_push($properties, array("uri" => $uriA));
                 }
             }
-        }
+        }}
 
         // feed title helper w/ URIs
         $titleHelper = new OntoWiki_Model_TitleHelper($model);
@@ -1184,7 +1185,7 @@ FILTER(lang(?label) = '" . $lang . "')
                 }
             }
         }
-
+        if(isset($output->addOptionalPropertyValues)){
         foreach ($output["addOptionalPropertyValues"] as $k => $v) {
             if ($k != "http://www.w3.org/1999/02/22-rdf-syntax-ns#type") {
                 $query = 'SELECT ?range WHERE {
@@ -1200,7 +1201,7 @@ FILTER(lang(?label) = '" . $lang . "')
                     $output["addOptionalPropertyValues"][$k]["ranges"] = $ranges;
                 }
             }
-        }
+        }}
 
         $inititialData = array();
         $additionalData = array();
