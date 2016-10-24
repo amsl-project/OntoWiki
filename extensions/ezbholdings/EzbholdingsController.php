@@ -388,7 +388,7 @@ class EzbholdingsController extends OntoWiki_Controller_Component
         $properties[] = array(
             'ezbIndex' => 12,
             'property' => 'http://vocab.ub.uni-leipzig.de/amsl/embargoInfo',
-            'type' => 'value',
+            'type' => 'literal',
         );
         $properties[] = array(
             'ezbIndex' => 13,
