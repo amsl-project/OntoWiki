@@ -360,6 +360,7 @@ $(document).ready(function() {
     });
 
     $('.edit.save').click(function() {
+        $('.contextmenu').css("display", "block");
         $('.property-add').css("display", "inline");
         RDFauthor.commit();
     });
