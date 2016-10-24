@@ -724,6 +724,7 @@ function editProperty(event) {
     $('.toolbar a.save').removeClass('hidden');
     $('.toolbar a.cancel').removeClass('hidden');
 
+    $('.contextmenu').css("display", "none");
     loadRDFauthor(function () {
         var serviceURI = urlBase + 'service/rdfauthorinit';
         var prototypeResource = selectedResource.URI;
