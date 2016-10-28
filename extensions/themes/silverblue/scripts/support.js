@@ -495,9 +495,6 @@ if(window.RDFAUTHOR_START_FIX != undefined) {
 
                     }
 
-
-
-
                 var stmt = new Statement({
                     subject: '<' + currentSubject + '>',
                     predicate: '<' + currentProperty + '>',
