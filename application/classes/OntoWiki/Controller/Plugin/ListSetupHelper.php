@@ -195,10 +195,12 @@ class OntoWiki_Controller_Plugin_ListSetupHelper extends Zend_Controller_Plugin_
                         ->setWherePart('WHERE { <' . $sortParam . '> <http://www.w3.org/2000/01/rdf-schema#range> ?range . }');
 
                     $result = $store->sparqlQuery($query);
-                    if($result[0]['range'] === "http://www.w3.org/2001/XMLSchema#integer" || $result[0]['range'] === "http://www.w3.org/2001/XMLSchema#decimal"){
-                        $_SESSION['ONTOWIKI']['StringSort'] = false;
-                    }else{
-                        $_SESSION['ONTOWIKI']['StringSort'] = true;
+                    if(array_key_exists("0", $result)) {
+                        if ($result[0]['range'] === "http://www.w3.org/2001/XMLSchema#integer" || $result[0]['range'] === "http://www.w3.org/2001/XMLSchema#decimal") {
+                            $_SESSION['ONTOWIKI']['StringSort'] = false;
+                        } else {
+                            $_SESSION['ONTOWIKI']['StringSort'] = true;
+                        }
                     }
                         $list->setOrderProperty($config['sort']['uri'], $config['sort']['asc']);
 
