@@ -642,6 +642,11 @@ class ServiceController extends Zend_Controller_Action
         $indexEvent->model      = $deleteModel->getModelUri();
         $indexEvent->trigger();
 
+        $objectCache = Erfurt_App::getInstance()->getCache();
+        if (!($objectCache->getBackend() instanceof Erfurt_Cache_Backend_Null)) {
+            $objectCache->clean();
+        }
+
         if ($changes) {
             /**
              * @see {http://www.w3.org/Protocols/rfc2616/rfc2616-sec10.html#sec10.2.2}
